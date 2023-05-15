@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "NUEDC_System", ".", "{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8.1"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_52628"
+		Debug.AspNetCompiler.PhysicalPath = "..\NUEDC_System\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52628\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_52628"
+		Release.AspNetCompiler.PhysicalPath = "..\NUEDC_System\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52628\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "52628"
+		SlnRelativePath = "..\NUEDC_System\"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {54DB9AD2-5A2C-432C-A8AE-72BB417FA1A6}
+	EndGlobalSection
+EndGlobal

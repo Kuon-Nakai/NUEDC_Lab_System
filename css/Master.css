@@ -1,0 +1,103 @@
+﻿body {
+}
+
+.Ddl {
+    margin-left:10px;
+}
+
+#Asset_dv {
+    position: relative;
+}
+
+#Asset_bt {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: aquamarine;
+    color: #1a00ff;
+    border-radius: 0;
+    border-block-style: none;
+}
+
+#Asset_fx {
+    z-index: 4;
+    /*visibility: hidden;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: aquamarine;
+    color: aquamarine;
+    border-radius: 0;
+    border-block-style: none;
+}
+
+#Asset_fx:hover{
+    visibility: visible;
+    -webkit-animation: ping 0.8s ease-in-out both;
+    animation: ping 0.8s ease-in-out both;
+    animation-delay: 0.1s;
+    animation-play-state: running;
+}
+
+.relWrapper {
+    position: relative;
+}
+
+#BgDim_pn {
+    z-index: 9;
+    position: page;
+    left: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: all ease-in-out linear;
+}
+
+#WrongPassword_pn {
+    position: absolute;
+    left: 30%;
+    top: 30%;
+    width: 40%;
+    height: 40%;
+    
+}
+
+@-webkit-keyframes ping {
+    0% {
+        -webkit-transform: scale(0.2);
+        transform: scale(0.2);
+        opacity: 0.8;
+    }
+
+    80% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-transform: scale(2.2);
+        transform: scale(2.2);
+        opacity: 0;
+    }
+}
+
+@keyframes ping {
+    0% {
+        -webkit-transform: scale(0.2);
+        transform: scale(0.2);
+        opacity: 0.8;
+    }
+
+    80% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-transform: scale(2.2);
+        transform: scale(2.2);
+        opacity: 0;
+    }
+}
