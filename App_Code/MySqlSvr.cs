@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -14,6 +15,12 @@ public class MySqlSvr
 {
     public MySqlConnection cn;
     public delegate void ReaderDataHandler(MySqlDataReader rd);
+    public struct QueryReaderTask
+    {
+        public string sql;
+        public ReaderDataHandler ReaderDataHandler;
+        public Action NoDataHandler;
+    }
     public MySqlCommand cmd(string sql)
     {
         return new MySqlCommand(sql, cn);
@@ -60,6 +67,54 @@ public class MySqlSvr
             noDataHandler();
         }
         rd.Close();
+        cn.Close();
+    }
+    public async void QueryReader_Parallel(params QueryReaderTask[] tasks)
+    {
+        cn.Open();
+        var trds = new Dictionary<Task<DbDataReader>, QueryReaderTask>();
+        var rds = new Dictionary<DbDataReader, Task<bool>>();
+        var rhs = new Dictionary<DbDataReader, ReaderDataHandler>();
+
+        foreach (var task in tasks)
+        {
+            trds.Add(new MySqlCommand(task.sql, cn).ExecuteReaderAsync(), task);
+        }
+        //verify queries
+        foreach (var trd in trds.Keys)
+        {
+            var rd = await trd;
+            if (!rd.HasRows)
+            {
+                trds[trd].NoDataHandler();
+                rd.Close();
+                continue;
+            }
+            rds.Add(rd, rd.ReadAsync());
+            rhs.Add(rd, trds[trd].ReaderDataHandler);
+        }
+        //read
+        var rd2clear = new List<DbDataReader>();
+        while(rds.Count > 0)
+        {
+            foreach (var rd in rds.Keys)
+            {
+                if (!await rds[rd])
+                {
+                    rd2clear.Add(rd);
+                    continue;
+                }
+                rhs[rd]((MySqlDataReader)rd);
+                rds[rd] = rd.ReadAsync();
+            }
+            foreach(var rd in rd2clear)
+            {
+                rds.Remove(rd);
+                rhs.Remove(rd);
+                rd.Close();
+            }
+            rd2clear.Clear();
+        }
         cn.Close();
     }
     public int Execute(string sql)

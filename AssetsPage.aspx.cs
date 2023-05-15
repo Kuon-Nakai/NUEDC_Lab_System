@@ -67,11 +67,26 @@ public partial class AssetsPage : System.Web.UI.Page
         }
     }
 
-    public void LoadAssetData(string sql_where)
+    public void LoadAssetData(string sql_where_assets)
     {
-        svr.QueryReader($"select AssetName, ClassName, MainValue, ValueUnit, Location, Characteristics, Datasheet, Amount-ReservationQty-(select count(TransactionCode) from lending right join assets on lending.AssetCode=assets.AssetCode where {sql_where} and Status='Returned') from assets left join assetclasses on assets.ClassCode=assetclasses.ClassCode where {sql_where};", 
+        int i = -1;
+        svr.QueryReader($"select AssetName, ClassName, MainValue, ValueUnit, Location, Characteristics, Amount-ReservationQty-(select count(TransactionCode) from lending right join assets on lending.AssetCode=assets.AssetCode where {sql_where_assets} and Status='Returned') from assets left join assetclasses on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};", 
             AssignAssetData,
             () => Alert_DBQueryEmpty_pn.Visible = true);
+        svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where {sql_where_assets}",
+            (MySqlDataReader rd) =>
+            {
+                Datasheet_pn1.Controls.Remove(Datasheet_lk);
+                DynamicControls.CreateHTMLElement("br", Datasheet_pn0);
+                DynamicControls.CreateHTMLElement("div", Datasheet_pn1);
+                DynamicControls.CreateHyperLink(rd.GetValue(1).ToString(), rd.GetValue(0).ToString(), Datasheet_pn1);
+                //Datasheet_pn1.Controls.RemoveAt(Datasheet_pn1.Controls.Count - 1);
+                ++i;
+            },
+            () =>
+            {
+                Datasheet_lk.Text = "暂无文档";
+            });
     }
 
     private void AssignAssetData(MySqlDataReader rd)
@@ -81,18 +96,21 @@ public partial class AssetsPage : System.Web.UI.Page
         PrimValue_lb.Text   = $"{rd[2]} {rd[3]}";
         Location_lb.Text    = (string)rd[4];
         Property_lb.Text = rd[5].GetType() == Type.GetType("DBNull") ? (string)rd[5] : "暂无数据";
-        if (((string)rd[6]).Length == 0)
-        {
-            Datasheet_lk.Text = "暂无";
-            Datasheet_lk.NavigateUrl = "#0";
-        }
-        else
-        {
-            Datasheet_lk.Text = "点击访问";
-            Datasheet_lk.NavigateUrl = (string)rd[6];
-        }
-        Borrowable_lb.Text = rd[7]?.ToString();
-        if ((UInt64)rd[7] > 0)
+
+        //Legacy code
+        //if (((string)rd[6]).Length == 0)
+        //{
+        //    Datasheet_lk.Text = "暂无";
+        //    Datasheet_lk.NavigateUrl = "#0";
+        //}
+        //else
+        //{
+        //    Datasheet_lk.Text = "点击访问";
+        //    Datasheet_lk.NavigateUrl = (string)rd[6];
+        //}
+
+        Borrowable_lb.Text = rd[6]?.ToString();
+        if ((UInt64)rd[6] > 0)
         {
             BorrowQtySel_tb.Enabled = true;
             BorrowConfirm_pn.Visible = true;
@@ -104,5 +122,9 @@ public partial class AssetsPage : System.Web.UI.Page
             BorrowConfirm_pn.Visible = false;
             BorrowNotAvailable_pn.Visible = true;
         }
+    }
+    private void AssignDatasheetLinks(MySqlDataReader rd)
+    {
+
     }
 }

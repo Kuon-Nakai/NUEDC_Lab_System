@@ -93,6 +93,12 @@ public class DynamicControls
         parent.Controls.Add(r);
         return r;
     }
+    public static HtmlGenericControl CreateHTMLElement(string tag, Control parent)
+    {
+        var r = new HtmlGenericControl(tag);
+        parent.Controls.Add(r);
+        return r;
+    }
 
     public DynamicControls()
     {

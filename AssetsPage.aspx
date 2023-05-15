@@ -138,7 +138,7 @@
                                 <div class="row">
                                     <h5 style="position:relative; top:-39px; width:150px">元器件搜索</h5>
                                     <asp:TextBox runat="server" TextMode="Search" />
-                                    <a class="btn btn--primary" href="#0">搜索</a>
+                                    <a class="btn btn--primary" href="#0" onclick="bt_click('Search_bt_Click', 0, null);">搜索</a>
                                 </div>
                                 <div class="row">
                                     <h5 style="position:relative; top:-39px; width:150px">快捷查询</h5>
@@ -167,26 +167,31 @@
                                         元件类型<br/> <br />
                                         值<br/> <br />
                                         位置<br/> <br />
-                                        属性<br/> <br />
+                                        属性<br/>
                                         <asp:Panel runat="server" ID="Datasheet_pn0">
-                                            参考文档<br/> <br />
+                                            参考文档
                                         </asp:Panel>
-                                        可借出数量<br/> <br />
-                                        申请借出(件)<br/> <br />
                                     </div>
                                     <div class="column lg-6 tab-12" style="text-align:right">
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetName_lb" /> <br /> <br />
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetClass_lb" /> <br /> <br />
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="PrimValue_lb" /> <br /> <br />
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Location_lb"/> <br /> <br />
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb"/> <br /> <br />
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb"/> <br />
                                         <asp:Panel runat="server" ID="Datasheet_pn1">
-                                            <asp:HyperLink runat="server" ID="Datasheet_cn_lk" Text="Not available"></asp:HyperLink> <br />
-                                            <asp:HyperLink runat="server" ID="Datasheet_lk" Text="Not available"></asp:HyperLink> <br />
+                                            <asp:HyperLink runat="server" ID="Datasheet_lk" Text="Not available"></asp:HyperLink>
                                         </asp:Panel>
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb"/> <br /> <br />
-                                        <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" OnTextChanged="BorrowQtySel_tb_TextChanged"  />
                                     </div>
+                                </div>
+                                <div class="row u-add-half-bottom">
+                                     <div class="column lg-6 tab-12">
+                                         可借出数量<br/> <br />
+                                         申请借出(件)<br/> <br />
+                                     </div>
+                                     <div class="column lg-6 tab-12" style="text-align:right">
+                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb"/> <br /> <br />
+                                        <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" OnTextChanged="BorrowQtySel_tb_TextChanged"  />
+                                     </div>
                                 </div>
                                 <asp:Panel runat="server" ID="BorrowConfirm_pn">
                                     <a class="btn btn--primary u-fullwidth" href="#0">登记借出</a>
@@ -806,6 +811,21 @@
             </script>
         </div>
     </form>
-
+    <script type="text/javascript">
+        function bt_click(id, ev, param) {
+            $.ajax({
+                url: 'AssetsPage.aspx',
+                type: 'POST',
+                data: {
+                    'id': id,
+                    'evnt': ev,
+                    'param': param
+                },
+                //success: function (r) { alert("Call successful!"); },
+                //error: function (jqxhr, txt, err) { alert(err+txt); },
+                complete: function (jqxhr, txt) { console.log('Response: ' + jqxhr.status); }
+            });
+        }
+    </script>
 </body>
 </html>
