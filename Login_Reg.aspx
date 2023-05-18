@@ -109,6 +109,11 @@
                     <!-- end s-header__nav -->
 
                 </div>
+                <div style="margin-top: 10px; position: sticky" class="column u-pull-right">
+                    <asp:Panel runat="server" ID="Alerts_pn" Width="70%">
+                        <asp:Panel runat="server" ID="Alert_DBQueryEmpty_pn" Visible="false" HorizontalAlign="Center"></asp:Panel>
+                    </asp:Panel>
+                </div>
                 <!-- end s-header__inner -->
 
             </header>
@@ -133,41 +138,6 @@
 
                 </div>
                 <!-- end row -->
-                <div class="column" style="text-align:center">
-                    <asp:Panel runat="server" ID="AlertError_pn" Visible="false" HorizontalAlign="Center">
-                        <div class="alert-box alert-box--error" style="top: 20px; margin-top:10px;">
-                            <p>数据库系统错误, 请联系系统管理员</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                    </asp:Panel>
-                    <!-- end error -->
-                        
-                    <asp:Panel runat="server" ID="AlertSuccess_pn" Visible="false" HorizontalAlign="Center">
-                        <div class="alert-box alert-box--success" style="top: 20px; margin-top:10px;">
-                            <p>登录成功!</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                    </asp:Panel>
-                    <!-- end success -->
-
-                    <asp:Panel runat="server" ID="AlertInfo_pn" Visible="true" HorizontalAlign="Center">
-                        <div class="alert-box alert-box--info" style="top: 20px; margin-top:10px;">
-                            <br />
-                            <p>当前为Debug版本, 仅供调试</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                    </asp:Panel>
-                    
-                    <!-- end info -->
-                        
-                    <asp:Panel runat="server" ID="AlertWrong_pn" Visible="false" HorizontalAlign="Center">
-                        <div class="alert-box alert-box--notice" style="top: 20px; margin-top:10px;">
-                            <p>登录信息错误, 请检查后重试</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                    </asp:Panel>
-                    <!-- end notice -->
-                </div>
 
                     
 
@@ -193,7 +163,7 @@
                                 <h5 class="text-left">账号(学号)</h5>
                                 <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegAcc_tb" />
                                 <h5 class="text-left">姓名</h5>
-                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="TextBox1" />
+                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegName_tb" />
                                 <h5 class="text-left">密码</h5>
                                 <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegPsw0_tb" TextMode="Password" />
                                 <h5 class="text-left">重复密码</h5>
@@ -201,6 +171,12 @@
                                 <h5 class="text-left">邮箱</h5>
                                 用于找回密码和发送通知, 非必填, 默认学校分配的教育邮箱
                                 <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegMail_tb" TextMode="Email" />
+                                <asp:RequiredFieldValidator ID="Reg_Acc_ReqVal" runat="server" ErrorMessage="账号为必填项" ControlToValidate="RegAcc_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
+                                <asp:CustomValidator ID="Reg_Acc_YearVal" runat="server" ErrorMessage="入学年份不河里捏..." ControlToValidate="RegAcc_tb" Visible="false" ValidationGroup="Reg" OnServerValidate="Reg_Acc_YearVal_ServerValidate"></asp:CustomValidator>
+                                <asp:RequiredFieldValidator ID="Reg_Name_ReqVal" runat="server" ErrorMessage="姓名为必填项" ControlToValidate="RegName_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator ID="Reg_Psw_ReqVal" runat="server" ErrorMessage="密码为必填项" ControlToValidate="RegPsw0_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
+                                <asp:CompareValidator ID="Reg_Psw_CompVal" runat="server" ErrorMessage="密码不一致" ControlToValidate="RegPsw1_tb" ControlToCompare="RegPsw0_tb" Visible="false" ValidationGroup="Reg"></asp:CompareValidator>
+                                <asp:ValidationSummary ID="Reg_ValidationSummary" runat="server" ForeColor="Red" ValidationGroup="Reg" />
                                 <a class="btn btn--primary u-fullwidth" href="#0">注册</a>
                             </div>
 

@@ -51,18 +51,19 @@ public partial class AssetsPage : System.Web.UI.Page
         Asset_gv.DataBind();
     }
 
-    protected void BorrowQtySel_tb_TextChanged(object sender, EventArgs e)
+    protected void Assert_BorrowQty(object sender, EventArgs e)
     {
         //if(int.Parse(BorrowQtySel_tb.Text) > int.Parse(Borrowable_lb.Text))
         if (int.Parse(BorrowQtySel_tb.Text) > 16)
         {
-            //BorrowQtySel_tb.Text = Borrowable_lb.Text;
-            BorrowQtySel_tb.Text = "16";
+            Page.SetFocus(BorrowQtySel_tb);
+            DynamicControls.CreateAlert($"申请数量无效: 超出最大可用量({Borrowable_lb.Text})", "error");
             return;
         }
         if(int.Parse(BorrowQtySel_tb.Text) < 0)
         {
-            BorrowQtySel_tb.Text = "0";
+            Page.SetFocus(BorrowQtySel_tb);
+            DynamicControls.CreateAlert("申请数量无效: 但是欢迎给实验室送元件()", "error");
             return;
         }
     }
@@ -95,7 +96,7 @@ public partial class AssetsPage : System.Web.UI.Page
         AssetClass_lb.Text  = (string)rd[1];
         PrimValue_lb.Text   = $"{rd[2]} {rd[3]}";
         Location_lb.Text    = (string)rd[4];
-        Property_lb.Text = rd[5].GetType() == Type.GetType("DBNull") ? (string)rd[5] : "暂无数据";
+        Property_lb.Text    = rd[5].GetType() == Type.GetType("DBNull") ? (string)rd[5] : "暂无数据";
 
         //Legacy code
         //if (((string)rd[6]).Length == 0)
@@ -122,9 +123,5 @@ public partial class AssetsPage : System.Web.UI.Page
             BorrowConfirm_pn.Visible = false;
             BorrowNotAvailable_pn.Visible = true;
         }
-    }
-    private void AssignDatasheetLinks(MySqlDataReader rd)
-    {
-
     }
 }

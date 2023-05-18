@@ -117,12 +117,20 @@ public class MySqlSvr
         }
         cn.Close();
     }
-    public int Execute(string sql)
+    public int? Execute(string sql, Action<Exception> errorHandler)
     {
-        cn.Open();
-        var r = new MySqlCommand(sql, cn).ExecuteNonQuery();
-        cn.Close();
-        return r;
+        try
+        {
+            cn.Open();
+            var r = new MySqlCommand(sql, cn).ExecuteNonQuery();
+            cn.Close();
+            return r;
+        }
+        catch(Exception ex)
+        {
+            errorHandler?.Invoke(ex);
+            return null;
+        }
     }
     public int Execute(string sql, MySqlTransaction transaction)
     {

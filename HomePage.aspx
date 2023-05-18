@@ -17,38 +17,6 @@
             <div style="text-align:center; background-color:#1C1C24"> 
                 <asp:Label runat="server" Text="NUEDC实验室管理系统"></asp:Label>
                 <p></p>
-                <div style="text-align:left" class="relwrapper">
-                
-                    <asp:Panel runat="server" Width="600px">
-                        <div id="Asset_dv">
-                            <asp:Button runat="server" Text="资产查询/借还" ID="Asset_bt" Width="100px"></asp:Button>
-                            <asp:Button runat="server" Text=" " Width="100px" ID="Asset_fx"></asp:Button>
-                        </div>
-                    
-                        <p></p>
-                        <asp:Button runat="server" Text="仪器使用预约"></asp:Button>
-                        <p></p>
-                        <asp:Button runat="server" Text="成员概览" CssClass="btn--stroke s-intro__content-btn smoothscroll" ForeColor="White"></asp:Button>
-                        <p></p>
-                        <asp:Button runat="server" Text="安全控制台"></asp:Button>
-                        <p></p>
-                        <asp:Button runat="server" Text="系统管理"></asp:Button>
-                    </asp:Panel>
-                    <asp:Panel runat="server" Width="300px">
-                        <asp:Label runat="server" Text="访客您好，请登录"></asp:Label>
-                        <p></p>
-                        <asp:Panel runat="server" Width="275px" ID="Login_pn">
-                            <asp:Label ID="Label1" runat="server" Text="账号"></asp:Label>
-                            <asp:TextBox ID="Username_tb" runat="server"></asp:TextBox>
-                            <p></p>
-                            <asp:Label ID="Label2" runat="server" Text="密码"></asp:Label>
-                            <asp:TextBox ID="Password_tb" runat="server" TextMode="Password"></asp:TextBox>
-                            <p></p>
-                            <asp:Button ID="Login_bt" runat="server" Text="登录" Width="100px"  />
-                            <asp:LinkButton ID="Reg_bt" runat="server" Width="100px">注册</asp:LinkButton>
-                        </asp:Panel>
-                    </asp:Panel>
-                </div>
 
                 <div id="bricks" class="row bricks">
                     <div class="column lg-12 masonry">

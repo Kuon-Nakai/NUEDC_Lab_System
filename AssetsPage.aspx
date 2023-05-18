@@ -69,7 +69,7 @@
                     <div class="s-header__block">
                         <div class="s-header__logo">
                             <a class="logo" href="index.html">
-                                <img src="images/logo.svg" alt="Homepage">
+                                <img src="images/logo.svg" alt="Homepage" />
                             </a>
                         </div>
 
@@ -167,30 +167,30 @@
                                         元件类型<br/> <br />
                                         值<br/> <br />
                                         位置<br/> <br />
-                                        属性<br/>
+                                        属性<br/> <br />
                                         <asp:Panel runat="server" ID="Datasheet_pn0">
                                             参考文档
                                         </asp:Panel>
                                     </div>
-                                    <div class="column lg-6 tab-12" style="text-align:right">
+                                    <div class="column lg-6 tab-12" style="text-align:right; margin-bottom: 0px">
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetName_lb" /> <br /> <br />
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetClass_lb" /> <br /> <br />
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="PrimValue_lb" /> <br /> <br />
                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Location_lb"/> <br /> <br />
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb"/> <br />
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb"/> <br /> <br />
                                         <asp:Panel runat="server" ID="Datasheet_pn1">
                                             <asp:HyperLink runat="server" ID="Datasheet_lk" Text="Not available"></asp:HyperLink>
                                         </asp:Panel>
                                     </div>
                                 </div>
-                                <div class="row u-add-half-bottom">
+                                <div class="row u-add-half-bottom" style="margin-top:0px">
                                      <div class="column lg-6 tab-12">
                                          可借出数量<br/> <br />
                                          申请借出(件)<br/> <br />
                                      </div>
                                      <div class="column lg-6 tab-12" style="text-align:right">
                                          <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb"/> <br /> <br />
-                                        <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" OnTextChanged="BorrowQtySel_tb_TextChanged"  />
+                                         <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" AutoPostBack="True" />
                                      </div>
                                 </div>
                                 <asp:Panel runat="server" ID="BorrowConfirm_pn">
