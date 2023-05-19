@@ -14,7 +14,7 @@
     <div id="page" class="s-pagewrap">
         <form id="form1" runat="server">
             <asp:ScriptManager runat="server" ID="Smg"></asp:ScriptManager>
-            <div style="text-align:center; background-color:#1C1C24"> 
+            <div style="text-align: center; background-color: #1C1C24">
                 <asp:Label runat="server" Text="NUEDC实验室管理系统"></asp:Label>
                 <p></p>
 
@@ -34,7 +34,8 @@
                                         <h4 class="entry__title">元件借出/归还登记</h4>
                                     </div>
                                 </a>
-                            </article> <!-- entry -->
+                            </article>
+                            <!-- entry -->
 
                             <article class="brick brick--double entry" style="position: absolute; left: 49.9995%; top: 0px;">
                                 <a href="EquipmentPage.aspx" class="entry__link">
@@ -46,7 +47,8 @@
                                         <h4 class="entry__title">仪器使用预约</h4>
                                     </div>
                                 </a>
-                            </article> <!-- entry -->
+                            </article>
+                            <!-- entry -->
 
                             <article class="brick entry" style="position: absolute; left: 0%; top: 465.75px;">
                                 <a href="#modal-03" class="entry__link">
@@ -58,7 +60,8 @@
                                         <h4 class="entry__title">成员概览</h4>
                                     </div>
                                 </a>
-                            </article> <!-- entry -->
+                            </article>
+                            <!-- entry -->
 
                             <article class="brick entry" style="position: absolute; left: 24.9997%; top: 465.75px;">
                                 <a href="#modal-04" class="entry__link">
@@ -70,7 +73,8 @@
                                         <h4 class="entry__title">Lamp</h4>
                                     </div>
                                 </a>
-                            </article> <!-- entry -->
+                            </article>
+                            <!-- entry -->
 
                             <article class="brick entry" style="position: absolute; left: 49.9995%; top: 465.75px;">
                                 <a href="#modal-05" class="entry__link">
@@ -82,7 +86,8 @@
                                         <h4 class="entry__title">Tropical</h4>
                                     </div>
                                 </a>
-                            </article> <!-- entry -->
+                            </article>
+                            <!-- entry -->
 
                             <article class="brick entry" style="position: absolute; left: 74.9992%; top: 465.75px;">
                                 <a href="#modal-06" class="entry__link">
@@ -94,22 +99,22 @@
                                         <h4 class="entry__title">Woodcraft</h4>
                                     </div>
                                 </a>
-                            </article> <!-- entry -->
+                            </article>
+                            <!-- entry -->
 
-                        </div> <!-- end bricks-wrapper -->
-                    </div> <!-- end masonry -->
+                        </div>
+                        <!-- end bricks-wrapper -->
+                    </div>
+                    <!-- end masonry -->
                 </div>
 
-    <%--            <asp:Panel ID="WrongPassword_pn" runat="server">
+                <%--            <asp:Panel ID="WrongPassword_pn" runat="server">
                     <div id="BgDim_pn"></div>
                 </asp:Panel>--%>
-                <svg xmlns="http://www.w3.org/2000/svg" width="200", height="200">
-                    <rect x="10" y="10" height="45" width="100" fill="blue" onclick="bt_click('test', 1, 0)"></rect>
-                </svg>
             </div>
         </form>
     </div>
-    
+
 </body>
 
 <script type="text/javascript">

@@ -81,6 +81,7 @@ public class DynamicControls
         };
         panel.Controls.Add(div);
         parent.Controls.Add(panel);
+        
         return panel;
     }
     public static HyperLink CreateHyperLink(string message, string link, Control parent)

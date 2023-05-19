@@ -116,6 +116,9 @@
 
                 </div>
                 <!-- end row -->
+<%--                <div class="row">
+                    <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
+                </div>--%>
 
                 <div class="row u-add-half-bottom">
 
@@ -209,7 +212,7 @@
                                         </div>
                                         <div class="column">
                                             <asp:Label Text="-1" runat="server" ID="QtyToReturn_lb" /> <br /> <br />
-                                            <asp:Label Text="1919/8/10" runat="server" ID="Label1" /> <br /> <br />
+                                            <asp:Label Text="1919/8/10" runat="server" ID="ReturnDate_lb" /> <br /> <br />
                                         </div>
                                     </div>
                                     <a class="btn btn--stroke u-fullwidth" href="#0">归还</a>

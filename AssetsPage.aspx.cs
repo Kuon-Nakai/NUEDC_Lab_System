@@ -32,7 +32,7 @@ public partial class AssetsPage : System.Web.UI.Page
         TotalEntries_lb.Text = (await te)?.ToString();
         TotalLent_lb.Text = (await tl)?.ToString();
         TotalReg_lb.Text = (await tr)?.ToString();
-#else //USE_ASYNC
+#else // not USE_ASYNC
         TotalComp_lb.Text = (string)svr.QuerySingle("select sum(Amount) from assets group by com;");
         TotalEntries_lb.Text = (string)svr.QuerySingle("select count(AssetCode) from assets group by com;");
         TotalLent_lb.Text = (string)svr.QuerySingle("select sum(Qty) from lending group by com;");

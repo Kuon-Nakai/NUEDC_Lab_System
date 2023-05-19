@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Bin.zip
+/NUEDC_System/{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}/CodeAnalysisLog.xml
+/NUEDC_System/{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}/WebProject.lastcodeanalysissucceeded

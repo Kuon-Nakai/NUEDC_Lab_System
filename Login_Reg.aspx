@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Login_Reg.aspx.cs" Inherits="Login_Reg" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Login_Reg.aspx.cs" Inherits="Login_Reg" Async="true" MaintainScrollPositionOnPostback="true" %>
 
 <!DOCTYPE html>
 
@@ -89,18 +89,8 @@
                         </li>--%>
                         <li>
                             <div class="column" style="margin-top:5px">
-                                <asp:Button Text="Log in" runat="server" CssClass="s-header__social-a" ID="Login_bt" BackColor="Black" ForeColor="White" />
-                                <asp:Panel runat="server" ID="AccDetail_pn" BackColor="LightGray">
-                                    <div class="row u-add-half-bottom">
-                                        <div class="column">
-                                            <label>账号</label><br />
-                                            <label>姓名</label><br />
-                                        </div>
-                                        <div class="column" style="text-align:right">
-                                            <asp:Label Text="Unknown" runat="server" ID="AccDet_Acc_lb" />
-                                        </div>
-                                    </div>
-                                </asp:Panel>
+                                <asp:Button Text="Log in" runat="server" CssClass="s-header__social-a" ID="Login_Jmp_bt" BackColor="Black" ForeColor="White" />
+                                
                             </div>
                         </li>
                         <!-- s-header__social -->
@@ -110,7 +100,7 @@
 
                 </div>
                 <div style="margin-top: 10px; position: sticky" class="column u-pull-right">
-                    <asp:Panel runat="server" ID="Alerts_pn" Width="70%">
+                    <asp:Panel runat="server" ID="Alerts_pn" Width="100%">
                         <asp:Panel runat="server" ID="Alert_DBQueryEmpty_pn" Visible="false" HorizontalAlign="Center"></asp:Panel>
                     </asp:Panel>
                 </div>
@@ -151,11 +141,16 @@
                             <div class="column lg-6 tab-12">
                                 <h3>账号密码登录</h3>
                                 <h5 class="text-left">账号(学号)</h5>
-                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="LoginAcc_tb" />
+                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="LoginAcc_tb" CausesValidation="true" OnTextChanged="Login_Acc_tb_TextChanged" />
                                 <h5 class="text-left">密码</h5>
-                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="LoginPsw_tb" TextMode="Password" />
-                                <a class="btn btn--primary u-fullwidth" href="#0">登录</a>
-                                <a class="btn btn--stroke u-fullwidth" href="#0">忘记密码</a>
+                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="LoginPsw_tb" TextMode="Password" CausesValidation="True" OnTextChanged="Login_Psw_tb_TextChanged" />
+                                <asp:RequiredFieldValidator ID="Login_Acc_ReqVal" runat="server" ErrorMessage="需要填写账号" ValidationGroup="Login" Visible="false" ControlToValidate="LoginAcc_tb" EnableClientScript="true"></asp:RequiredFieldValidator>
+                                <asp:RequiredFieldValidator ID="Login_Psw_ReqVal" runat="server" ErrorMessage="需要填写密码" ValidationGroup="Login" Visible="false" ControlToValidate="LoginPsw_tb" EnableClientScript="true" ValidateRequestMode="Enabled" InitialValue='""'></asp:RequiredFieldValidator>
+                                <asp:ValidationSummary ID="Login_ValSummary" runat="server" ValidationGroup="Login" />
+                                <%--<a class="btn btn--primary u-fullwidth" href="#0" onclick="callSvr('Login_bt_Click', null)">登录</a>--%>
+                                <asp:HyperLink ID="Login_bt" runat="server" Text="登录" CssClass="btn btn--primary u-fullwidth" OnClick="Login_bt_Click" />
+                                <%--<a class="btn btn--stroke u-fullwidth" href="#0">忘记密码</a>--%>
+                                <asp:HyperLink ID="RestorePsw_bt" runat="server" Text="忘记密码" CssClass="btn btn--stroke u-fullwidth" />
                             </div>
                             
                             <div class="column lg-6 tab-12">
@@ -177,7 +172,7 @@
                                 <asp:RequiredFieldValidator ID="Reg_Psw_ReqVal" runat="server" ErrorMessage="密码为必填项" ControlToValidate="RegPsw0_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
                                 <asp:CompareValidator ID="Reg_Psw_CompVal" runat="server" ErrorMessage="密码不一致" ControlToValidate="RegPsw1_tb" ControlToCompare="RegPsw0_tb" Visible="false" ValidationGroup="Reg"></asp:CompareValidator>
                                 <asp:ValidationSummary ID="Reg_ValidationSummary" runat="server" ForeColor="Red" ValidationGroup="Reg" />
-                                <a class="btn btn--primary u-fullwidth" href="#0">注册</a>
+                                <asp:HyperLink ID="Reg_bt" runat="server" CssClass="btn btn--primary u-fullwidth">注册</asp:HyperLink>
                             </div>
 
                         </div>
@@ -422,37 +417,19 @@
             <script src="js/main.js"></script>
             <script type="text/javascript">
                 var r_i = true;
-                function pollForValue(id, para, func) {
-                    $.ajax({
-                        url: 'AssetsPage.aspx',
-                        method: 'POST',
-                        dataType: 'json',
-                        data: {
-                            id: id,
-                            evnt: 0,
-                            param: para
-                        },
-                        //success: func,
-                        error: function (xhr, status, err) {
-                            if (r_i) {
-                                r_i = false;
-                                pollForValue(id, para, func);
-                            }
-                            console.log("Failed to poll for value: " + id);
-                            console.log(xhr);
-                            console.log(status);
-                            console.log(err);
-                        },
-                        success: function (r1, r2, r3) {
-                            console.log(r1);
-                            console.log(r2);
-                            console.log(r3);
-                        }
-                    });
-                }
-                window.onload = function () {
-                    pollForValue("?totalEntries", null, function (r) { document.getElementById("TotalEntries_lb").innerText = JSON.parse(r.responseText).value; })
 
+                function callSvr(id, param) {
+                    $.ajax({
+                        url: 'AjaxHandler.ashx',
+                        type: 'POST',
+                        data: JSON.stringify({
+                            Req: id,
+                            Param: param
+                        }),
+                        //success: function (r) { alert("Call successful!"); },
+                        //error: function (jqxhr, txt, err) { alert(err+txt); },
+                        complete: function (jqxhr, txt) { console.log('Response: ' + jqxhr.status); }
+                    });
                 }
             </script>
         </div>
