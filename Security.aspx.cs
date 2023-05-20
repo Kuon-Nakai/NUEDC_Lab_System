@@ -11,4 +11,9 @@ public partial class Security : System.Web.UI.Page
     {
 
     }
+
+    protected void Login_Jmp_bt_Click(object sender, EventArgs e)
+    {
+
+    }
 }
