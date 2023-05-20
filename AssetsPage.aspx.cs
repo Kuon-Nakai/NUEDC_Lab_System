@@ -23,10 +23,10 @@ public partial class AssetsPage : System.Web.UI.Page
         //Update system usage public summary
 #if USE_ASYNC
         svr.cn.Open();
-        var tc = svr.cmd("select sum(Amount) from assets group by com;").ExecuteScalarAsync();
-        var te = svr.cmd("select count(AssetCode) from assets group by com;").ExecuteScalarAsync();
-        var tl = svr.cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
-        var tr = svr.cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
+        var tc = svr.Cmd("select sum(Amount) from assets group by com;").ExecuteScalarAsync();
+        var te = svr.Cmd("select count(AssetCode) from assets group by com;").ExecuteScalarAsync();
+        var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
+        var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
 
         TotalComp_lb.Text = (await tc)?.ToString();
         TotalEntries_lb.Text = (await te)?.ToString();
