@@ -8,7 +8,8 @@ using Newtonsoft.Json;
 
 public class AjaxHandler : IHttpHandler
 {
-
+    //private object RespData;
+    //public void setTestData(object data) => RespData = data;
     public void ProcessRequest (HttpContext context) {
         if(context.Request.HttpMethod == "POST")
         {
@@ -19,9 +20,10 @@ public class AjaxHandler : IHttpHandler
             context.Response.ContentType = "application/json";
             context.Response.Write(JsonConvert.SerializeObject(new
             {
-                status = (r >= 200 && r < 300) ? "success" : "error"
+                status = (r.statusCode >= 200 && r.statusCode < 300) ? "success" : "error",
+                data   = r.data
             }));
-            context.Response.StatusCode = r;
+            context.Response.StatusCode = r.statusCode;
         }
 
         //context.Response.ContentType = "text/plain";

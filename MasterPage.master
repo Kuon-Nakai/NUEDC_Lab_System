@@ -38,9 +38,9 @@
             }
     </style>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/nuedc_logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/nuedc_logo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="images/nuedc_logo.png" />
     <link rel="manifest" href="site.webmanifest" />
 </head>
 <body id="top" class="ss-show">
@@ -50,8 +50,9 @@
     </div>
 
     <input type="hidden" id="scrollPosition" value="0" />
-
-    <form id="form1" runat="server" onsubmit="saveScrollPosition();">
+    
+    <%--<form id="form1" runat="server" onsubmit="saveScrollPosition();">--%>
+    <form id="form1" runat="server">
 
         <asp:ScriptManager runat="server"></asp:ScriptManager>
 
@@ -75,11 +76,7 @@
                     <nav class="s-header__nav">
 
                         <ul class="s-header__menu-links">
-                            <li class=""><a href="HomePage.aspx" class="smoothscroll">主页</a></li>
-                            <li><a href="AssetPage.aspx">元器件</a></li>
-                            <li><a href="Events.aspx">活动</a></li>
-                            <li class=""><a href="#footer" class="smoothscroll">联系我们</a></li>
-                            <li><a href="Management.aspx" style="visibility: hidden">管理</a></li>
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder_TopNavLinks" runat="server"></asp:ContentPlaceHolder>
                         </ul>
                         <!-- s-header__menu-links -->
 

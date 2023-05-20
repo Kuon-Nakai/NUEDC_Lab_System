@@ -10,6 +10,8 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+#pragma warning disable IDE0074 // Use compound assignment
+
 public partial class Login_Reg : System.Web.UI.Page
 {
     MySqlSvr svr;
@@ -20,6 +22,7 @@ public partial class Login_Reg : System.Web.UI.Page
         {
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
+
         //RemoteDelegates.RegisterDelegate("Login_bt_Click", Login_bt_Click);
         //DynamicControls.CreateAlert("请提供登录信息", "error", Alerts_pn);
     }
@@ -39,6 +42,7 @@ public partial class Login_Reg : System.Web.UI.Page
         {
             // Auth pass
             Session["UserID"] = LoginAcc_tb.Text;
+            Session["UserPerm"] = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
             try
             {
                 DynamicControls.CreateAlert($"登录成功, 欢迎 {svr.QuerySingle($"select MemberName from members where MemberCode={Session["LoginAcc"]}")}", "success", Alerts_pn);

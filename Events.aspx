@@ -96,10 +96,10 @@
                                 <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="MaxCount_lb" />
                             </div>
                         </div>
-                        <asp:HyperLink runat="server" CssClass="btn btn--primary u-fullwidth" Visible="false" ID="Signup_bt">报名参加</asp:HyperLink>
-                        <asp:HyperLink runat="server" CssClass="btn u-fullwidth" Visible="false" ID="NoSignup_bt">报名参加</asp:HyperLink>
-                        <asp:HyperLink runat="server" CssClass="btn btn--stroke u-fullwidth" Visible="false" ID="EditForm_bt">修改信息</asp:HyperLink>
-                        <asp:HyperLink runat="server" CssClass="btn btn--stroke u-fullwidth" Visible="false" ID="Cancel_bt">取消报名</asp:HyperLink>
+                        <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" Visible="true" ID="Signup_bt">报名参加</asp:LinkButton>
+                        <asp:LinkButton runat="server" CssClass="btn u-fullwidth" Visible="false" ID="NoSignup_bt">报名参加</asp:LinkButton>
+                        <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" Visible="false" ID="EditForm_bt">修改信息</asp:LinkButton>
+                        <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" Visible="false" ID="Cancel_bt">取消报名</asp:LinkButton>
                         <br />
                         <hr />
                         <h3>活动介绍</h3>

@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NUEDC实验室 - 元器件管理系统</title>
-    
+
     <script src="https://ajax.microsoft.com/ajax/4.0/1/MicrosoftAjax.js" type="text/javascript"></script>
 
     <script>
@@ -36,9 +36,9 @@
     </style>
     <!-- favicons
     ================================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/nuedc_logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/nuedc_logo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="images/nuedc_logo.png" />
     <link rel="manifest" href="site.webmanifest" />
 </head>
 <body id="top" class="ss-show">
@@ -69,7 +69,7 @@
                     <div class="s-header__block">
                         <div class="s-header__logo">
                             <a class="logo" href="index.html">
-                                <img src="images/logo.svg" alt="Homepage" />
+                                <img src="images/nuedc_logo.png" alt="Homepage" />
                             </a>
                         </div>
 
@@ -80,11 +80,11 @@
                     <nav class="s-header__nav">
 
                         <ul class="s-header__menu-links">
-                            <li class=""><a href="#intro" class="smoothscroll">主页</a></li>
-                            <li><a href="index.html#about">元器件</a></li>
-                            <li><a href="index.html#services">活动</a></li>
+                            <li class=""><a href="index.aspx">主页</a></li>
+                            <li><a href="#top" class="smoothscroll" style="color:white">元器件</a></li>
+                            <li><a href="Events.aspx">活动</a></li>
                             <li class=""><a href="#footer" class="smoothscroll">联系我们</a></li>
-                            <li><a href="index.html#folio" style="visibility:hidden">管理</a></li>
+                            <li><a href="Management.aspx" style="visibility: hidden">管理</a></li>
                         </ul>
                         <!-- s-header__menu-links -->
 
@@ -105,96 +105,130 @@
 
             <!-- styles
             ----------------------------------------------- -->
-            <div id="styles" class="s-styles">
+            <div id="styles" class="s-styles" style="padding-top: 76px">
 
+                <div style="background-image: url(images/pcb1.jpg); width: 100%; height: 500px; background-size: cover; background-position: center; padding-top: 0"></div>
+                <br />
                 <div class="row">
 
-                    <div class="column lg-12 intro">
+                    <div class="column lg-12 intro" style="background-color: rgba(255,255,255,0.7); z-index: 3">
 
                         <h1>NUEDC实验室 元器件查询/借用系统</h1>
                     </div>
 
                 </div>
                 <!-- end row -->
-<%--                <div class="row">
+                <%--                <div class="row">
                     <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
                 </div>--%>
 
-                <div class="row u-add-half-bottom">
+                <div class="row u-add-half-bottom" style="background-color: rgba(255,255,255,0.7);">
 
                     <div class="column">
 
                         <h3>元器件资产系统统计</h3>
 
                         <ul class="stats-tabs">
-                            <li class="stats-tabs-li"><asp:Label Text="1,234" runat="server" ID="TotalEntries_lb" CssClass="stats-tabs-li-a" /> <em class="stats-tabs-li-a-em">总分类数</em></li>
-                            <li><asp:Label Text="567" runat="server" ID="TotalComp_lb" CssClass="stats-tabs-li-a" /> <em class="stats-tabs-li-a-em">总器件数</em></li>
-                            <li><asp:Label Text="23,456" runat="server" ID="TotalLent_lb" CssClass="stats-tabs-li-a" /> <em class="stats-tabs-li-a-em">总借出</em></li>
-                            <li><asp:Label Text="3,456" runat="server" ID="TotalReturned_lb" CssClass="stats-tabs-li-a" /> <em class="stats-tabs-li-a-em">完成借出</em></li>
-                            <li><asp:Label Text="456" runat="server" ID="TotalQueries_lb" CssClass="stats-tabs-li-a" /> <em class="stats-tabs-li-a-em">查询数</em></li>
-                            <li><asp:Label Text="26" runat="server" ID="TotalReg_lb" CssClass="stats-tabs-li-a" /> <em class="stats-tabs-li-a-em">登记次数</em></li>
+                            <li class="stats-tabs-li">
+                                <asp:Label Text="1,234" runat="server" ID="TotalEntries_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">总分类数</em></li>
+                            <li>
+                                <asp:Label Text="567" runat="server" ID="TotalComp_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">总器件数</em></li>
+                            <li>
+                                <asp:Label Text="23,456" runat="server" ID="TotalLent_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">总借出</em></li>
+                            <li>
+                                <asp:Label Text="3,456" runat="server" ID="TotalReturned_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">完成借出</em></li>
+                            <li>
+                                <asp:Label Text="456" runat="server" ID="TotalQueries_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">查询数</em></li>
+                            <li>
+                                <asp:Label Text="26" runat="server" ID="TotalReg_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">登记次数</em></li>
                         </ul>
-                        
+
                         <div class="row u-add-half-bottom">
 
                             <div class="column lg-6 tab-12">
                                 <div class="row">
-                                    <h5 style="position:relative; top:-39px; width:150px">元器件搜索</h5>
+                                    <h5 style="position: relative; top: -39px; width: 150px">元器件搜索</h5>
                                     <asp:TextBox runat="server" TextMode="Search" />
                                     <a class="btn btn--primary" href="#0" onclick="bt_click('Search_bt_Click', 0, null);">搜索</a>
                                 </div>
                                 <div class="row">
-                                    <h5 style="position:relative; top:-39px; width:150px">快捷查询</h5>
+                                    <h5 style="position: relative; top: -39px; width: 150px">快捷查询</h5>
                                     <a class="btn btn--stroke" href="#0">待归还</a>
                                     <a class="btn btn--stroke" href="#0">可续借</a>
                                 </div>
-                                <div style="max-width:100%; overflow-x:scroll">
+                                <div style="max-width: 100%; overflow-x: scroll">
                                     <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" AutoGenerateSelectButton="True" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red"></asp:GridView>
                                 </div>
-                                
+
                             </div>
 
                             <div class="column lg-6 tab-12">
                                 <div class="row">
-                                    <h5 style="position:relative; top:-39px; width:60px">分类</h5>
-                                    <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel0_ddl"> </asp:DropDownList>
-                                    <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel1_ddl"> </asp:DropDownList>
-                                    <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel2_ddl"> </asp:DropDownList>
+                                    <h5 style="position: relative; top: -39px; width: 60px">分类</h5>
+                                    <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel0_ddl"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel1_ddl"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel2_ddl"></asp:DropDownList>
                                 </div>
-                                
-                                <h4>元器件信息<br/></h4>
-                                <div style="position:relative; left:160px; top:-50px">Component Information</div>
+
+                                <h4>元器件信息<br />
+                                </h4>
+                                <div style="position: relative; left: 160px; top: -50px">Component Information</div>
                                 <div class="row u-add-half-bottom">
                                     <div class="column lg-6 tab-12">
-                                        元件名称<br/> <br />
-                                        元件类型<br/> <br />
-                                        值<br/> <br />
-                                        位置<br/> <br />
-                                        属性<br/> <br />
+                                        元件名称<br />
+                                        <br />
+                                        元件类型<br />
+                                        <br />
+                                        值<br />
+                                        <br />
+                                        位置<br />
+                                        <br />
+                                        属性<br />
+                                        <br />
                                         <asp:Panel runat="server" ID="Datasheet_pn0">
                                             参考文档
                                         </asp:Panel>
                                     </div>
-                                    <div class="column lg-6 tab-12" style="text-align:right; margin-bottom: 0px">
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetName_lb" /> <br /> <br />
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetClass_lb" /> <br /> <br />
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="PrimValue_lb" /> <br /> <br />
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Location_lb"/> <br /> <br />
-                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb"/> <br /> <br />
+                                    <div class="column lg-6 tab-12" style="text-align: right; margin-bottom: 0px">
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetName_lb" />
+                                        <br />
+                                        <br />
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetClass_lb" />
+                                        <br />
+                                        <br />
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="PrimValue_lb" />
+                                        <br />
+                                        <br />
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Location_lb" />
+                                        <br />
+                                        <br />
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb" />
+                                        <br />
+                                        <br />
                                         <asp:Panel runat="server" ID="Datasheet_pn1">
                                             <asp:HyperLink runat="server" ID="Datasheet_lk" Text="Not available"></asp:HyperLink>
                                         </asp:Panel>
                                     </div>
                                 </div>
-                                <div class="row u-add-half-bottom" style="margin-top:0px">
-                                     <div class="column lg-6 tab-12">
-                                         可借出数量<br/> <br />
-                                         申请借出(件)<br/> <br />
-                                     </div>
-                                     <div class="column lg-6 tab-12" style="text-align:right">
-                                         <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb"/> <br /> <br />
-                                         <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" AutoPostBack="True" />
-                                     </div>
+                                <div class="row u-add-half-bottom" style="margin-top: 0px">
+                                    <div class="column lg-6 tab-12">
+                                        可借出数量<br />
+                                        <br />
+                                        申请借出(件)<br />
+                                        <br />
+                                    </div>
+                                    <div class="column lg-6 tab-12" style="text-align: right">
+                                        <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb" />
+                                        <br />
+                                        <br />
+                                        <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" AutoPostBack="True" />
+                                    </div>
                                 </div>
                                 <asp:Panel runat="server" ID="BorrowConfirm_pn">
                                     <a class="btn btn--primary u-fullwidth" href="#0">登记借出</a>
@@ -202,17 +236,25 @@
                                 <asp:Panel runat="server" ID="BorrowNotAvailable_pn" Visible="false">
                                     <a class="btn u-fullwidth" href="#0">登记借出</a>
                                 </asp:Panel>
-                                
+
                                 <a class="btn btn--stroke u-fullwidth" href="#0">元件定位</a>
                                 <asp:Panel runat="server" Visible="false">
                                     <div class="row">
                                         <div class="column">
-                                            待归还(件) <br /> <br />
-                                            借出期限 <br /> <br />
+                                            待归还(件)
+                                            <br />
+                                            <br />
+                                            借出期限
+                                            <br />
+                                            <br />
                                         </div>
                                         <div class="column">
-                                            <asp:Label Text="-1" runat="server" ID="QtyToReturn_lb" /> <br /> <br />
-                                            <asp:Label Text="1919/8/10" runat="server" ID="ReturnDate_lb" /> <br /> <br />
+                                            <asp:Label Text="-1" runat="server" ID="Label1" />
+                                            <br />
+                                            <br />
+                                            <asp:Label Text="1919/8/10" runat="server" ID="Label2" />
+                                            <br />
+                                            <br />
                                         </div>
                                     </div>
                                     <a class="btn btn--stroke u-fullwidth" href="#0">归还</a>
@@ -221,485 +263,52 @@
 
                         </div>
 
-                        <h3 class="u-add-bottom">Buttons</h3>
-
-                        <p>
-                            <a class="btn btn--primary u-fullwidth" href="#0">Primary Button</a>
-                            <a class="btn u-fullwidth" href="#0">Default Button</a>
-                            <a class="btn btn--stroke u-fullwidth" href="#0">Stroke Button</a>
-                        </p>
-
-                        <h3 class="u-add-bottom">Code</h3>
-
-                        <pre class=" language-css"><code class=" language-css">
-    <span class="token selector">code</span> <span class="token punctuation">{</span>
-    <span class="token property">font-size</span><span class="token punctuation">:</span> 1.4rem<span class="token punctuation">;</span>
-    <span class="token property">margin</span><span class="token punctuation">:</span> 0 .2rem<span class="token punctuation">;</span>
-    <span class="token property">padding</span><span class="token punctuation">:</span> .2rem .6rem<span class="token punctuation">;</span>
-    <span class="token property">white-space</span><span class="token punctuation">:</span> nowrap<span class="token punctuation">;</span>
-    <span class="token property">background</span><span class="token punctuation">:</span> #F1F1F1<span class="token punctuation">;</span>
-    <span class="token property">border</span><span class="token punctuation">:</span> 1px solid #E1E1E1<span class="token punctuation">;</span>	
-    <span class="token property">border-radius</span><span class="token punctuation">:</span> 3px<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-</code></pre>
-
                     </div>
 
                 </div>
                 <!-- end row -->
 
-                <div class="row u-add-half-bottom">
-
-                    <div class="column lg-6 tab-12">
-
-                        <h1>H1 Heading Doloremque dolor voluptas est sequi omnis.</h1>
-                        <p>
-                            Doloremque dolor voluptas est sequi omnis. Pariatur ut aut. Sed enim tempora qui veniam qui cum vel. 
-                        Voluptas odit at vitae minima. In assumenda ut. Voluptatem totam impedit accusantium reiciendis excepturi aut qui accusamus praesentium.
-                        </p>
-
-                        <h2>H2 Heading Doloremque dolor voluptas est sequi omnis.</h2>
-                        <p>
-                            Doloremque dolor voluptas est sequi omnis. Pariatur ut aut. Sed enim tempora qui veniam qui cum vel. 
-                        Voluptas odit at vitae minima. In assumenda ut. Voluptatem totam impedit accusantium reiciendis excepturi aut qui accusamus praesentium.
-                        </p>
-
-                        <h3>H3 Heading Doloremque dolor voluptas est sequi omnis.</h3>
-                        <p>
-                            Doloremque dolor voluptas est sequi omnis. Pariatur ut aut. Sed enim tempora qui veniam qui cum vel. 
-                        Voluptas odit at vitae minima. In assumenda ut. Voluptatem totam impedit accusantium reiciendis excepturi aut qui accusamus praesentium.
-                        </p>
-
-
-                    </div>
-
-                    <div class="column lg-6 tab-12">
-                        <h4>H4 Heading Doloremque dolor voluptas est sequi omnis.</h4>
-                        <p>
-                            Doloremque dolor voluptas est sequi omnis. Pariatur ut aut. Sed enim tempora qui veniam qui cum vel. 
-                        Voluptas odit at vitae minima. In assumenda ut. Voluptatem totam impedit accusantium reiciendis excepturi aut qui accusamus praesentium.
-                        </p>
-
-                        <h5>H5 Heading Doloremque dolor voluptas est sequi omnis.</h5>
-                        <p>
-                            Doloremque dolor voluptas est sequi omnis. Pariatur ut aut. Sed enim tempora qui veniam qui cum vel. 
-                        Voluptas odit at vitae minima. In assumenda ut. Voluptatem totam impedit accusantium reiciendis excepturi aut qui accusamus praesentium.
-                        </p>
-
-                        <h6>H6 Heading Doloremque dolor voluptas est sequi omnis.</h6>
-                        <p>
-                            Doloremque dolor voluptas est sequi omnis. Pariatur ut aut. Sed enim tempora qui veniam qui cum vel. 
-                        Voluptas odit at vitae minima. In assumenda ut. Voluptatem totam impedit accusantium reiciendis excepturi aut qui accusamus praesentium.
-                        </p>
-
-
-                    </div>
-
-                </div>
-                <!-- end row -->
-
-                <div class="row u-add-half-bottom">
-
-                    <div class="column lg-6 tab-12">
-
-                        <h3 class="u-add-bottom">Responsive Image</h3>
-
-                        <figure>
-                            <img src="images/wheel-500.jpg" srcset="images/wheel-1000.jpg 1000w, 
-                            images/wheel-500.jpg 500w"
-                                sizes="(max-width: 1000px) 100vw, 1000px" alt="">
-
-                            <figcaption>Here is some random picture.
-                            </figcaption>
-                        </figure>
-
-                    </div>
-
-                    <div class="column lg-6 tab-12">
-
-                        <h3 class="u-add-bottom">Responsive video</h3>
-
-                        <div class="video-container">
-                            <iframe src="https://player.vimeo.com/video/14592941?color=00a650&amp;title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- end row -->
-
-                <div class="row u-add-bottom">
-
-                    <div class="column lg-12">
-
-                        <h3>Tables</h3>
-                        <p>Be sure to use properly formed table markup with <code>&lt;thead&gt;</code> and <code>&lt;tbody&gt;</code> when building a <code>table</code>.</p>
-
-                        <div class="table-responsive">
-
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Age</th>
-                                        <th>Sex</th>
-                                        <th>Location</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>William J. Seymour</td>
-                                        <td>34</td>
-                                        <td>Male</td>
-                                        <td>Azusa Street</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jennie Evans Moore</td>
-                                        <td>30</td>
-                                        <td>Female</td>
-                                        <td>Azusa Street</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- end row -->
-
-                <div class="row">
-
-                    <div class="column lg-12">
-                        <h3>Pagination</h3>
-
-                        <nav class="pgn">
-                            <ul>
-                                <li>
-                                    <a class="pgn__prev" href="#0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                            <path d="M12.707 17.293L8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg>
-                                    </a>
-                                </li>
-                                <li><a class="pgn__num" href="#0">1</a></li>
-                                <li><span class="pgn__num current">2</span></li>
-                                <li><a class="pgn__num" href="#0">3</a></li>
-                                <li><a class="pgn__num" href="#0">4</a></li>
-                                <li><a class="pgn__num" href="#0">5</a></li>
-                                <li><span class="pgn__num dots">…</span></li>
-                                <li><a class="pgn__num" href="#0">8</a></li>
-                                <li>
-                                    <a class="pgn__next" href="#0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                            <path d="M11.293 17.293l1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"></path></svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-
-                    </div>
-
-                </div>
-                <!-- end row -->
-
-                <div class="row">
-
-                    <div class="column lg-6 tab-12">
-
-                        <h3 class="u-add-bottom">Form Styles</h3>
-
-                        <form>
-                            <div>
-                                <label for="sampleInput">Your email</label>
-                                <input class="u-fullwidth" type="email" placeholder="test@mailbox.com" id="sampleInput">
-                            </div>
-                            <div>
-                                <label for="sampleRecipientInput">Reason for contacting</label>
-                                <div class="ss-custom-select">
-                                    <select class="u-fullwidth" id="sampleRecipientInput">
-                                        <option value="Option 1">Questions</option>
-                                        <option value="Option 2">Report</option>
-                                        <option value="Option 3">Others</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <label for="exampleMessage">Message</label>
-                            <textarea class="u-fullwidth" placeholder="Your message" id="exampleMessage"></textarea>
-
-                            <label class="u-add-bottom">
-                                <input type="checkbox">
-                                <span class="label-text">Send a copy to yourself</span>
-                            </label>
-
-                            <input class="btn--primary u-fullwidth" type="submit" value="Submit">
-                        </form>
-
-                    </div>
-
-                    <div class="column lg-6 tab-12">
-
-                        <h3>Alert Boxes</h3>
-
-                        <br>
-
-                        <div class="alert-box alert-box--error hideit" style="display: none;">
-                            <p>Error Message. Your Message Goes Here.</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                        <!-- end error -->
-
-                        <div class="alert-box alert-box--success hideit" style="display: none;">
-                            <p>Success Message. Your Message Goes Here.</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                        <!-- end success -->
-
-                        <div class="alert-box alert-box--info hideit" style="display: none;">
-                            <p>Info Message. Your Message Goes Here.</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                        <!-- end info -->
-
-                        <div class="alert-box alert-box--notice hideit" style="display: none;">
-                            <p>Notice Message. Your Message Goes Here.</p>
-                            <span class="alert-box__close"></span>
-                        </div>
-                        <!-- end notice -->
-
-                    </div>
-
-                </div>
-                <!-- end row -->
-
-                <div class="row">
-
-                    <div class="lg-12 column">
-                        <h3>Grid Columns</h3>
-                    </div>
-
-                </div>
-                <!-- Row End-->
-
-                <!--<h4>1/3 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-4 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-4 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-4 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>1/4 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>1/2 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>2/3 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-8 tab-7 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor.
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-4 tab-5 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>3/4 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-3 tab-5 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-9 tab-7 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor.Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor.
-                       
-                        </p>
-                    </div>
-
-                </div>
+                </section> 
+            <!-- end content -->
 
             </div>
             <!-- end styles -->
 
-            </section> 
-            <!-- end content -->
-
-
             <!-- # site-footer
         ================================================== -->
-            <footer id="footer" class="s-footer target-section">
+           <footer id="footer" class="s-footer target-section">
 
-                <div class="row section-header" data-num="04">
-                    <h3 class="column lg-12 section-header__pretitle text-pretitle">GET IN TOUCH</h3>
+                <div class="row section-header" data-num="Contact">
+                    <h3 class="column lg-12 section-header__pretitle text-pretitle" style="text-size-adjust:250%">联系我们</h3>
                     <div class="column lg-6 stack-on-1100 section-header__primary">
-                        <h2 class="title text-display-1">Have an idea or an epic project in mind? Talk to us. 
-                    Let's work together and make something great. 
-                    Drop us a line at <a href="mailto:#0" title="">hello@mueller.com</a>
+                        <h2 class="title text-display-1"><b>DHU NUEDC实验室</b> <br /><br />
+                            "Dare to Create and Enjoy"
                         </h2>
                     </div>
                     <div class="column lg-6 stack-on-1100 section-header__secondary">
 
                         <div class="contact-block">
-                            <h6>Where To Find Us</h6>
+                            <h6>实验室地址</h6>
                             <p>
-                                1600 Amphitheatre Parkway
+                                上海市松江区
                                 <br>
-                                Mountain View, California
+                                人民北路2999号 东华大学
                                 <br>
-                                94043  US
-                       
+                                2号学院楼 2202
                             </p>
                         </div>
 
                         <div class="contact-block">
-                            <h6>Contact Infos</h6>
+                            <h6>联系方式</h6>
                             <ul class="contact-list">
-                                <li><a href="tel:197-543-2345">+197 543 2345</a></li>
-                                <li><a href="tel:197-123-9876">+197 123 9876</a></li>
+                                <li><a href="#0">dhu_nuedc@163.com</a></li>
+                                <li><a href="#0">还有什么联系方式 我也不知道</a></li>
                             </ul>
                         </div>
 
                     </div>
                 </div>
                 <!-- end section-header -->
-
-                <div class="row list-block block-lg-one-half block-tab-whole block-stack-on-1000 s-footer__btns">
-                    <div class="column list-block__item">
-                        <div class="s-footer__contact-btn">
-                            <a href="mailto:#0" class="btn btn--primary u-fullwidth">Let's Talk 
-                        </a>
-                        </div>
-                    </div>
-                    <div class="column list-block__item">
-                        <div class="subscribe-form s-footer__subscribe">
-                            <h6>Subscribe</h6>
-                            <form id="mc-form" class="mc-form" novalidate="true">
-                                <input type="email" name="EMAIL" id="mce-EMAIL" class="u-fullwidth text-center" placeholder="Your Email Address" title="The domain portion of the email address is invalid (the portion after the @)." pattern="^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*(\.\w{2,})+$" required="">
-                                <input type="submit" name="subscribe" value="Subscribe" class="btn btn--primary u-fullwidth">
-                                <!-- <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_cdb7b577e41181934ed6a6a44_9a91cfe7b3" tabindex="-1" value=""></div> -->
-                                <div class="mc-status"></div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- end s-footer__btns -->
 
                 <div class="row s-footer__bottom">
 
@@ -738,8 +347,8 @@
 
                     <div class="column lg-6 tab-12 s-footer__bottom-right">
                         <div class="ss-copyright">
-                            <span>© Copyright Mueller 2022</span>
-                            <span>Design by <a href="https://www.styleshout.com/">StyleShout</a></span>
+                            <span>NUEDC Innovation Lab @ DHU</span>
+                            <span>Design by: Clive</span>
                         </div>
                     </div>
 
@@ -755,6 +364,9 @@
                 <!-- end ss-go-top -->
 
             </footer>
+
+            <script src="js/plugins.js"></script>
+            <script src="js/main.js"></script>
             <!-- end footer -->
 
 

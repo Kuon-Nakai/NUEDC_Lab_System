@@ -34,10 +34,10 @@
     </style>
     <!-- favicons
     ================================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="manifest" href="site.webmanifest" />
 </head>
 <body id="top" class="ss-show">
 
@@ -148,9 +148,9 @@
                                 <asp:RequiredFieldValidator ID="Login_Psw_ReqVal" runat="server" ErrorMessage="需要填写密码" ValidationGroup="Login" Visible="false" ControlToValidate="LoginPsw_tb" EnableClientScript="true" ValidateRequestMode="Enabled" InitialValue='""'></asp:RequiredFieldValidator>
                                 <asp:ValidationSummary ID="Login_ValSummary" runat="server" ValidationGroup="Login" />
                                 <%--<a class="btn btn--primary u-fullwidth" href="#0" onclick="callSvr('Login_bt_Click', null)">登录</a>--%>
-                                <asp:HyperLink ID="Login_bt" runat="server" Text="登录" CssClass="btn btn--primary u-fullwidth" OnClick="Login_bt_Click" />
+                                <asp:LinkButton ID="Login_bt" runat="server" Text="登录" CssClass="btn btn--primary u-fullwidth" OnClick="Login_bt_Click" />
                                 <%--<a class="btn btn--stroke u-fullwidth" href="#0">忘记密码</a>--%>
-                                <asp:HyperLink ID="RestorePsw_bt" runat="server" Text="忘记密码" CssClass="btn btn--stroke u-fullwidth" />
+                                <asp:LinkButton ID="RestorePsw_bt" runat="server" Text="忘记密码" CssClass="btn btn--stroke u-fullwidth" />
                             </div>
                             
                             <div class="column lg-6 tab-12">
@@ -181,172 +181,6 @@
 
                 </div>
                 <!-- end row -->
-                
-                    
-
-                <!-- end row -->
-
-                <div class="row">
-
-                    <div class="lg-12 column">
-                        <h3>Grid Columns</h3>
-                    </div>
-
-                </div>
-                <!-- Row End-->
-
-                <!--<h4>1/3 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-4 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-4 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-4 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>1/4 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-3 tab-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>1/2 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-6 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>2/3 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-8 tab-7 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor.
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-4 tab-5 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
-                       
-                        </p>
-                    </div>
-
-                </div>
-
-                <!--<h4>3/4 Columns</h4>  -->
-
-                <div class="row">
-
-                    <div class="lg-3 tab-5 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at. 
-                       
-                        </p>
-                    </div>
-
-                    <div class="lg-9 tab-7 mob-12 column">
-                        <p>
-                            Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor.Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor.
-                       
-                        </p>
-                    </div>
-
-                </div>
 
             </div>
             <!-- end styles -->
