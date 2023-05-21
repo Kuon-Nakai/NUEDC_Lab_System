@@ -406,32 +406,32 @@
             });
 
             // Polling for server show requests
-            function poll() {
-                var xhr = new XMLHttpRequest();
-                xhr.timeout = 5000;
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == XMLHttpRequest.DONE) {
-                        console.log("Poll cplt: " + xhr.status);
-                        if (xhr.status == 200) {
-                            var resp = JSON.parse(xhr.responseText);
-                            while (resp.data.ShowReq--) {
-                                modals[resp.data.ModalID[resp.data.ShowReq]].show();
-                            }
-                            poll();
-                        }
-                        else {
-                            console.log("Polling failed: " + xhr.status);
-                            poll();
-                        }
-                    }
-                }
-                xhr.open("POST", "~/AjaxHandler.ashx");
-                xhr.send(JSON.stringify({
-                    Req = "Popup_poll",
-                    Param = null
-                }));
-            }
-            poll();
+            //function poll() {
+            //    var xhr = new XMLHttpRequest();
+            //    xhr.timeout = 5000;
+            //    xhr.onreadystatechange = function () {
+            //        if (xhr.readyState == XMLHttpRequest.DONE) {
+            //            console.log("Poll cplt: " + xhr.status);
+            //            if (xhr.status == 200) {
+            //                var resp = JSON.parse(xhr.responseText);
+            //                while (resp.data.ShowReq--) {
+            //                    modals[resp.data.ModalID[resp.data.ShowReq]].show();
+            //                }
+            //                poll();
+            //            }
+            //            else {
+            //                console.log("Polling failed: " + xhr.status);
+            //                poll();
+            //            }
+            //        }
+            //    }
+            //    xhr.open("POST", "~/AjaxHandler.ashx");
+            //    xhr.send(JSON.stringify({
+            //        Req = "Popup_poll",
+            //        Param = null
+            //    }));
+            //}
+            //poll();
         };
 
         videoLightbox();

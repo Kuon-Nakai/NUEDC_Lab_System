@@ -24,7 +24,7 @@
 
                     <div class="column lg-12 intro" style="background-color: rgba(255,255,255,0.7); z-index: 3">
 
-                        <h1>实验室安全仪表盘</h1>
+                        <h1>实验室安全/网站统计仪表盘</h1>
                     </div>
 
                 </div>
@@ -37,22 +37,49 @@
 
                         <ul class="stats-tabs">
                             <li class="stats-tabs-li">
-                                <asp:LinkButton Text="1,234" runat="server" ID="TotalEntries_lb" CssClass="stats-tabs-li-a" />
-                                <em class="stats-tabs-li-a-em">总分类数</em></li>
+                                <asp:LinkButton Text="0" runat="server" ID="TotalEntries_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">在线节点</em></li>
                             <li>
-                                <asp:LinkButton Text="567" runat="server" ID="TotalComp_lb" CssClass="stats-tabs-li-a" />
-                                <em class="stats-tabs-li-a-em">总器件数</em></li>
+                                <asp:LinkButton Text="0" runat="server" ID="TotalComp_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">总节点</em></li>
                             <li>
-                                <asp:LinkButton Text="23,456" runat="server" ID="TotalLent_lb" CssClass="stats-tabs-li-a" />
-                                <em class="stats-tabs-li-a-em">总借出</em></li>
+                                <asp:LinkButton Text="0kbps" runat="server" ID="TotalLent_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">数据接收</em></li>
                             <li>
-                                <asp:LinkButton Text="3,456" runat="server" ID="TotalReturned_lb" CssClass="stats-tabs-li-a" />
-                                <em class="stats-tabs-li-a-em">完成借出</em></li>
+                                <asp:LinkButton Text="0%" runat="server" ID="TotalReturned_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">组件电量</em></li>
                             <li>
-                                <asp:LinkButton Text="456" runat="server" ID="TotalQueries_lb" CssClass="stats-tabs-li-a" />
+                                <asp:LinkButton Text="0Wh" runat="server" ID="TotalQueries_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">系统能耗</em></li>
+                            <li>
+                                <asp:LinkButton Text="0" runat="server" ID="TotalReg_lb" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">警告</em></li>
+                            <li>
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton7" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">异常</em></li>
+                        </ul>
+
+                        <h3>网站使用统计</h3>
+
+                        <ul class="stats-tabs">
+                            <li class="stats-tabs-li">
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton1" CssClass="stats-tabs-li-a" OnClick="LinkButton1_Click" />
+                                <input type="button" name="idk" value="test" onshow="alert('test');" />
+                                <em class="stats-tabs-li-a-em">会话数</em></li>
+                            <li>
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton2" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">数据库查询</em></li>
+                            <li>
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton3" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">数据库更新</em></li>
+                            <li>
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton4" CssClass="stats-tabs-li-a" />
+                                <em class="stats-tabs-li-a-em">总注册用户</em></li>
+                            <li>
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton5" CssClass="stats-tabs-li-a" />
                                 <em class="stats-tabs-li-a-em">查询数</em></li>
                             <li>
-                                <asp:LinkButton Text="26" runat="server" ID="TotalReg_lb" CssClass="stats-tabs-li-a" />
+                                <asp:LinkButton Text="0" runat="server" ID="LinkButton6" CssClass="stats-tabs-li-a" />
                                 <em class="stats-tabs-li-a-em">登记次数</em></li>
                         </ul>
 
