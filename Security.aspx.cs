@@ -8,11 +8,13 @@ using System.Web.UI.WebControls;
 
 public partial class Security : System.Web.UI.Page
 {
-    public static DataSet NodeCnt, TotalNodeCnt, DataRxCnt, PowerCnt, PowerConsCnt, WarnCnt, AnomalyCnt;
-    public static DataSet SessionCnt, QueryCnt, UpdateCnt, AccCnt;
+    private DynamicControls dc = new DynamicControls();
+    public static Queue<int>    NodeCnt, TotalNodeCnt, WarnCnt, AnomalyCnt, SessionCnt, QueryCnt, UpdateCnt, AccCnt;
+    public static Queue<double> DataRxCnt, PowerCnt, PowerConsCnt;
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        dc.Restore();
+        //test data
     }
 
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
@@ -24,12 +26,12 @@ public partial class Security : System.Web.UI.Page
     {
         if(SessionCnt == null)
         {
-            DynamicControls.CreateAlert("数据不可用", "error", Alerts_pn);
+            dc.CreateAlert("数据不可用", "error", Alerts_pn);
             return;
         }
-        if(SessionCnt.Tables.Count == 0)
+        if(SessionCnt.Count == 0)
         {
-            DynamicControls.CreateAlert("暂无数据", "error", Alerts_pn);
+            dc.CreateAlert("暂无数据", "error", Alerts_pn);
             return;
         }
     }

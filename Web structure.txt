@@ -1,0 +1,11 @@
+Web structure
+主页 index.aspx
+	登录/注册 Login_Reg.-
+	元器件管理 AssetsPage
+	活动 Events
+		信息收集表 Form
+	安全系统和网页统计 Security
+	管理 Management
+	反馈 Feedback
+	文档 Documents
+		文档浏览 DocView

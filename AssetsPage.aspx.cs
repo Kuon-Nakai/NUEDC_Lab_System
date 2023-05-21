@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 public partial class AssetsPage : System.Web.UI.Page
 {
+    private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
     bool loggedIn= false;
     string userId;
@@ -40,7 +41,7 @@ public partial class AssetsPage : System.Web.UI.Page
         //TotalQueries_lb.Text = (string) svr.QuerySingle("select ")
 #endif //USE_ASYNC
         InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
-        DynamicControls.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
+        dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
         //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
         LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[1].Text}'");
     }
@@ -57,13 +58,13 @@ public partial class AssetsPage : System.Web.UI.Page
         if (int.Parse(BorrowQtySel_tb.Text) > 16)
         {
             Page.SetFocus(BorrowQtySel_tb);
-            DynamicControls.CreateAlert($"申请数量无效: 超出最大可用量({Borrowable_lb.Text})", "error");
+            dc.CreateAlert($"申请数量无效: 超出最大可用量({Borrowable_lb.Text})", "error");
             return;
         }
         if(int.Parse(BorrowQtySel_tb.Text) < 0)
         {
             Page.SetFocus(BorrowQtySel_tb);
-            DynamicControls.CreateAlert("申请数量无效: 但是欢迎给实验室送元件()", "error");
+            dc.CreateAlert("申请数量无效: 但是欢迎给实验室送元件()", "error");
             return;
         }
     }
@@ -78,9 +79,9 @@ public partial class AssetsPage : System.Web.UI.Page
             (MySqlDataReader rd) =>
             {
                 Datasheet_pn1.Controls.Remove(Datasheet_lk);
-                DynamicControls.CreateHTMLElement("br", Datasheet_pn0);
-                DynamicControls.CreateHTMLElement("div", Datasheet_pn1);
-                DynamicControls.CreateHyperLink(rd.GetValue(1).ToString(), rd.GetValue(0).ToString(), Datasheet_pn1);
+                dc.CreateHTMLElement("br", Datasheet_pn0);
+                dc.CreateHTMLElement("div", Datasheet_pn1);
+                dc.CreateHyperLink(rd.GetValue(1).ToString(), rd.GetValue(0).ToString(), Datasheet_pn1);
                 //Datasheet_pn1.Controls.RemoveAt(Datasheet_pn1.Controls.Count - 1);
                 ++i;
             },

@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 
 public partial class Login_Reg : System.Web.UI.Page
 {
+    private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,7 +35,7 @@ public partial class Login_Reg : System.Web.UI.Page
         if(!Login_Acc_ReqVal.IsValid || !Login_Psw_ReqVal.IsValid || LoginAcc_tb.Text.Trim().Length == 0 || LoginPsw_tb.Text.Trim().Length == 0)
         {
             // Fields invalid
-            DynamicControls.CreateAlert("请提供登录信息", "error", Alerts_pn);
+            dc.CreateAlert("请提供登录信息", "error", Alerts_pn);
             return;
         }
         if ((string)svr.QuerySingle($"select password from members where MemberCode={LoginAcc_tb.Text};") == LoginPsw_tb.Text)
@@ -44,7 +45,7 @@ public partial class Login_Reg : System.Web.UI.Page
             Session["UserPerm"] = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
             try
             {
-                DynamicControls.CreateAlert($"登录成功, 欢迎 {svr.QuerySingle($"select MemberName from members where MemberCode={Session["LoginAcc"]}")}", "success", Alerts_pn);
+                dc.CreateAlert($"登录成功, 欢迎 {svr.QuerySingle($"select MemberName from members where MemberCode={Session["LoginAcc"]}")}", "success", Alerts_pn);
             }
             catch (Exception) { }
             if ((((Stack<string>)Session["jmpStack"])?.Count ?? 0) != 0)
@@ -57,12 +58,12 @@ public partial class Login_Reg : System.Web.UI.Page
         if(svr.QuerySingle($"Select * from members where MemberCode={LoginAcc_tb.Text};").GetType().Name == "DBNull")
         {
             // Account does not exist
-            DynamicControls.CreateAlert("账号不存在, 请注册", "notice", Alerts_pn);
+            dc.CreateAlert("账号不存在, 请注册", "notice", Alerts_pn);
             Page.SetFocus(RegAcc_tb);
             return;
         }
         // Account exists
-        DynamicControls.CreateAlert("密码错误, 请重试", "notice", Alerts_pn);
+        dc.CreateAlert("密码错误, 请重试", "notice", Alerts_pn);
     }
     
     public void Reg_bt_Click()
@@ -74,15 +75,15 @@ public partial class Login_Reg : System.Web.UI.Page
             if(svr.Execute($"Insert into members values({RegAcc_tb.Text}, {RegName_tb.Text}, 4, NOW(), NOW(), null, {RegPsw0_tb.Text})",
                 (Exception e) =>
                 {
-                    DynamicControls.CreateAlert($"创建数据记录时发生数据库错误:\n{e.Message}", "error", Alerts_pn);
+                    dc.CreateAlert($"创建数据记录时发生数据库错误:\n{e.Message}", "error", Alerts_pn);
                 }) == 1)
             {
-                DynamicControls.CreateAlert("创建数据记录时影响行数异常", "error", Alerts_pn);
+                dc.CreateAlert("创建数据记录时影响行数异常", "error", Alerts_pn);
             }
         }
         else
         {
-            DynamicControls.CreateAlert("注册信息有误", "info", Alerts_pn);
+            dc.CreateAlert("注册信息有误", "info", Alerts_pn);
         }
     }
 
