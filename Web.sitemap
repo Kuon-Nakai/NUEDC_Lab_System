@@ -1,9 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
-	<siteMapNode url="~/HomePage.aspx" title="主页"  description="">
-		<siteMapNode url="~/AssetsPage.aspx" title="元器件管理系统"  description="" />
-		<siteMapNode url="~/EquipmentPage.aspx" title="仪器使用预约"  description="" />
-		<siteMapNode url="~/Login_Reg.aspx" title="登录/注册"  description="" />
-		<siteMapNode url="~/Events.aspx" title="活动报名"  description="" />
+  <siteMapNode url="~/index.aspx" title="主页"  description="">
+    <siteMapNode url="~/Login_Reg.aspx" title="登陆注册"  description="" />
+    <siteMapNode url="~/AssetsPage.aspx" title="元器件管理"  description=""/>
+    <siteMapNode url="~/Events.aspx" title="活动"  description="" >
+        <siteMapNode url="~/Form.aspx" title="信息收集表"  description="" />
 	</siteMapNode>
+    <siteMapNode url="~/Security.aspx" title="安全系统与网页设计"  description="" />
+    <siteMapNode url="~/Management.aspx" title="管理"  description="" />
+    <siteMapNode url="~/Feedback.aspx" title="反馈"  description="" />
+    <siteMapNode url="~/Documents.aspx" title="文档"  description="" >
+        <siteMapNode url="~/DocView.aspx" title="文档浏览"  description="" />
+    </siteMapNode>
+  </siteMapNode>
 </siteMap>
