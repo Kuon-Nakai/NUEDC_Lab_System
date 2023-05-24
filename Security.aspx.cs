@@ -13,13 +13,22 @@ public partial class Security : System.Web.UI.Page
     public static Queue<double> DataRxCnt, PowerCnt, PowerConsCnt;
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["UserID"] != null)
+        {
+            Login_Jmp_bt.Text = "已登录";
+        }
         dc.Restore();
         //test data
     }
 
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
-
+        if (Session["UserID"] == null)
+        {
+            if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
+            ((Stack<string>)Session["jmpStack"]).Push("Events.aspx");
+            Response.Redirect("Login_Reg.aspx");
+        }
     }
 
     protected void LinkButton1_Click(object sender, EventArgs e)

@@ -65,7 +65,7 @@
                     <div class="s-header__block">
                         <div class="s-header__logo">
                             <a class="logo" href="index.html">
-                                <img src="images/logo.svg" alt="Homepage" />
+                                <img src="images/nuedc_logo.png" alt="Homepage" />
                             </a>
                         </div>
 
@@ -100,7 +100,11 @@
                 <!-- end s-header__inner -->
 
             </header>
-            <div>
+            <div style="width:100%">
+                <div style="position:absolute; top:80px; z-index:5; width:100%; background-color:rgb(0, 0, 0, <%=col%>)">
+                    <asp:SiteMapPath ID="SiteMapPath_top" runat="server" ForeColor="White" Width="100%">
+                    </asp:SiteMapPath>
+                </div>
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                 </asp:ContentPlaceHolder>
             </div>
@@ -172,8 +176,6 @@
                                         </asp:MenuItem>
                                     </Items>
                                 </asp:Menu>
-                                <asp:SiteMapPath ID="SiteMapPath1" runat="server">
-                                </asp:SiteMapPath>
                             </li>
                             <li>
                                 <a href="">
