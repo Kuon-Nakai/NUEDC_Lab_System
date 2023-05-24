@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 
 #pragma warning disable IDE0074 // Use compound assignment
 
-public partial class _1 : System.Web.UI.Page
+public partial class Login_Reg : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
@@ -32,7 +32,7 @@ public partial class _1 : System.Web.UI.Page
         //Login_Acc_ReqVal.Validate();
         //Login_Psw_ReqVal.Validate();
         Page.Validate("Login");
-        if (!Login_Acc_ReqVal.IsValid || !Login_Psw_ReqVal.IsValid || LoginAcc_tb.Text.Trim().Length == 0 || LoginPsw_tb.Text.Trim().Length == 0)
+        if(!Login_Acc_ReqVal.IsValid || !Login_Psw_ReqVal.IsValid || LoginAcc_tb.Text.Trim().Length == 0 || LoginPsw_tb.Text.Trim().Length == 0)
         {
             // Fields invalid
             dc.CreateAlert("请提供登录信息", "error", Alerts_pn);
@@ -55,7 +55,7 @@ public partial class _1 : System.Web.UI.Page
             return;
         }
         // Auth fail
-        if (svr.QuerySingle($"Select * from members where MemberCode={LoginAcc_tb.Text};").GetType().Name == "DBNull")
+        if(svr.QuerySingle($"Select * from members where MemberCode={LoginAcc_tb.Text};").GetType().Name == "DBNull")
         {
             // Account does not exist
             dc.CreateAlert("账号不存在, 请注册", "notice", Alerts_pn);
@@ -65,14 +65,14 @@ public partial class _1 : System.Web.UI.Page
         // Account exists
         dc.CreateAlert("密码错误, 请重试", "notice", Alerts_pn);
     }
-
+    
     public void Reg_bt_Click()
     {
         Validate("Reg");
-        if (Reg_Acc_ReqVal.IsValid & Reg_Name_ReqVal.IsValid & Reg_Psw_ReqVal.IsValid & Reg_Psw_CompVal.IsValid &
-            (RegMail_tb.Text.Length == 0 || Regex.IsMatch(RegMail_tb.Text, "^[a-zA-Z0-9]+@[a-zA-Z0-9.]+(com|cn|co|net)$")))
+        if(Reg_Acc_ReqVal.IsValid & Reg_Name_ReqVal.IsValid & Reg_Psw_ReqVal.IsValid & Reg_Psw_CompVal.IsValid &
+            (RegMail_tb.Text.Length==0 || Regex.IsMatch(RegMail_tb.Text, "^[a-zA-Z0-9]+@[a-zA-Z0-9.]+(com|cn|co|net)$")))
         {
-            if (svr.Execute($"Insert into members values({RegAcc_tb.Text}, {RegName_tb.Text}, 4, NOW(), NOW(), null, {RegPsw0_tb.Text})",
+            if(svr.Execute($"Insert into members values({RegAcc_tb.Text}, {RegName_tb.Text}, 4, NOW(), NOW(), null, {RegPsw0_tb.Text})",
                 (Exception e) =>
                 {
                     dc.CreateAlert($"创建数据记录时发生数据库错误:\n{e.Message}", "error", Alerts_pn);

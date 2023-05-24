@@ -48,6 +48,10 @@ public partial class AssetsPage : System.Web.UI.Page
 
     private void InitiateSearch(string sql)
     {
+        if(svr == null)
+        {
+            svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
+        }
         Asset_gv.DataSource = svr.QueryDataset(sql);
         Asset_gv.DataBind();
     }
@@ -126,4 +130,22 @@ public partial class AssetsPage : System.Web.UI.Page
         }
     }
 
+
+    protected void Search_bt_Click(object sender, EventArgs e)
+    {
+        string sear_str=sear_tb.Text;
+        InitiateSearch($"select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode like '%{sear_str}%' or AssetName like '%{sear_str}%';");
+    }
+
+    protected void AwaitReturn_bt_Click(object sender, EventArgs e)
+    {
+        if (Session["UserID"] == null)
+        {
+            dc.CreateAlert("请登录", "error", Alerts_pn);
+        }
+        else
+        {
+            InitiateSearch($"select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where lending.MemberCode='{Session["UserID"]}' and lending.Status='taken'; ");
+        }
+    }
 }
