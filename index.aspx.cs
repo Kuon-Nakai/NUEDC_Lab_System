@@ -22,6 +22,7 @@ public partial class index : System.Web.UI.Page
     }
     protected void Page_Load(object sender, EventArgs e)
     {
+        MasterPage.col = 0f;
         //Session.Clear(); // for testing
         if (Session["UserID"] != null)
         {

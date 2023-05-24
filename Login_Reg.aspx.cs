@@ -17,6 +17,7 @@ public partial class _1 : System.Web.UI.Page
     MySqlSvr svr;
     protected void Page_Load(object sender, EventArgs e)
     {
+        MasterPage.col = .5f;
         Validate();
         if (svr == null)
         {
