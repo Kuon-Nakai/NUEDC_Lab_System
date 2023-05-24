@@ -9,6 +9,7 @@ public partial class Events : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        MasterPage.col = 0.5f;
         if (Session["UserID"] != null)
         {
             Login_Jmp_bt.Text = "已登录";

@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ContentPlaceHolder_TopNavLinks" runat="Server">
     <li class=""><a href="#intro" class="smoothscroll" style="color:white">主页</a></li>
-    <li><a href="AssetPage.aspx">元器件</a></li>
+    <li><a href="AssetsPage.aspx">元器件</a></li>
     <li><a href="Events.aspx">活动</a></li>
     <li class=""><a href="#footer" class="smoothscroll">联系我们</a></li>
     <li><a href="Management.aspx" style="visibility: hidden">管理</a></li>

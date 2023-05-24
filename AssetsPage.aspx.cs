@@ -125,4 +125,5 @@ public partial class AssetsPage : System.Web.UI.Page
             BorrowNotAvailable_pn.Visible = true;
         }
     }
+
 }
