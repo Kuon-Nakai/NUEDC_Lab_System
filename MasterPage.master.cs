@@ -37,6 +37,6 @@ public partial class MasterPage : System.Web.UI.MasterPage
 
     protected void Page_Unload(object sender, EventArgs e)
     {
-        PathUpdThr.Abort();
+        PathUpdThr?.Abort();
     }
 }

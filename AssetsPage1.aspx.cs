@@ -8,7 +8,7 @@ public partial class AssetsPage : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
-    bool loggedIn = false;
+    bool loggedIn= false;
     string userId;
 
     protected async void Page_Load(object sender, EventArgs e)
@@ -16,7 +16,7 @@ public partial class AssetsPage : System.Web.UI.Page
         Page.MaintainScrollPositionOnPostBack = true;
         if (!loggedIn && Session["UserID"] != null)
         {
-            loggedIn = true;
+            loggedIn= true;
             userId = (string)Session["UserID"];
         }
         if (IsPostBack) { return; }
@@ -48,7 +48,7 @@ public partial class AssetsPage : System.Web.UI.Page
 
     private void InitiateSearch(string sql)
     {
-        if (svr == null)
+        if(svr == null)
         {
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
@@ -65,7 +65,7 @@ public partial class AssetsPage : System.Web.UI.Page
             dc.CreateAlert($"申请数量无效: 超出最大可用量({Borrowable_lb.Text})", "error");
             return;
         }
-        if (int.Parse(BorrowQtySel_tb.Text) < 0)
+        if(int.Parse(BorrowQtySel_tb.Text) < 0)
         {
             Page.SetFocus(BorrowQtySel_tb);
             dc.CreateAlert("申请数量无效: 但是欢迎给实验室送元件()", "error");
@@ -76,9 +76,9 @@ public partial class AssetsPage : System.Web.UI.Page
     public void LoadAssetData(string sql_where_assets)
     {
         int i = -1;
-        svr.QueryReader($"select AssetName, ClassName, MainValue, ValueUnit, Location, Characteristics, Amount-ReservationQty-(select count(TransactionCode) from lending right join assets on lending.AssetCode=assets.AssetCode where {sql_where_assets} and Status='Returned') from assets left join assetclasses on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};",
+        svr.QueryReader($"select AssetName, ClassName, MainValue, ValueUnit, Location, Characteristics, Amount-ReservationQty-(select count(TransactionCode) from lending right join assets on lending.AssetCode=assets.AssetCode where {sql_where_assets} and Status='Returned') from assets left join assetclasses on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};", 
             AssignAssetData,
-            /*() => Alert_DBQueryEmpty_pn.Visible = true*/null);
+            () => Alert_DBQueryEmpty_pn.Visible = true);
         svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where {sql_where_assets}",
             (MySqlDataReader rd) =>
             {
@@ -97,11 +97,11 @@ public partial class AssetsPage : System.Web.UI.Page
 
     private void AssignAssetData(MySqlDataReader rd)
     {
-        AssetName_lb.Text = (string)rd[0];
-        AssetClass_lb.Text = (string)rd[1];
-        PrimValue_lb.Text = $"{rd[2]} {rd[3]}";
-        Location_lb.Text = (string)rd[4];
-        Property_lb.Text = rd[5].GetType() == Type.GetType("DBNull") ? (string)rd[5] : "暂无数据";
+        AssetName_lb.Text   = (string)rd[0];
+        AssetClass_lb.Text  = (string)rd[1];
+        PrimValue_lb.Text   = $"{rd[2]} {rd[3]}";
+        Location_lb.Text    = (string)rd[4];
+        Property_lb.Text    = rd[5].GetType() == Type.GetType("DBNull") ? (string)rd[5] : "暂无数据";
 
         //Legacy code
         //if (((string)rd[6]).Length == 0)
@@ -133,7 +133,7 @@ public partial class AssetsPage : System.Web.UI.Page
 
     protected void Search_bt_Click(object sender, EventArgs e)
     {
-        string sear_str = sear_tb.Text;
+        string sear_str=sear_tb.Text;
         InitiateSearch($"select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode like '%{sear_str}%' or AssetName like '%{sear_str}%';");
     }
 
@@ -147,10 +147,5 @@ public partial class AssetsPage : System.Web.UI.Page
         {
             InitiateSearch($"select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where lending.MemberCode='{Session["UserID"]}' and lending.Status='taken'; ");
         }
-    }
-
-    protected void LendReg_bt_Click(object sender, EventArgs e)
-    {
-        
     }
 }

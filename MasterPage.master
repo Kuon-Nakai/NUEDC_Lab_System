@@ -118,7 +118,6 @@
                                 <asp:MenuItem NavigateUrl="~/Login_Reg.aspx" Text="登录/注册" Value="登录/注册"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/Security.aspx" Text="安全系统与网页统计" Value="安全系统与网页统计"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/Management.aspx" Text="管理" Value="管理"></asp:MenuItem>
-                                <asp:MenuItem NavigateUrl="~/Feedback.aspx" Text="反馈" Value="反馈"></asp:MenuItem>
                                 <asp:MenuItem NavigateUrl="~/Documents.aspx" Text="文档" Value="文档">
                                     <asp:MenuItem NavigateUrl="~/DocView.aspx" Text="文档浏览" Value="文档浏览"></asp:MenuItem>
                                 </asp:MenuItem>
