@@ -10,7 +10,7 @@
 		</siteMapNode>
 		<siteMapNode url="~/Security.aspx" title="安全系统与网页统计"  description="" />
 		<siteMapNode url="~/Management.aspx" title="管理"  description="" />
-		<siteMapNode url="~/Feedback.aspx" title="反馈"  description="" />
+		<!--<siteMapNode url="~/Feedback.aspx" title="反馈"  description="" />-->
 		<siteMapNode url="~/Documents.aspx" title="文档"  description="" >
 			<siteMapNode url="~/DocView.aspx" title="文档浏览"  description="" />
 		</siteMapNode>
