@@ -36,7 +36,6 @@ public partial class index : System.Web.UI.Page
         }
         RemoteDelegates.RegisterDelegate("Popup_poll", Popup_poll_Handler);
     }
-
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
         if (Session["UserID"] == null)

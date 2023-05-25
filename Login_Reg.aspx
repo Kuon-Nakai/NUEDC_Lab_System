@@ -1,6 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Login_Reg.aspx.cs" Inherits="_1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Login_Reg.aspx.cs" Inherits="Login_Reg" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <title>NUEDC综合服务平台-登录</title>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder_TopNavLinks" runat="Server">
     <li class=""><a href="HomePage.aspx" class="smoothscroll">主页</a></li>

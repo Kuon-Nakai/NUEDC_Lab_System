@@ -1,23 +1,50 @@
-﻿using MarkdownSharp;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using MarkdownSharp;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class DocView : System.Web.UI.Page
 {
-    DynamicControls dc;
+    DynamicControls dc = new DynamicControls();
+    public string filePath;
+    public string fileType;
     protected void Page_Load(object sender, EventArgs e)
     {
-        dc = new DynamicControls();
-        var filePath = Request.QueryString["filePath"];
-        var fileType = Request.QueryString["fileType"];
+        filePath = Request.QueryString["filePath"];
+        fileType = Request.QueryString["fileType"];
+        DataBind();
+        MasterPage.col = .5f;
+        Page.MaintainScrollPositionOnPostBack = true;
+        if (Session["UserID"] != null)
+        {
+            Login_Jmp_bt.Text = "已登录";
+        }
         try
         {
-            var txt = File.ReadAllText(Server.MapPath(filePath));
+            // Verify privilege level if config exists
+            var cfgFilePath = Server.MapPath($"PublicFiles/{filePath.Substring(0, filePath.LastIndexOf('/'))}/Config.json");
+            PublicFileConfig cfg = null;
+            if (File.Exists(cfgFilePath))
+            {
+                cfg = JsonConvert.DeserializeObject<PublicFileConfig>(File.ReadAllText(cfgFilePath));
+                if (!cfg.Whitelist.Contains(Session["UserID"]) && (cfg.Blacklist.Contains(Session["UserID"]) || cfg.ClassificationLevel < (int)Session["UserPerm"]))
+                {
+                    dc.CreateAlert("用户权限不足", "info", Alerts_pn);
+                    return;
+                }
+            }
+            // Render content
+            var txt = File.ReadAllText(Server.MapPath($"PublicFiles/{filePath}"));
             string t;
             switch(fileType)
             {
@@ -26,6 +53,18 @@ public partial class DocView : System.Web.UI.Page
                     {
                         EmptyElementSuffix = "/>"
                     }.Transform(txt);
+                    if ((!cfg?.Config?.Contains("NoBrReplace")) ?? true)
+                    {
+                        t = t.Replace("\\", "<br />");
+                    }
+                    if((!cfg?.Config?.Contains("NoHReplace")) ?? true)
+                    {
+                        t = t.Replace("h5", "h6")
+                            .Replace("h4", "h5")
+                            .Replace("h3", "h4")
+                            .Replace("h2", "h3")
+                            .Replace("h1", "h2");
+                    }
                     break;
                 // ...
                 case "txt":
@@ -35,14 +74,56 @@ public partial class DocView : System.Web.UI.Page
             }
             DocContent_lt.Text = t;
         }
-        catch (FileNotFoundException) 
+        catch (FileNotFoundException)
         {
             dc.CreateAlert("请求的文件不存在", "error", Alerts_pn);
+        }
+        catch (DirectoryNotFoundException)
+        {
+            dc.CreateAlert("请求的路径无效", "error", Alerts_pn).CssClass += " u-fullwidth";
         }
     }
 
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
-        
+        if (Session["UserID"] == null)
+        {
+            if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
+            ((Stack<string>)Session["jmpStack"]).Push(Request.RawUrl);
+            Response.Redirect("Login_Reg.aspx");
+        }
+    }
+    public string ConvertDocxToHtml(string docxFilePath)
+    {
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        using (WordprocessingDocument doc = WordprocessingDocument.Open(docxFilePath, false))
+        {
+            MainDocumentPart mainPart = doc.MainDocumentPart;
+            if (mainPart != null)
+            {
+                Body body = mainPart.Document.Body;
+                if (body != null)
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        //TODO
+                    }
+                }
+            }
+        }
+
+        return htmlBuilder.ToString();
+    }
+
+    private class PublicFileConfig
+    {
+        [JsonRequired]
+        public ushort ClassificationLevel;
+        [JsonRequired]
+        public List<string> Whitelist;
+        [JsonRequired]
+        public List<string> Blacklist;
+        public List<string> Config;
     }
 }

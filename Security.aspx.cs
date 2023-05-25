@@ -20,7 +20,6 @@ public partial class Security : System.Web.UI.Page
         dc.Restore();
         //test data
     }
-
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
         if (Session["UserID"] == null)
@@ -30,7 +29,6 @@ public partial class Security : System.Web.UI.Page
             Response.Redirect("Login_Reg.aspx");
         }
     }
-
     protected void LinkButton1_Click(object sender, EventArgs e)
     {
         if(SessionCnt == null)

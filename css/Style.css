@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 /* =================================================================== 
  * Mueller Main Stylesheet
  * Template Ver. 1.0.0
@@ -1472,10 +1472,10 @@ blockquote {
 
     blockquote p {
         font-family: var(--font-1);
-        font-weight: 400;
-        font-size: var(--text-lg);
+        /*font-weight: 400;*/
+        /*font-size: var(--text-lg);*/
         font-style: normal;
-        line-height: var(--vspace-1_25);
+        /*line-height: var(--vspace-1_25);*/
         color: var(--color-text-dark);
         padding: 0;
     }

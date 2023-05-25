@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 
 #pragma warning disable IDE0074 // Use compound assignment
 
-public partial class _1 : System.Web.UI.Page
+public partial class Login_Reg : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;

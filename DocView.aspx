@@ -24,7 +24,9 @@
 
                 <div class="column lg-12 intro" style="background-color: rgba(255,255,255,0.7); z-index: 3">
 
-                    <h1>文件浏览</h1>
+                    <h3>文件浏览</h3>
+                    文件 <%=filePath %><br />
+                    格式 <%=fileType %>
                 </div>
                 <hr />
             </div>

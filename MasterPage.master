@@ -94,7 +94,7 @@
                     </nav>
                     <!-- end s-header__nav -->
                 </div>
-                <div style="margin-top: 10px; position: sticky" class="column u-pull-right">
+                <div style="margin-top: 10px; position: sticky; width: 33%" class="column u-pull-right">
                     <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server"></asp:ContentPlaceHolder>
                 </div>
                 <!-- end s-header__inner -->
