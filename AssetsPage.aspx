@@ -143,10 +143,9 @@
                                 </div>
                             </div>
                             <asp:Panel runat="server" ID="BorrowConfirm_pn">
-                                <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="LendReg_bt">登记借出</asp:LinkButton>
+                                <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="LendReg_bt" OnClick="LendReg_bt_Click">登记借出</asp:LinkButton>
                             </asp:Panel>
                             <asp:Panel runat="server" ID="BorrowNotAvailable_pn" Visible="false">
-                                <asp:LinkButton runat="server" CssClass="btn u-fullwidth" ID="Lend_NotAva_bt">登记借出</asp:LinkButton>
                             </asp:Panel>
 
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt">元件定位</asp:LinkButton>

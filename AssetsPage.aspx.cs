@@ -148,4 +148,9 @@ public partial class AssetsPage : System.Web.UI.Page
             InitiateSearch($"select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where lending.MemberCode='{Session["UserID"]}' and lending.Status='taken'; ");
         }
     }
+
+    protected void LendReg_bt_Click(object sender, EventArgs e)
+    {
+        
+    }
 }
