@@ -32,7 +32,25 @@
         </div>
         <!-- end row -->
 
-
+        <asp:Panel runat="server" ID="Logout_pn" CssClass="column" Visible="false">
+            <div class="row">
+                <h3>当前登录</h3>
+            </div>
+            <div class="row u-add-half-bottom">
+                <div class="column">
+                    账号<br /><br />
+                    姓名
+                </div>
+                <div class="column">
+                    <%=Session["UserID"] %><br /><br />
+                    <%=Username %>
+                </div>
+            </div>
+            <div class="row">
+                <asp:LinkButton Text="退出登录" runat="server" CssClass="btn btn--primary u-fullwidth" ID="Logout_bt" OnClick="Logout_bt_Click" />
+            </div>
+            
+        </asp:Panel>
 
         <div class="row u-add-half-bottom">
 
