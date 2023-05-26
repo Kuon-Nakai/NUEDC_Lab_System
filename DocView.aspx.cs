@@ -20,7 +20,7 @@ public partial class DocView : System.Web.UI.Page
     public string fileType;
     protected void Page_Load(object sender, EventArgs e)
     {
-        filePath = Request.QueryString["filePath"];
+        filePath = $"PublicFiles/{Request.QueryString["filePath"]}";
         fileType = Request.QueryString["fileType"];
         DataBind();
         MasterPage.col = .5f;
@@ -44,7 +44,7 @@ public partial class DocView : System.Web.UI.Page
                 }
             }
             // Render content
-            var txt = File.ReadAllText(Server.MapPath($"PublicFiles/{filePath}"));
+            var txt = File.ReadAllText(Server.MapPath(filePath));
             string t;
             switch(fileType)
             {
@@ -66,6 +66,14 @@ public partial class DocView : System.Web.UI.Page
                             .Replace("h1", "h2");
                     }
                     break;
+                case "pdf":
+                    t = $"<embed src=\"{filePath}\" type=\"application/pdf\" frameBorder=\"0\" scrolling=\"auto\" height=\"1000px\" width=\"100%\"></embed>";
+                    break;
+                case "jpg":
+                case "jpeg":
+                case "png":
+                    t = $"<img src=\"{filePath}\" />";
+                    break;
                 // ...
                 case "txt":
                 default:
@@ -76,11 +84,15 @@ public partial class DocView : System.Web.UI.Page
         }
         catch (FileNotFoundException)
         {
-            dc.CreateAlert("请求的文件不存在", "error", Alerts_pn);
+            dc.CreateAlert("请求的文件不存在", "error", Alerts_pn).CssClass += " u-fullwidth";
         }
-        catch (DirectoryNotFoundException)
+        //catch (DirectoryNotFoundException)
+        //{
+        //    dc.CreateAlert("请求的路径无效", "error", Alerts_pn).CssClass += " u-fullwidth";
+        //}
+        catch (UnauthorizedAccessException)
         {
-            dc.CreateAlert("请求的路径无效", "error", Alerts_pn).CssClass += " u-fullwidth";
+            dc.CreateAlert("拒绝访问: 请检查文件路径", "error", Alerts_pn).CssClass += " u-fullwidth";
         }
     }
 
