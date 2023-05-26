@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsPage.aspx.cs" Inherits="AssetsPage" Async="true" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsPage.aspx.cs" Inherits="AssetsPage" Async="true" AsyncTimeout="10000" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -75,7 +75,7 @@
                                 <asp:LinkButton runat="server" CssClass="btn btn--stroke">可续借</asp:LinkButton>
                             </div>
                             <div style="max-width: 100%; overflow-x: scroll">
-                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" AutoGenerateSelectButton="True" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red"></asp:GridView>
+                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" AutoGenerateSelectButton="True" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnSelectedIndexChanged="Asset_gv_SelectedIndexChanged"></asp:GridView>
                             </div>
 
                         </div>
@@ -134,20 +134,24 @@
                                     <br />
                                     申请借出(件)<br />
                                     <br />
+                                    <br />
+                                    元件识别码<br />
+                                    <br />
                                 </div>
                                 <div class="column lg-6 tab-12" style="text-align: right">
                                     <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb" />
                                     <br />
                                     <br />
                                     <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" AutoPostBack="True" />
+                                    <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="ItemID_tb" AutoPostBack="True" />
                                 </div>
                             </div>
-                            <asp:Panel runat="server" ID="BorrowConfirm_pn">
+                            <%--<asp:Panel runat="server" ID="BorrowConfirm_pn">
                                 <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="LendReg_bt" OnClick="LendReg_bt_Click">登记借出</asp:LinkButton>
                             </asp:Panel>
                             <asp:Panel runat="server" ID="BorrowNotAvailable_pn" Visible="false">
-                            </asp:Panel>
-
+                            </asp:Panel>--%>
+                            <asp:HyperLink NavigateUrl="#modal-01" runat="server" CssClass="entry__link btn btn--primary u-fullwidth" ID="Borrow_tb">登记借出</asp:HyperLink>
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt">元件定位</asp:LinkButton>
                             <asp:Panel runat="server" Visible="false">
                                 <div class="row">
@@ -181,7 +185,7 @@
 
         </section>
         <!-- end content -->
-
+        
     </div>
 </asp:Content>
 
