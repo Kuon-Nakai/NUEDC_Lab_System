@@ -105,28 +105,9 @@ public partial class DocView : System.Web.UI.Page
             Response.Redirect("Login_Reg.aspx");
         }
     }
-    public string ConvertDocxToHtml(string docxFilePath)
-    {
-        StringBuilder htmlBuilder = new StringBuilder();
+    
 
-        using (WordprocessingDocument doc = WordprocessingDocument.Open(docxFilePath, false))
-        {
-            MainDocumentPart mainPart = doc.MainDocumentPart;
-            if (mainPart != null)
-            {
-                Body body = mainPart.Document.Body;
-                if (body != null)
-                {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        //TODO
-                    }
-                }
-            }
-        }
-
-        return htmlBuilder.ToString();
-    }
+    
 
     private class PublicFileConfig
     {

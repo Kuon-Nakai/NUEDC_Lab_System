@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -25,5 +26,14 @@ public partial class Events : System.Web.UI.Page
             ((Stack<string>)Session["jmpStack"]).Push("Events.aspx");
             Response.Redirect("Login_Reg.aspx");
         }
+    }
+
+    protected void Asset_gv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        DataSet ds = new DataSet();
+        ds = (DataSet)this.ViewState["ds"];
+        Asset_gv.DataSource = ds;
+        Asset_gv.PageIndex = e.NewPageIndex;
+        Asset_gv.DataBind();
     }
 }
