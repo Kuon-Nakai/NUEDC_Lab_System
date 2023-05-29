@@ -44,9 +44,12 @@ public class MySqlSvr
     /// <returns></returns>
     public object QuerySingle(string sql)
     {
-        cn.Open();
+        var cl = cn.State == ConnectionState.Closed;
+        if (cl)
+            cn.Open();
         var r = new MySqlCommand(sql, cn).ExecuteScalar();
-        cn.Close();
+        if(cl)
+            cn.Close();
         return r;
     }
     /// <summary>
@@ -57,7 +60,8 @@ public class MySqlSvr
     [Obsolete("GetReader() is deprecated, use QueryReader() instead.", false)]
     public MySqlDataReader GetReader(string sql)
     {
-        cn.Open();
+        if (cn.State == ConnectionState.Closed)
+            cn.Open();
         return new MySqlCommand(sql, cn).ExecuteReader();
     }
     /// <summary>
@@ -67,7 +71,9 @@ public class MySqlSvr
     /// <param name="rowHandler">委托函数 参数: 位于一行结果的Reader对象 每行执行一次</param>
     public void QueryReader(string sql, ReaderDataHandler rowHandler)
     {
-        cn.Open();
+        var cl = cn.State == ConnectionState.Closed;
+        if (cl)
+            cn.Open();
         var rd = new MySqlCommand(sql, cn).ExecuteReader();
         if (rd.HasRows)
         {
@@ -77,7 +83,8 @@ public class MySqlSvr
             }
         }
         rd.Close();
-        cn.Close();
+        if (cl)
+            cn.Close();
     }
     /// <summary>
     /// 创建Reader对象 并对每行结果执行操作
@@ -87,7 +94,9 @@ public class MySqlSvr
     /// <param name="noDataHandler">委托函数 没有查询到数据时调用</param>
     public void QueryReader(string sql, ReaderDataHandler rowHandler, Action noDataHandler)
     {
-        cn.Open();
+        var cl = cn.State == ConnectionState.Closed;
+        if (cl)
+            cn.Open();
         var rd = new MySqlCommand(sql, cn).ExecuteReader();
         if (rd.HasRows)
         {
@@ -101,7 +110,8 @@ public class MySqlSvr
             noDataHandler();
         }
         rd.Close();
-        cn.Close();
+        if (cl)
+            cn.Close();
     }
     /// <summary>
     /// 利用异步访问实现多个查询同时进行 数据量大时效率较高
@@ -110,7 +120,9 @@ public class MySqlSvr
     /// <param name="tasks">任务列表 把所有结构体全都列在参数里就行</param>
     public async void QueryReader_Parallel(params QueryReaderTask[] tasks)
     {
-        cn.Open();
+        var cl = cn.State == ConnectionState.Closed;
+        if (cl)
+            cn.Open();
         var trds = new Dictionary<Task<DbDataReader>, QueryReaderTask>();
         var rds = new Dictionary<DbDataReader, Task<bool>>();
         var rhs = new Dictionary<DbDataReader, ReaderDataHandler>();
@@ -154,7 +166,8 @@ public class MySqlSvr
             }
             rd2clear.Clear();
         }
-        cn.Close();
+        if (cl)
+            cn.Close();
     }
     /// <summary>
     /// 执行非查询操作
@@ -166,9 +179,12 @@ public class MySqlSvr
     {
         try
         {
-            cn.Open();
+            var cl = cn.State == ConnectionState.Closed;
+            if (cl)
+                cn.Open();
             var r = new MySqlCommand(sql, cn).ExecuteNonQuery();
-            cn.Close();
+            if (cl)
+                cn.Close();
             return r;
         }
         catch(Exception ex)
@@ -185,9 +201,9 @@ public class MySqlSvr
     /// <returns>影响行数</returns>
     public int Execute(string sql, MySqlTransaction transaction)
     {
-        cn.Open();
+        //cn.Open();
         var r = new MySqlCommand(sql, cn, transaction).ExecuteNonQuery();
-        cn.Close();
+        //cn.Close();
         return r;
     }
     /// <summary>

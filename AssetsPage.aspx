@@ -1,6 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsPage.aspx.cs" Inherits="AssetsPage" Async="true" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsPage.aspx.cs" Inherits="AssetsPage" Async="true" AsyncTimeout="10000" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link rel="stylesheet" href="css/LightboxStyles.scss" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder_TopNavLinks" runat="Server">
     <li class=""><a href="index.aspx">主页</a></li>
@@ -10,7 +11,7 @@
     <li><a href="Management.aspx" style="visibility: hidden">管理</a></li>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder3" runat="Server">
-    <asp:LinkButton Text="Log in" runat="server" CssClass="btn btn--stroke" ForeColor="White" BorderColor="White" ID="Login_Jmp_bt" />
+    <asp:LinkButton Text="Log in" runat="server" CssClass="btn btn--stroke" ForeColor="White" BorderColor="White" ID="Login_Jmp_bt" OnClick="Login_Jmp_bt_Click" />
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <asp:Panel ID="Alerts_pn" runat="server"></asp:Panel>
@@ -134,20 +135,24 @@
                                     <br />
                                     申请借出(件)<br />
                                     <br />
+                                    <br />
+                                    元件识别码<br />
+                                    <br />
                                 </div>
                                 <div class="column lg-6 tab-12" style="text-align: right">
                                     <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Borrowable_lb" />
                                     <br />
                                     <br />
-                                    <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" AutoPostBack="True" />
+                                    <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="BorrowQtySel_tb" />
+                                    <asp:TextBox runat="server" CssClass="u-fullwidth" TextMode="Number" ID="ItemID_tb" />
                                 </div>
                             </div>
-                            <asp:Panel runat="server" ID="BorrowConfirm_pn">
+                            <%--<asp:Panel runat="server" ID="BorrowConfirm_pn">
                                 <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="LendReg_bt" OnClick="LendReg_bt_Click">登记借出</asp:LinkButton>
                             </asp:Panel>
                             <asp:Panel runat="server" ID="BorrowNotAvailable_pn" Visible="false">
-                            </asp:Panel>
-
+                            </asp:Panel>--%>
+                            <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="Borrow_tb" Text="登记借出" />
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt">元件定位</asp:LinkButton>
                             <asp:Panel runat="server" Visible="false">
                                 <div class="row">
@@ -178,10 +183,27 @@
 
             </div>
             <!-- end row -->
-
+            
         </section>
         <!-- end content -->
+        <script type="text/javascript">
+            function showBorrowConfirmPopup() {
 
+                const instance = basicLightbox.create(`
+		<h1 style="color:white">请确认登录信息和返还日期, 并仔细阅读以下注意事项</h1>
+		<p style="color:white">当前登录: <%=userId %></p>
+        <p style="color:white">注意事项</p>
+        <hr />
+        <asp:LinkButton Text="我已阅读, 确认借出" runat="server" ID="ConfirmBorrow_bt" CssClass="btn btn--primary btn--large" OnClick="LendReg_bt_Click" />
+	`);
+
+                //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
+                //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
+                
+                instance.show();
+
+            }
+        </script>
     </div>
 </asp:Content>
 

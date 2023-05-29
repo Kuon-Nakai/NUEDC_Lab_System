@@ -15,6 +15,7 @@ public partial class Login_Reg : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
+    public string Username;
     protected void Page_Load(object sender, EventArgs e)
     {
         MasterPage.col = .5f;
@@ -23,7 +24,14 @@ public partial class Login_Reg : System.Web.UI.Page
         {
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
-
+        if (IsPostBack) return;
+        if (Session["UserID"] != null)
+        {
+            // User already logged in
+            Username = svr.QuerySingle($"select MemberName from members where MemberCode='{Session["UserID"]}'") as string ?? "Unavailable";
+            DataBind();
+            Logout_pn.Visible = true;
+        }
         //RemoteDelegates.RegisterDelegate("Login_bt_Click", Login_bt_Click);
         //DynamicControls.CreateAlert("请提供登录信息", "error", Alerts_pn);
     }
@@ -94,4 +102,10 @@ public partial class Login_Reg : System.Web.UI.Page
     }
     protected void Login_Acc_tb_TextChanged(object sender, EventArgs e) { }
     protected void Login_Psw_tb_TextChanged(object sender, EventArgs e) { }
+
+    protected void Logout_bt_Click(object sender, EventArgs e)
+    {
+        Session.Clear();
+        Response.Redirect(Request.RawUrl);
+    }
 }
