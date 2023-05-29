@@ -2,6 +2,7 @@
 
 using MySql.Data.MySqlClient;
 using System;
+using System.Data;
 using System.Threading.Tasks;
 
 public partial class AssetsPage : System.Web.UI.Page
@@ -52,7 +53,8 @@ public partial class AssetsPage : System.Web.UI.Page
         {
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
-        Asset_gv.DataSource = svr.QueryDataset(sql);
+        ViewState["ds"] = svr.QueryDataset(sql);
+        Asset_gv.DataSource = ViewState["ds"];
         Asset_gv.DataBind();
     }
 
@@ -152,5 +154,14 @@ public partial class AssetsPage : System.Web.UI.Page
     protected void LendReg_bt_Click(object sender, EventArgs e)
     {
         
+    }
+
+    protected void Asset_gv_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
+    {
+        DataSet ds=new DataSet();
+        ds = (DataSet)this.ViewState["ds"];
+        Asset_gv.DataSource = ds;
+        Asset_gv.PageIndex = e.NewPageIndex;
+        Asset_gv.DataBind();
     }
 }
