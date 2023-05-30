@@ -25,13 +25,22 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "NUEDC_System", ".", "{F7BA7
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCRxBridge", "..\NFCRxBridge\NFCRxBridge.csproj", "{B07AF175-AE15-4D59-B2C5-E3DAB958D900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7BA7E8E-062A-4BF1-9F4F-F66A19D86D07}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B07AF175-AE15-4D59-B2C5-E3DAB958D900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B07AF175-AE15-4D59-B2C5-E3DAB958D900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B07AF175-AE15-4D59-B2C5-E3DAB958D900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B07AF175-AE15-4D59-B2C5-E3DAB958D900}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

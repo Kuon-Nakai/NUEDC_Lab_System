@@ -16,6 +16,9 @@ public partial class Login_Reg : System.Web.UI.Page
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
     public string Username;
+    public string PopupL1 = "请在读卡器刷校园卡...";
+    public string PopupL2 = "";
+    private string CardCache;
     protected void Page_Load(object sender, EventArgs e)
     {
         MasterPage.col = .5f;
@@ -107,5 +110,30 @@ public partial class Login_Reg : System.Web.UI.Page
     {
         Session.Clear();
         Response.Redirect(Request.RawUrl);
+    }
+
+    protected void CardLogin_Click(object sender, EventArgs e)
+    {
+        RemoteDelegates.CardSwipeHandler = (string data) =>
+        {
+            PopupL1 = "请检查登录信息";
+            PopupL2 = $"卡号: {data}\n姓名: {svr.QuerySingle($"select MemberName from members where MemberCode={Session["LoginAcc"]}")}";
+            ViewState["CardCache"] = data;
+            DataBind();
+            FindControl("ConfirmCard_bt").Visible = true;
+        };
+        PopupL2 = "已向服务器发送请求, 等待读卡...";
+    }
+    protected void ConfirmCard_bt_Click(object sender, EventArgs e)
+    {
+        FindControl("ConfirmCard_bt").Visible = false;
+        Session["UserID"] = ViewState["CardCache"];
+        Session["UserPerm"] = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
+        ViewState["CardCache"] = null;
+        if ((((Stack<string>)Session["jmpStack"])?.Count ?? 0) != 0)
+        {
+            Response.Redirect(((Stack<string>)Session["jmpStack"]).Pop());
+        }
+        return;
     }
 }

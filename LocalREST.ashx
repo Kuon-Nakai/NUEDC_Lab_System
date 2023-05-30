@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 public class LocalREST : IHttpHandler
 {
-    public static Action<string> CardSwipeHandler;
+    //public static Action<string> CardSwipeHandler;
     //private object RespData;
     //public void setTestData(object data) => RespData = data;
     public void ProcessRequest(HttpContext context)
@@ -20,7 +20,7 @@ public class LocalREST : IHttpHandler
             var obj = JsonConvert.DeserializeObject<IPCReq>(json);
             //var r = RemoteDelegates.Invoke(obj.Req, obj.Param);
             if(obj.Source.Equals("NFC"))
-                CardSwipeHandler?.Invoke(obj.Data);
+                RemoteDelegates.CardSwipeHandler?.Invoke(obj.Data);
             context.Response.ContentType = "application/json";
             context.Response.Write(JsonConvert.SerializeObject(new
             {
