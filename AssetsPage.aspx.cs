@@ -225,6 +225,7 @@ public partial class AssetsPage : System.Web.UI.Page
                 dc.CreateHTMLElement("br", Datasheet_pn0);
                 dc.CreateHTMLElement("div", Datasheet_pn1);
                 dc.CreateHyperLink(rd.GetValue(1).ToString(), rd.GetValue(0).ToString(), Datasheet_pn1);
+                
                 //Datasheet_pn1.Controls.RemoveAt(Datasheet_pn1.Controls.Count - 1);
                 ++i;
             },
@@ -282,7 +283,7 @@ public partial class AssetsPage : System.Web.UI.Page
     protected void Search_bt_Click(object sender, EventArgs e)
     {
         string sear_str = sear_tb.Text;
-        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值, ValueUnit as 单位 from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode like '%{sear_str}%' or AssetName like '%{sear_str}%';");
+        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值, ValueUnit as 单位 from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode='{sear_str}' or AssetName like '%{sear_str}%' or MainValue like '%{sear_str}%';");
         LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
     }
 

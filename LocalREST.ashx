@@ -1,4 +1,4 @@
-﻿<%@ WebHandler Language="C#" Class="AjaxHandler" %>
+﻿<%@ WebHandler Language="C#" Class="LocalREST" %>
 
 using System;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Web;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-public class AjaxHandler : IHttpHandler
+public class LocalREST : IHttpHandler
 {
     //private object RespData;
     //public void setTestData(object data) => RespData = data;

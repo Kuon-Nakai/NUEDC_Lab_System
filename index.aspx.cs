@@ -9,23 +9,28 @@ public partial class index : System.Web.UI.Page
 {
     //MySqlSvr svr;
 
-    public RemoteDelegates.AjaxResult Popup_poll_Handler(string[] param)
-    {
-        return new RemoteDelegates.AjaxResult
-        {
-            statusCode = 200,
-            data = new
-            {
-                ModalID = 1
-            }
-        };
-    }
+    //public RemoteDelegates.AjaxResult Popup_poll_Handler(string[] param)
+    //{
+    //    return new RemoteDelegates.AjaxResult
+    //    {
+    //        statusCode = 200,
+    //        data = new
+    //        {
+    //            ModalID = 1
+    //        }
+    //    };
+    //}
     protected void Page_Load(object sender, EventArgs e)
     {
         MasterPage.col = 0f;
         //Session.Clear(); // for testing
         if (Session["UserID"] != null)
         {
+            if (Session["UserPerm"] == null)
+            {
+                Session["UserID"] = null;
+                return;
+            }
             Login_Jmp_bt.Text = "已登录";
             if ((int)Session["UserPerm"] < 3)
             {
@@ -34,7 +39,7 @@ public partial class index : System.Web.UI.Page
                 Security_lk.Visible = true;
             }
         }
-        RemoteDelegates.RegisterDelegate("Popup_poll", Popup_poll_Handler);
+        //RemoteDelegates.RegisterDelegate("Popup_poll", Popup_poll_Handler);
     }
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {

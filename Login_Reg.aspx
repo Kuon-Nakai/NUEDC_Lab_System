@@ -68,6 +68,7 @@
                         <asp:RequiredFieldValidator ID="Login_Acc_ReqVal" runat="server" ErrorMessage="需要填写账号" ValidationGroup="Login" Visible="false" ControlToValidate="LoginAcc_tb" EnableClientScript="true"></asp:RequiredFieldValidator>
                         <asp:RequiredFieldValidator ID="Login_Psw_ReqVal" runat="server" ErrorMessage="需要填写密码" ValidationGroup="Login" Visible="false" ControlToValidate="LoginPsw_tb" EnableClientScript="true" ValidateRequestMode="Enabled" InitialValue='""'></asp:RequiredFieldValidator>
                         <asp:ValidationSummary ID="Login_ValSummary" runat="server" ValidationGroup="Login" />
+                        <h6>Note: 实验室终端支持刷卡快速验证</h6>
                         <%--<a class="btn btn--primary u-fullwidth" href="#0" onclick="callSvr('Login_bt_Click', null)">登录</a>--%>
                         <asp:LinkButton ID="Login_bt" runat="server" Text="登录" CssClass="btn btn--primary u-fullwidth" OnClick="Login_bt_Click" />
                         <%--<a class="btn btn--stroke u-fullwidth" href="#0">忘记密码</a>--%>
