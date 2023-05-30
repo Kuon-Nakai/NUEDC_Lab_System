@@ -9,6 +9,7 @@ using System.Web.Http.Results;
 /// </summary>
 public class RemoteDelegates
 {
+    public static Action<string> CardSwipeHandler;
     private static Dictionary<string, Func<string[], AjaxResult>> funcs = new Dictionary<string, Func<string[], AjaxResult>>();
     /// <summary>
     /// 注册/更新一个回调函数

@@ -68,11 +68,12 @@
                         <asp:RequiredFieldValidator ID="Login_Acc_ReqVal" runat="server" ErrorMessage="需要填写账号" ValidationGroup="Login" Visible="false" ControlToValidate="LoginAcc_tb" EnableClientScript="true"></asp:RequiredFieldValidator>
                         <asp:RequiredFieldValidator ID="Login_Psw_ReqVal" runat="server" ErrorMessage="需要填写密码" ValidationGroup="Login" Visible="false" ControlToValidate="LoginPsw_tb" EnableClientScript="true" ValidateRequestMode="Enabled" InitialValue='""'></asp:RequiredFieldValidator>
                         <asp:ValidationSummary ID="Login_ValSummary" runat="server" ValidationGroup="Login" />
-                        <h6>Note: 实验室终端支持刷卡快速验证</h6>
                         <%--<a class="btn btn--primary u-fullwidth" href="#0" onclick="callSvr('Login_bt_Click', null)">登录</a>--%>
                         <asp:LinkButton ID="Login_bt" runat="server" Text="登录" CssClass="btn btn--primary u-fullwidth" OnClick="Login_bt_Click" />
                         <%--<a class="btn btn--stroke u-fullwidth" href="#0">忘记密码</a>--%>
                         <asp:LinkButton ID="RestorePsw_bt" runat="server" Text="忘记密码" CssClass="btn btn--stroke u-fullwidth" />
+                        <h3>实验室刷卡登录</h3>
+                        <asp:LinkButton Text="刷卡登录" runat="server" CssClass="btn btn--primary u-fullwidth" ID="CardLogin" OnClick="CardLogin_Click" OnClientClick="showCardConfirmPopup();" />
                     </div>
 
                     <div class="column lg-6 tab-12">
@@ -105,5 +106,22 @@
         <!-- end row -->
 
     </div>
+    <script type="text/javascript">
+            function showCardConfirmPopup() {
+
+                const instance = basicLightbox.create(`
+		<h2 style="color:white"><%=PopupL1 %></h2>
+		<p style="color:white">当前登录: <%=PopupL2 %></p>
+        <hr />
+        <asp:LinkButton Text="确认登录" runat="server" ID="ConfirmCard_bt" CssClass="btn btn--primary btn--large" OnClick="ConfirmCard_bt_Click" Visible="false" />
+	`);
+
+                //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
+                //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
+                
+                instance.show();
+
+            }
+    </script>
 </asp:Content>
 
