@@ -79,20 +79,23 @@ public partial class Login_Reg : System.Web.UI.Page
         dc.CreateAlert("密码错误, 请重试", "notice", Alerts_pn);
     }
 
-    public void Reg_bt_Click()
+    protected void Reg_bt_Click(object sender, EventArgs ea)
     {
         Validate("Reg");
         if (Reg_Acc_ReqVal.IsValid & Reg_Name_ReqVal.IsValid & Reg_Psw_ReqVal.IsValid & Reg_Psw_CompVal.IsValid &
             (RegMail_tb.Text.Length == 0 || Regex.IsMatch(RegMail_tb.Text, "^[a-zA-Z0-9]+@[a-zA-Z0-9.]+(com|cn|co|net)$")))
         {
-            if (svr.Execute($"Insert into members values({RegAcc_tb.Text}, {RegName_tb.Text}, 4, NOW(), NOW(), null, {RegPsw0_tb.Text})",
+            if (svr.Execute($"Insert into members values({RegAcc_tb.Text}, '{RegName_tb.Text}', 4, NOW(), NOW(), null, '{RegPsw0_tb.Text}')",
                 (Exception e) =>
                 {
                     dc.CreateAlert($"创建数据记录时发生数据库错误:\n{e.Message}", "error", Alerts_pn);
-                }) == 1)
+                    return;
+                }) != 1)
             {
                 dc.CreateAlert("创建数据记录时影响行数异常", "error", Alerts_pn);
+                return;
             }
+            dc.CreateAlert("账号创建成功!", "success", Alerts_pn);
         }
         else
         {
@@ -129,7 +132,15 @@ public partial class Login_Reg : System.Web.UI.Page
     {
         FindControl("ConfirmCard_bt").Visible = false;
         Session["UserID"] = ViewState["CardCache"];
-        Session["UserPerm"] = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
+        var perm = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
+        if( perm == null )
+        {
+            Session["UserID"] = null;
+            PopupL1 = "错误";
+            PopupL2 = "账号不存在";
+            // todo: move to 
+        }
+        Session["UserPerm"] = perm;
         ViewState["CardCache"] = null;
         if ((((Stack<string>)Session["jmpStack"])?.Count ?? 0) != 0)
         {

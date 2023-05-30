@@ -95,7 +95,7 @@
                         <asp:RequiredFieldValidator ID="Reg_Psw_ReqVal" runat="server" ErrorMessage="密码为必填项" ControlToValidate="RegPsw0_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
                         <asp:CompareValidator ID="Reg_Psw_CompVal" runat="server" ErrorMessage="密码不一致" ControlToValidate="RegPsw1_tb" ControlToCompare="RegPsw0_tb" Visible="false" ValidationGroup="Reg"></asp:CompareValidator>
                         <asp:ValidationSummary ID="Reg_ValidationSummary" runat="server" ForeColor="Red" ValidationGroup="Reg" />
-                        <asp:HyperLink ID="Reg_bt" runat="server" CssClass="btn btn--primary u-fullwidth">注册</asp:HyperLink>
+                        <asp:LinkButton ID="Reg_bt" runat="server" CssClass="btn btn--primary u-fullwidth" Text="注册" OnClick="Reg_bt_Click"></asp:LinkButton>
                     </div>
 
                 </div>
