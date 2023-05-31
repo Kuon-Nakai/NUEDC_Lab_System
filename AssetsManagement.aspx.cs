@@ -179,17 +179,15 @@ public partial class AssetsManagement : System.Web.UI.Page
         }
     }
 
-    protected void Asset_gv_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
+    protected void Asset_gv_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        DataSet ds = new DataSet();
-        ds = (DataSet)this.ViewState["ds"];
-        Asset_gv.DataSource = ds;
+        Asset_gv.DataSource = (DataSet)ViewState["ds"];
         Asset_gv.PageIndex = e.NewPageIndex;
         Asset_gv.DataBind();
     }
 
     protected void LendSearch_bt_Click(object sender, EventArgs e)
     {
-
+        LendState_gv.DataSource = svr.QueryDataset("select ")
     }
 }
