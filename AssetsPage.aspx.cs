@@ -329,7 +329,6 @@ public partial class AssetsPage : System.Web.UI.Page
             e.Row.Attributes["onmouseout"] = "this.style.background-color='none';";
             e.Row.ToolTip = "点击选择";
             e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(Asset_gv, "Select$" + e.Row.RowIndex);
-            
         }
     }
 
