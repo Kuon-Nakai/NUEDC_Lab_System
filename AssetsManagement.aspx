@@ -72,7 +72,7 @@
                             </div>
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">快捷查询</h5>
-                                <asp:LinkButton runat="server" CssClass="btn btn--stroke" ID="AwaitReturn_bt" OnClick="AwaitReturn_bt_Click">待归还</asp:LinkButton>
+                                <asp:LinkButton runat="server" CssClass="btn btn--stroke" ID="AwaitReturn_bt">待归还</asp:LinkButton>
                                 <asp:LinkButton runat="server" CssClass="btn btn--stroke">可续借</asp:LinkButton>
                             </div>
                             <div style="max-width: 100%; overflow-x: scroll">
@@ -181,7 +181,7 @@
 		<p style="color:white">当前登录: <%=userId %></p>
         <p style="color:white">注意事项</p>
         <hr />
-        <asp:LinkButton Text="创建元件" runat="server" ID="ConfirmBorrow_bt" CssClass="btn btn--primary btn--large" OnClick="LendReg_bt_Click" />
+        <asp:LinkButton Text="创建元件" runat="server" ID="ConfirmBorrow_bt" CssClass="btn btn--primary btn--large" />
 	`);
 
                 //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
