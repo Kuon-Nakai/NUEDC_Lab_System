@@ -76,7 +76,7 @@
                                 <asp:LinkButton runat="server" CssClass="btn btn--stroke">可续借</asp:LinkButton>
                             </div>
                             <div style="max-width: 100%; overflow-x: scroll">
-                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="25" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging" OnRowCreated="Asset_gv_RowCreated" OnSelectedIndexChanged="Asset_gv_SelectedIndexChanged"></asp:GridView>
+                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging" OnRowCreated="Asset_gv_RowCreated" OnSelectedIndexChanged="Asset_gv_SelectedIndexChanged"></asp:GridView>
                             </div>
 
                         </div>
@@ -173,7 +173,7 @@
                                         <br />
                                     </div>
                                 </div>
-                                <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Return_bt">归还</asp:LinkButton>
+                                <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Return_bt" OnClick="Return_bt_Click">归还</asp:LinkButton>
                             </asp:Panel>
                         </div>
 

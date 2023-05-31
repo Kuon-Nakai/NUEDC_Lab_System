@@ -350,4 +350,12 @@ public partial class AssetsPage : System.Web.UI.Page
         Asset_gv.PageIndex = e.NewPageIndex;
         Asset_gv.DataBind();
     }
+
+    protected void Return_bt_Click(object sender, EventArgs e)
+    {
+        svr.Execute($"UPDATE lending SET `Status`='Returned',DateReturned=NOW(),TransactionCode=1 WHERE AssetCode={Asset_gv.SelectedRow.Cells[0]}", (Exception ex) =>
+        {
+            dc.CreateAlert(" 请重试或检查数据", "error", Alerts_pn);
+        });
+    }
 }
