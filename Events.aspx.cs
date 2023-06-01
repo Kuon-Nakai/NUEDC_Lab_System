@@ -18,7 +18,7 @@ public partial class Events : System.Web.UI.Page
         {
             Login_Jmp_bt.Text = "已登录";
         }
-        InitiateSearch("select * from event");
+        InitiateSearch("select EventCode as 活动代码, EventName as 活动名称, DateStart as 活动时间, DateReg as 报名时间, MaxParticipants as 最大组数 from event");
 
     }
     private void InitiateSearch(string sql)
@@ -53,7 +53,7 @@ public partial class Events : System.Web.UI.Page
 
     protected void Search_bt_Click(object sender, EventArgs e)
     {
-        InitiateSearch($"select * from event where (EventName like '%{event_sea.Text}%' or EventCode like '%{event_sea.Text}%') and JoinLevel>={Session["USerPerm"]}");
+        InitiateSearch($"select EventCode as 活动代码, EventName as 活动名称, DateStart as 活动时间, DateReg as 报名时间, MaxParticipants as 最大组数 from event where (EventName like '%{event_sea.Text}%' or EventCode like '%{event_sea.Text}%') and JoinLevel>={Session["USerPerm"]}");
     }
 
     public void LoadAssetData(string sql_where_assets)
@@ -68,9 +68,9 @@ public partial class Events : System.Web.UI.Page
     private void AssignAssetData(MySqlDataReader rd)
     {
         EventName_lb.Text = (string)rd[1];
-        EventTime_lb.Text = $"{(DateTime)rd[6]:yyyy-MM-dd HH:mm}   {(DateTime)rd[7]:yyyy-MM-dd HH:mm}";
+        EventTime_lb.Text = $"{(DateTime)rd[6]:yyyy-MM-dd HH:mm} --- {(DateTime)rd[7]:yyyy-MM-dd HH:mm}";
         Location_lb.Text =  rd[10].ToString().Length > 0 ? (string)rd[10] : "暂无数据";
-        SignupTime_lb.Text = $"{(DateTime)rd[4]:yyyy-MM-dd HH:mm}  {(DateTime)rd[5]:yyyy-MM-dd HH:mm:yyyy-MM-dd HH:mm}";
+        SignupTime_lb.Text = $"{(DateTime)rd[4]:yyyy-MM-dd HH:mm} --- {(DateTime)rd[5]:yyyy-MM-dd HH:mm}";
         MaxCount_lb.Text = $"{rd[8]}";
         EventDesc_lb.Text = rd[2].ToString().Length > 0 ? (string)rd[2] : "暂无数据";
         
