@@ -20,7 +20,7 @@
                     <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
                 </div>--%>
 
-        <div class="row u-add-half-bottom">
+        <div class="row" style="width:100%">
 
             <div class="column">
 
@@ -49,15 +49,15 @@
                             <asp:TextBox runat="server" TextMode="Search" ID="event_sea" />
                             <asp:LinkButton ID="Search_bt" runat="server" CssClass="btn btn--primary" Text="搜索" OnClick="Search_bt_Click"></asp:LinkButton>
                         </div>
-                        <div style="max-width: 100%; overflow-x: scroll">
-                            <asp:GridView ID="Event_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Event_gv_PageIndexChanging" OnRowCreated="Event_gv_RowCreated" OnSelectedIndexChanged="Event_gv_SelectedIndexChanged"></asp:GridView>
+                        <div class="row" style="max-width: 100%; overflow-x: scroll">
+                            <asp:GridView ID="Event_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Event_gv_PageIndexChanging" OnRowCreated="Event_gv_RowCreated" OnSelectedIndexChanged="Event_gv_SelectedIndexChanged" CssClass="u-fullwidth"></asp:GridView>
                         </div>
 
                     </div>
 
                 </div>
 
-                <div class="row u-add-bottom">
+                <div class="row u-add-bottom u-fullwidth">
                     <div class="column">
 
                         <h4>活动信息<br />
