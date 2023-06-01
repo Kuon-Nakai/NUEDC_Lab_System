@@ -1,9 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -218,6 +220,45 @@ public class MySqlSvr
         cn.Close();
         return ds;
     }
+    public void CreateTable(string tableName, Action<Exception> errorHandler, params DataColumnConfiguration[] columns)
+    {
+        List<string> keys = new List<string>();
+        StringBuilder builder = new StringBuilder("CREATE TABLE `nuedc`.");
+        builder.Append(tableName).Append("` (");
+        foreach(var col in columns)
+        {
+            if (col.Key) keys.Add(col.ColumnName);
+            builder.Append($"`{col.ColumnName}` {col.DataType}");
+            if(col.Length != null)
+            {
+                builder.Append($"({col.Length}");
+                if(col.Decimals != null)
+                {
+                    builder.Append($", {col.Decimals})");
+                }
+                else
+                {
+                    builder.Append(")");
+                }
+            }
+            builder.Append(col.NotNull ? " NOT NULL " : " NULL ");
+            if((col.Comment?.Length ?? 0) > 0)
+            {
+                builder.Append($"COMMENT {col.Comment}");
+            }
+            builder.Append(",\nPRIMARY KEY (");
+        }
+        bool first = true;
+        foreach(var key in keys)
+        {
+            if (first) first = false;
+            else builder.Append(", ");
+            builder.Append($"`{key}`");
+        }
+        builder.Append("));");
+        Execute(builder.ToString(), errorHandler);
+    }
+
     /// <summary>
     /// 构造函数
     /// </summary>
@@ -233,5 +274,17 @@ public class MySqlSvr
     public MySqlSvr(string str)
     {
         cn = new MySqlConnection(str);
+    }
+    public class DataColumnConfiguration
+    {
+        [Required]
+        public string ColumnName;
+        [Required]
+        public string DataType;
+        public int? Length;
+        public int? Decimals;
+        public bool NotNull;
+        public bool Key;
+        public string Comment;
     }
 }

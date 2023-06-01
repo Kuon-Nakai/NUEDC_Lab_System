@@ -111,18 +111,8 @@ public partial class AssetsManagement : System.Web.UI.Page
         PrimValue_lb.Text = $"{rd[2]} {rd[3]}";
         Location_lb.Text = (string)rd[4];
         Property_lb.Text = rd[5].ToString().Length > 0 ? (string)rd[5] : "暂无数据";
-        if ((ulong)rd[7] == 1)
-        {
-            //BorrowQtySel_tb.Enabled = true;
-            //ItemID_tb.Enabled = false;
-        }
-        else
-        {
-            //BorrowQtySel_tb.Enabled = false;
-            //ItemID_tb.Enabled = true;
-        }
 
-        //Legacy code
+        #region Legacy code...
         //if (((string)rd[6]).Length == 0)
         //{
         //    Datasheet_lk.Text = "暂无";
@@ -147,6 +137,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         //    //BorrowConfirm_pn.Visible = false;
         //    //BorrowNotAvailable_pn.Visible = true;
         //}
+#endregion
     }
 
     protected void Search_bt_Click(object sender, EventArgs e)
@@ -188,10 +179,10 @@ public partial class AssetsManagement : System.Web.UI.Page
 
     protected void LendSearch_bt_Click(object sender, EventArgs e)
     {
-        LendState_gv.DataSource = svr.QueryDataset($"select TransactionCode, MemberCode, {((byte)svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses=ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'") == 0 ? "" : "" )}, Status from lending where " +
+        LendState_gv.DataSource = svr.QueryDataset($"select TransactionCode, MemberCode, {((byte)svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses=ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'") == 0 ? "FullCode" : "Qty" )}, Status from lending where " +
             $"AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}' and (" +
-            $"TransactionCode='{LendSearch_bt.Text}' or" +
-            $"MemberCode='{LendSearch_bt.Text}' or" +
-            $""); // TODOs
+            $"TransactionCode='{LendSearch_bt.Text}' or " +
+            $"MemberCode='{LendSearch_bt.Text}' or " +
+            $"Status like %'{LendSearch_bt.Text}'%;"); // TODOs
     }
 }
