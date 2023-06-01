@@ -281,17 +281,16 @@
 
                 <div class="lg-4 mob-12 column">
                     <p>
-                        Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
+                        实验室注重以学生为主体，充分发挥其主观能动性。在培养方式上秉承“做中学”的教学理念，倡导启发式、交互式、讨论式、探究式培养方法，注重培养学生独立思考、勇于探索的自主学习、创新学习的能力，使知识获取的过程成为创新能力培养和创新人格培训的过程，实现大学生实践性教学与科学研究、技术开发、工程设计的有机结合。
                     </p>
                 </div>
 
                 <div class="lg-4 mob-12 column">
                     <p>
-                        Cras aliquet. Integer faucibus, eros ac molestie placerat, enim tellus varius lacus,
-                        nec dictum nunc tortor id urna. Suspendisse dapibus ullamcorper pede. Vivamus ligula ipsum,
-                        faucibus at, tincidunt eget, porttitor non, dolor. 
+                        NUEDC创新实验室营造真实、开放、自由、宽松的科技创新工作环境，为具有科技创新兴趣的学生提供了一个施展特长和交流学习的平台，为参赛同学提供参赛场地
+                        <br />
+                        和各类仪器设备的支持。
+                        
                     </p>
                 </div>
 
