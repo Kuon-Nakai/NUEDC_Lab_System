@@ -95,7 +95,7 @@
                             <div class="row">
                                 <h5 class="u-fullwidth">元件情况概览</h5>
                                 <p style="position:relative; text-align:center; margin-top:15px; margin-right:45px">记录搜索</p>
-                                <asp:TextBox runat="server" TextMode="Search" ID="TextBox1" />
+                                <asp:TextBox runat="server" TextMode="Search" ID="LendSearch_tb" />
                                 <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="LendSearch_bt" OnClick="LendSearch_bt_Click">搜索</asp:LinkButton>
                                 <asp:GridView runat="server" ID="LendState_gv"></asp:GridView>
                                 <hr />

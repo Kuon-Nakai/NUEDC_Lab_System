@@ -152,7 +152,7 @@ public partial class AssetsManagement : System.Web.UI.Page
     protected void Search_bt_Click(object sender, EventArgs e)
     {
         string sear_str = sear_tb.Text;
-        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值, ValueUnit as 单位 from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode='{sear_str}' or AssetName like '%{sear_str}%' or MainValue like '%{sear_str}%';");
+        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值, ClassName as 分类 from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode='{sear_str}' or AssetName like '%{sear_str}%' or MainValue like '%{sear_str}%';");
         LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
     }
 
@@ -188,6 +188,10 @@ public partial class AssetsManagement : System.Web.UI.Page
 
     protected void LendSearch_bt_Click(object sender, EventArgs e)
     {
-        LendState_gv.DataSource = svr.QueryDataset("select ")
+        LendState_gv.DataSource = svr.QueryDataset($"select TransactionCode, MemberCode, {((byte)svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses=ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'") == 0 ? "" : "" )}, Status from lending where " +
+            $"AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}' and (" +
+            $"TransactionCode='{LendSearch_bt.Text}' or" +
+            $"MemberCode='{LendSearch_bt.Text}' or" +
+            $""); // TODOs
     }
 }
