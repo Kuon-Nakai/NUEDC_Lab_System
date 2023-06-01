@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Events.aspx.cs" Inherits="Events" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Events.aspx.cs" Inherits="Events" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -46,11 +46,11 @@
                     <div class="column">
                         <div class="row">
                             <h5 style="position: relative; top: -39px; width: 150px">活动搜索</h5>
-                            <asp:TextBox runat="server" TextMode="Search" />
-                            <asp:HyperLink ID="Search_bt" runat="server" CssClass="btn btn--primary">搜索</asp:HyperLink>
+                            <asp:TextBox runat="server" TextMode="Search" ID="event_sea" />
+                            <asp:LinkButton ID="Search_bt" runat="server" CssClass="btn btn--primary" Text="搜索" OnClick="Search_bt_Click"></asp:LinkButton>
                         </div>
                         <div style="max-width: 100%; overflow-x: scroll">
-                            <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="25" AutoGenerateSelectButton="True" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging"></asp:GridView>
+                            <asp:GridView ID="Event_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Event_gv_PageIndexChanging" OnRowCreated="Event_gv_RowCreated" OnSelectedIndexChanged="Event_gv_SelectedIndexChanged"></asp:GridView>
                         </div>
 
                     </div>
@@ -73,8 +73,6 @@
                                 <br />
                                 报名时间<br />
                                 <br />
-                                备注<br />
-                                <br />
                                 人数/组数限制
                             </div>
                             <div class="column lg-6 tab-12" style="text-align: right; margin-bottom: 0px">
@@ -88,9 +86,6 @@
                                 <br />
                                 <br />
                                 <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="SignupTime_lb" />
-                                <br />
-                                <br />
-                                <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Notes_lb" />
                                 <br />
                                 <br />
                                 <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="MaxCount_lb" />

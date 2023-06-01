@@ -68,7 +68,7 @@
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">元器件搜索</h5>
                                 <asp:TextBox runat="server" TextMode="Search" ID="sear_tb" />
-                                <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" OnClick="Search_bt_Click">搜索</asp:LinkButton>
+                                <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" >搜索</asp:LinkButton>
                             </div>
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">快捷查询</h5>
