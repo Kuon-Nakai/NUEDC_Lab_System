@@ -90,7 +90,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where {sql_where_assets}",
             (MySqlDataReader rd) =>
             {
-                Datasheet_pn1.Controls.Remove(Datasheet_lk);
+                //Datasheet_pn1.Controls.Remove(Datasheet_lk);
                 dc.CreateHTMLElement("br", Datasheet_pn0);
                 dc.CreateHTMLElement("div", Datasheet_pn1);
                 dc.CreateHyperLink(rd.GetValue(1).ToString(), rd.GetValue(0).ToString(), Datasheet_pn1);
@@ -100,7 +100,7 @@ public partial class AssetsManagement : System.Web.UI.Page
             },
             () =>
             {
-                Datasheet_lk.Text = "暂无文档";
+                //Datasheet_lk.Text = "暂无文档";
             });
     }
 

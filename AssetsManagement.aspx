@@ -134,7 +134,7 @@
                                     <br />
                                     <br />
                                     <asp:Panel runat="server" ID="Datasheet_pn1">
-                                        <asp:HyperLink runat="server" ID="Datasheet_lk" Text="Not available"></asp:HyperLink>
+                                        <asp:LinkButton Text="添加" ID="AddDoc_bt" runat="server" />
                                     </asp:Panel>
                                 </div>
                             </div>

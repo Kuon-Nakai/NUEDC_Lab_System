@@ -29,7 +29,7 @@
             <div class="column lg-12 s-intro__content-inner">
 
                 <h1 class="s-intro__content-title">DHU NUEDC实验室
-                    <br />
+                     <br />
                     综合服务管理平台
                 </h1>
                 <h5 style="color: white">DHU NUEDC Innovation Lab
