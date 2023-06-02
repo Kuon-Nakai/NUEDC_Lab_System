@@ -50,24 +50,9 @@ public class MySqlSvr
         if (cl)
             cn.Open();
         var r = new MySqlCommand(sql, cn).ExecuteScalar();
-        if (cl)
+        if(cl)
             cn.Close();
         return r;
-    }
-    /// <summary>
-    /// 查询单个数据 或多个数据的第一个 自动转化为类型T
-    /// </summary>
-    /// <param name="sql">SQL select语句</param>
-    /// <returns></returns>
-    public T QuerySingle<T>(string sql)
-    {
-        var cl = cn.State == ConnectionState.Closed;
-        if (cl)
-            cn.Open();
-        var r = new MySqlCommand(sql, cn).ExecuteScalar();
-        if (cl)
-            cn.Close();
-        return (T)r;
     }
     /// <summary>
     /// 直接获取查询语句的reader对象 需要手动关闭连接 不建议使用
