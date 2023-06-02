@@ -6,6 +6,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
@@ -13,9 +14,12 @@ using System.Web.UI.WebControls;
 public partial class AssetsPage : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
-    MySqlSvr svr;
+    MySqlSvr svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
     bool loggedIn = false;
     public string userId;
+    //private List<string> class0 = new List<string>();
+    //private List<string> class1 = new List<string>();
+    //private List<string> class2 = new List<string>();
 
     protected async void Page_Load(object sender, EventArgs e)
     {
@@ -28,6 +32,38 @@ public partial class AssetsPage : System.Web.UI.Page
             Borrow_tb.Attributes["href"] = "#";
         }
         if (IsPostBack) { return; }
+        //if (class0.Count == 0)
+        //{
+            svr.QueryReader_Parallel(new MySqlSvr.QueryReaderTask
+            {
+                sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=3;",
+                ReaderDataHandler = (MySqlDataReader rd) =>
+                {
+                    TypeSel0_ddl.Items.Add($"{rd[0]}{rd[1]}");
+                    //class0.Add($"{rd[0]} {rd[1]}");
+                },
+                NoDataHandler = () => TypeSel0_ddl.Visible = false
+            }, new MySqlSvr.QueryReaderTask
+            {
+                sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=6;",
+                ReaderDataHandler = (MySqlDataReader rd) =>
+                {
+                    TypeSel1_ddl.Items.Add($"{((string)rd[0]).Substring(3)}{rd[1]}");
+                    //class1.Add($"{((string)rd[0]).Substring(3)} {rd[1]}");
+                },
+                NoDataHandler = () => TypeSel1_ddl.Visible = false
+            }, new MySqlSvr.QueryReaderTask
+            {
+                sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=9;",
+                ReaderDataHandler = (MySqlDataReader rd) =>
+                {
+                    TypeSel2_ddl.Items.Add($"{((string)rd[0]).Substring(6)}{rd[1]}");
+                    //class2.Add($"{((string)rd[0]).Substring(6)} {rd[1]}");
+                },
+                NoDataHandler = () => TypeSel2_ddl.Visible = false
+            });
+        //}
+        
         svr = new MySqlSvr(new MySqlConnection("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234"));
         //Update system usage public summary
 #if USE_ASYNC
@@ -181,7 +217,7 @@ public partial class AssetsPage : System.Web.UI.Page
                         {
                             // Transaction cycle will be marked as complete
                             if (svr.Execute("update lending set " +
-                                "TransactionCycleEnded = 1" +
+                                "TransactionCycleEnded = 1 " +
                                 $"where TransactionCode={DateTime.Today.ToString("yyyy-MM-dd").Replace("-", "") + ((int)Application["TransactionCount"] - 1).ToString("0000")};",
                                 transact) != 1)
                             {
@@ -231,10 +267,7 @@ public partial class AssetsPage : System.Web.UI.Page
                 //Datasheet_pn1.Controls.RemoveAt(Datasheet_pn1.Controls.Count - 1);
                 ++i;
             },
-            () =>
-            {
-                Datasheet_lk.Text = "暂无文档";
-            });
+            () => Datasheet_lk.Text = "暂无文档");
     }
 
     private void AssignAssetData(MySqlDataReader rd)
@@ -297,7 +330,7 @@ public partial class AssetsPage : System.Web.UI.Page
         }
         else
         {
-            InitiateSearch($"select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where lending.MemberCode='{Session["UserID"]}' and lending.Status='taken'; ");
+            InitiateSearch($"select lending.AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值, ValueUnit as 单位 from assets right join lending on assets.AssetCode=lending.AssetCode join assetclasses on assets.ClassCode=assetclasses.ClassCode where lending.MemberCode='{Session["UserID"]}' and lending.TransactionCycleEnded=0; ");
         }
     }
 
@@ -316,10 +349,7 @@ public partial class AssetsPage : System.Web.UI.Page
         await Task.WhenAny(tsk, timeout);
     }
 
-    protected void Asset_gv_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        LoadAssetData($"assets.AssetCode='{Asset_gv.SelectedRow.Cells[0].Text}'");
-    }
+    protected void Asset_gv_SelectedIndexChanged(object sender, EventArgs e) => LoadAssetData($"assets.AssetCode='{Asset_gv.SelectedRow.Cells[0].Text}'");
 
     protected void Asset_gv_RowCreated(object sender, GridViewRowEventArgs e)
     {
@@ -357,5 +387,42 @@ public partial class AssetsPage : System.Web.UI.Page
         {
             dc.CreateAlert(" 请重试或检查数据", "error", Alerts_pn);
         });
+    }
+
+    protected void TypeSel0_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}%'");
+        TypeSel1_ddl.Items.Clear();
+        svr.QueryReader($"select ClassCode, ClassName from assetclasses where Length(ClassCode)=6 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}%';", (MySqlDataReader rd) =>
+        {
+            TypeSel1_ddl.Items.Add(rd.GetString(0).Substring(3) + rd.GetString(1));
+            TypeSel1_ddl.Visible = true;
+        }, () => TypeSel1_ddl.Visible = false);
+    }
+
+    protected void TypeSel1_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}{TypeSel1_ddl.SelectedValue.Substring(0, 3)}%'");
+        TypeSel2_ddl.Items.Clear();
+        svr.QueryReader($"select ClassCode, ClassName from assetclasses where Length(ClassCode)=9 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}{TypeSel1_ddl.SelectedValue.Substring(0, 3)}%';", (MySqlDataReader rd) =>
+        {
+            TypeSel2_ddl.Items.Add(rd.GetString(0).Substring(6) + rd.GetString(1));
+            TypeSel2_ddl.Visible = true;
+        }, () => TypeSel2_ddl.Visible = false);
+    }
+
+    protected void TypeSel2_ddl_SelectedIndexChanged(object sender, EventArgs e) => InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode='{TypeSel2_ddl.SelectedValue.Substring(0, 3)}'");
+
+
+    protected void Borrowed_bt_Click(object sender, EventArgs e)
+    {
+        if (Session["UserID"] == null)
+        {
+            dc.CreateAlert("请登录", "error", Alerts_pn);
+        }
+        else
+        {
+            InitiateSearch($"select lending.AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets right join lending on assets.AssetCode=lending.AssetCode join assetclasses on assets.ClassCode=assetclasses.ClassCode where lending.MemberCode={Session["UserID"]} and lending.Status = 'taken';");
+        }
     }
 }

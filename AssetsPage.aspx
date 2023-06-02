@@ -68,12 +68,12 @@
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">元器件搜索</h5>
                                 <asp:TextBox runat="server" TextMode="Search" ID="sear_tb" />
-                                <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" >搜索</asp:LinkButton>
+                                <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" OnClick="Search_bt_Click">搜索</asp:LinkButton>
                             </div>
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">快捷查询</h5>
                                 <asp:LinkButton runat="server" CssClass="btn btn--stroke" ID="AwaitReturn_bt" OnClick="AwaitReturn_bt_Click">待归还</asp:LinkButton>
-                                <asp:LinkButton runat="server" CssClass="btn btn--stroke">可续借</asp:LinkButton>
+                                <asp:LinkButton runat="server" CssClass="btn btn--stroke" ID="Borrowed_bt" OnClick="Borrowed_bt_Click">已借出</asp:LinkButton>
                             </div>
                             <div style="max-width: 100%; overflow-x: scroll">
                                 <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="15" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging" OnRowCreated="Asset_gv_RowCreated" OnSelectedIndexChanged="Asset_gv_SelectedIndexChanged"></asp:GridView>
@@ -84,9 +84,9 @@
                         <div class="column lg-6 tab-12">
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 60px">分类</h5>
-                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel0_ddl"></asp:DropDownList>
-                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel1_ddl"></asp:DropDownList>
-                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel2_ddl"></asp:DropDownList>
+                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel0_ddl" OnSelectedIndexChanged="TypeSel0_ddl_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel1_ddl" OnSelectedIndexChanged="TypeSel1_ddl_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel2_ddl" OnSelectedIndexChanged="TypeSel2_ddl_SelectedIndexChanged"></asp:DropDownList>
                             </div>
 
                             <h4>元器件信息<br />
