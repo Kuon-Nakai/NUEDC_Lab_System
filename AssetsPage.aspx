@@ -154,26 +154,28 @@
                             </asp:Panel>--%>
                             <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="Borrow_tb" Text="登记借出" />
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt">元件定位</asp:LinkButton>
-                            <asp:Panel runat="server" Visible="false">
+                            <asp:Panel runat="server" Visible="false" ID="Return_pn">
+                                <h4>已借出该元件</h4>
                                 <div class="row">
                                     <div class="column">
                                         待归还(件)
                                             <br />
                                         <br />
-                                        借出期限
+                                        归还期限
                                             <br />
                                         <br />
                                     </div>
                                     <div class="column">
-                                        <asp:Label Text="-1" runat="server" ID="Label1" />
+                                        <asp:Label Text="-1" runat="server" ID="ToReturn_lb" CssClass="u-pull-right" />
                                         <br />
                                         <br />
-                                        <asp:Label Text="1919/8/10" runat="server" ID="Label2" />
+                                        <asp:Label Text="" runat="server" ID="ReturnDeadline_lb" CssClass="u-pull-right" />
                                         <br />
                                         <br />
                                     </div>
                                 </div>
-                                <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Return_bt" OnClick="Return_bt_Click">归还</asp:LinkButton>
+                                <asp:DropDownList ID="ReturnCodeSel_ddl" runat="server" AutoPostBack="true" CssClass="u-pull-right" OnSelectedIndexChanged="ReturnCodeSel_ddl_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:LinkButton runat="server" CssClass="btn btn--primary u-fullwidth" ID="Return_bt" OnClick="Return_bt_Click">归还</asp:LinkButton>
                             </asp:Panel>
                         </div>
 
@@ -190,8 +192,9 @@
             function showBorrowConfirmPopup() {
 
                 const instance = basicLightbox.create(`
-		<h1 style="color:white">请确认登录信息和返还日期, 并仔细阅读以下注意事项</h1>
+		<h2 style="color:white">请确认登录信息和返还日期, 并仔细阅读以下注意事项</h2>
 		<p style="color:white">当前登录: <%=userId %></p>
+		<p style="color:white">归还期限: <%=DateTime.Today.AddMonths(1).ToLongDateString() %></p>
         <p style="color:white">注意事项</p>
         <hr />
         <asp:LinkButton Text="我已阅读, 确认借出" runat="server" ID="ConfirmBorrow_bt" CssClass="btn btn--primary btn--large" OnClick="LendReg_bt_Click" />
@@ -199,7 +202,20 @@
 
                 //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
                 //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
-                
+
+                instance.show();
+
+            }
+            function showReturnImpossiblePopup() {
+
+                const instance = basicLightbox.create(`
+		<h2 style="color:white">请将元件交给实验室成员检查登记</h2>
+        <p style="color:white">该元件较贵重, 需由实验室成员登记归还</p>
+	`);
+
+                //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
+                //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
+
                 instance.show();
 
             }

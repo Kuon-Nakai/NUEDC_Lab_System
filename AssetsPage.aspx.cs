@@ -17,6 +17,7 @@ public partial class AssetsPage : System.Web.UI.Page
     MySqlSvr svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
     bool loggedIn = false;
     public string userId;
+    
     //private List<string> class0 = new List<string>();
     //private List<string> class1 = new List<string>();
     //private List<string> class2 = new List<string>();
@@ -253,11 +254,13 @@ public partial class AssetsPage : System.Web.UI.Page
     {
         if (svr == null) { svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234"); }
         int i = -1;
+        // Load data to right side bar
         svr.QueryReader($"select AssetName, ClassName, MainValue, ValueUnit, Location, Characteristics, Amount-ReservationQty-(select count(TransactionCode) from lending right join assets on lending.AssetCode=assets.AssetCode where {sql_where_assets} and Status='Returned'), AutoCplt from assets left join assetclasses on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};",
             AssignAssetData,
             /*() => Alert_DBQueryEmpty_pn.Visible = true*/
             () => dc.CreateAlert("元件信息查询失败: 返回信息为空", "error", Alerts_pn));
-        svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where {sql_where_assets}",
+        // Load all datasheets
+        svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where ({sql_where_assets})",
             (MySqlDataReader rd) =>
             {
                 Datasheet_pn1.Controls.Remove(Datasheet_lk);
@@ -269,6 +272,34 @@ public partial class AssetsPage : System.Web.UI.Page
                 ++i;
             },
             () => Datasheet_lk.Text = "暂无文档");
+        // Check if return is possible
+        if (Session["UserID"] != null)
+        {
+            var qty = 0;
+            ReturnDeadline_lb.Text = "";
+            ReturnCodeSel_ddl.Items.Clear();
+            var requirePerm = byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets}").ToString()) == 0;
+            if ((int)Session["UserPerm"] > 2 && requirePerm)
+            {
+                Return_bt.OnClientClick = "showReturnImpossiblePopup();";
+                Return_bt.Attributes["href"] = "#";
+            }
+            svr.QueryReader($"select DateProcessed, TransactionCode, AssetName, FullCode from lending left join assets on assets.AssetCode=lending.AssetCode where ({sql_where_assets}) and MemberCode={Session["UserID"]} and Status='Taken'", (MySqlDataReader rd) =>
+            {
+                Return_pn.Visible = true;
+                ReturnDeadline_lb.Text += $"{rd.GetDateTime(0).Date.AddMonths(1).ToLongDateString()}<br />";
+                //if (requirePerm)
+                ReturnCodeSel_ddl.Items.Add(requirePerm ? $"[{rd.GetString(1)}]{rd.GetString(2)}-{rd.GetString(3)} @ {rd.GetDateTime(0).Date.ToShortDateString()}" : $"[{rd.GetString(1)}]{rd.GetString(2)} @ {rd.GetDateTime(0).Date.ToShortDateString()}");
+                //ReturnCodeSel_ddl.Visible = requirePerm;
+                ++qty;
+            }, () => Return_pn.Visible = false);
+            if (qty > 0)
+            {
+                ToReturn_lb.Text = qty.ToString();
+                ReturnCodeSel_ddl.ToolTip = ReturnCodeSel_ddl.SelectedValue;
+            }
+        }
+        
     }
 
     private void AssignAssetData(MySqlDataReader rd)
@@ -370,7 +401,7 @@ public partial class AssetsPage : System.Web.UI.Page
         Response.Redirect("Login_Reg.aspx");
     }
 
-    protected void Asset_gv_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
+    protected void Asset_gv_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         DataSet ds=new DataSet();
         ds = (DataSet)this.ViewState["ds"];
@@ -381,10 +412,24 @@ public partial class AssetsPage : System.Web.UI.Page
 
     protected void Return_bt_Click(object sender, EventArgs e)
     {
-        svr.Execute($"UPDATE lending SET `Status`='Returned',DateReturned=NOW(),TransactionCode=1 WHERE AssetCode={Asset_gv.SelectedRow.Cells[0]}", (Exception ex) =>
+        var requirePerm = byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'").ToString()) == 0;
+        if(!requirePerm || (int)Session["UserPerm"] < 3)
         {
-            dc.CreateAlert(" 请重试或检查数据", "error", Alerts_pn);
-        });
+            svr.cn.Open();
+            // Can return
+            using (MySqlTransaction transact = svr.cn.BeginTransaction())
+            {
+                if (svr.Execute($"UPDATE lending SET `Status`='Returned',DateReturned=NOW(),TransactionCycleEnded=1 WHERE TransactionCode='{ReturnCodeSel_ddl.SelectedValue.Substring(1, 12)}'", transact) != 1)
+                {
+                    dc.CreateAlert("请重试或检查数据", "error", Alerts_pn);
+                    transact.Rollback();
+                    return;
+                }
+                transact.Commit();
+            }
+            dc.CreateAlert("归还成功!", "success", Alerts_pn);
+        }
+        else dc.CreateAlert("操作权限不足", "error", Alerts_pn);
     }
 
     protected void TypeSel0_ddl_SelectedIndexChanged(object sender, EventArgs e)
@@ -411,7 +456,6 @@ public partial class AssetsPage : System.Web.UI.Page
 
     protected void TypeSel2_ddl_SelectedIndexChanged(object sender, EventArgs e) => InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode='{TypeSel2_ddl.SelectedValue.Substring(0, 3)}'");
 
-
     protected void Borrowed_bt_Click(object sender, EventArgs e)
     {
         if (Session["UserID"] == null)
@@ -422,5 +466,10 @@ public partial class AssetsPage : System.Web.UI.Page
         {
             InitiateSearch($"select lending.AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets right join lending on assets.AssetCode=lending.AssetCode join assetclasses on assets.ClassCode=assetclasses.ClassCode where lending.MemberCode={Session["UserID"]} and lending.Status = 'taken';");
         }
+    }
+
+    protected void ReturnCodeSel_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ReturnCodeSel_ddl.ToolTip = ReturnCodeSel_ddl.SelectedValue;
     }
 }
