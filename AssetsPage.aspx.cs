@@ -27,6 +27,7 @@ public partial class AssetsPage : System.Web.UI.Page
         if (!loggedIn && Session["UserID"] != null)
         {
             loggedIn = true;
+            Login_Jmp_bt.Text = "已登录";
             userId = (string)Session["UserID"];
             Borrow_tb.OnClientClick = "showBorrowConfirmPopup();";
             Borrow_tb.Attributes["href"] = "#";
@@ -364,12 +365,9 @@ public partial class AssetsPage : System.Web.UI.Page
 
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
-        if (Session["UserID"] == null)
-        {
-            if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
-            ((Stack<string>)Session["jmpStack"]).Push(Request.RawUrl);
-            Response.Redirect("Login_Reg.aspx");
-        }
+        if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
+        ((Stack<string>)Session["jmpStack"]).Push(Request.RawUrl);
+        Response.Redirect("Login_Reg.aspx");
     }
 
     protected void Asset_gv_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)

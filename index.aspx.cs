@@ -43,11 +43,8 @@ public partial class index : System.Web.UI.Page
     }
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
-        if (Session["UserID"] == null)
-        {
-            if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
-            ((Stack<string>)Session["jmpStack"]).Push("index.aspx");
-            Response.Redirect("Login_Reg.aspx");
-        }
+        if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
+        ((Stack<string>)Session["jmpStack"]).Push("index.aspx");
+        Response.Redirect("Login_Reg.aspx");
     }
 }

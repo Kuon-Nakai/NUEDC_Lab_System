@@ -33,13 +33,9 @@ public partial class Events : System.Web.UI.Page
     }
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
-        if (Session["UserID"] == null)
-        {
-            if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
-            ((Stack<string>)Session["jmpStack"]).Push("Events.aspx");
-            Response.Redirect("Login_Reg.aspx");
-        }
-        
+        if (Session["jmpStack"] == null) Session["jmpStack"] = new Stack<string>();
+        ((Stack<string>)Session["jmpStack"]).Push("Events.aspx");
+        Response.Redirect("Login_Reg.aspx");
     }
 
     protected void Event_gv_PageIndexChanging(object sender, GridViewPageEventArgs e)
