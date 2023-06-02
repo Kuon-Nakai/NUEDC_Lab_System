@@ -116,22 +116,23 @@ public class MySqlSvr
             cn.Close();
     }
     /// <summary>
-    /// 利用异步访问实现多个查询同时进行 数据量大时效率较高
-    /// 没试过 可以用一下试试
+    /// 利用异步访问实现多个查询同时进行 数据量大时效率较高 具体调用方法见reference
     /// </summary>
     /// <param name="tasks">任务列表 把所有结构体全都列在参数里就行</param>
     public async void QueryReader_Parallel(params QueryReaderTask[] tasks)
     {
         var cl = cn.State == ConnectionState.Closed;
-        if (cl)
-            cn.Open();
+        //if (cl)
+        //    cn.Open();
         var trds = new Dictionary<Task<DbDataReader>, QueryReaderTask>();
         var rds = new Dictionary<DbDataReader, Task<bool>>();
         var rhs = new Dictionary<DbDataReader, ReaderDataHandler>();
-
+        var cns = new Stack<MySqlConnection>();
         foreach (var task in tasks)
         {
-            trds.Add(new MySqlCommand(task.sql, cn).ExecuteReaderAsync(), task);
+            cns.Push(new MySqlConnection(cn.ConnectionString));
+            cns.Peek().Open();
+            trds.Add(new MySqlCommand(task.sql, cns.Peek()).ExecuteReaderAsync(), task);
         }
         //verify queries
         foreach (var trd in trds.Keys)
@@ -150,7 +151,7 @@ public class MySqlSvr
         var rd2clear = new List<DbDataReader>();
         while(rds.Count > 0)
         {
-            foreach (var rd in rds.Keys)
+            foreach (var rd in rds.Keys.ToArray())
             {
                 if (!await rds[rd])
                 {
@@ -160,16 +161,19 @@ public class MySqlSvr
                 rhs[rd]((MySqlDataReader)rd);
                 rds[rd] = rd.ReadAsync();
             }
-            foreach(var rd in rd2clear)
+            foreach(var rd in rd2clear.ToArray())
             {
                 rds.Remove(rd);
                 rhs.Remove(rd);
                 rd.Close();
+                
             }
             rd2clear.Clear();
         }
-        if (cl)
-            cn.Close();
+        foreach(var c in cns.ToArray())
+        {
+            c.Close();
+        }
     }
     /// <summary>
     /// 执行非查询操作
