@@ -167,7 +167,7 @@
                         返还元器件请交还给实验室成员并协助登记。<br />
                     </p>
                     <a href="AssetsPage.aspx" class="btn btn--primary u-fullwidth">前往</a>
-                    <asp:HyperLink NavigateUrl="AssetsManage.aspx" runat="server" Visible="false" CssClass="btn btn--stroke u-fullwidth" ID="AssetsManage_lk">管理</asp:HyperLink>
+                    <asp:HyperLink NavigateUrl="AssetsManagement.aspx" runat="server" Visible="false" CssClass="btn btn--stroke u-fullwidth" ID="AssetsManage_lk">管理</asp:HyperLink>
                     <ul class="modal-popup__cat">
                         <li>借出操作需要登录</li>
                     </ul>
