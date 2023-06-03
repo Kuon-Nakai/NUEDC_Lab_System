@@ -182,4 +182,20 @@ public partial class AssetsManagement : System.Web.UI.Page
             $"MemberCode='{LendSearch_bt.Text}' or " +
             $"Status like %'{LendSearch_bt.Text}'%;"); // TODOs
     }
+
+    protected void Del_tb_Click(object sender, EventArgs e)
+    {
+        svr.Execute($"DELETE FROM assets WHERE AssetCode={Asset_gv.SelectedRow.Cells[0]}", (Exception ex) =>
+        {
+            dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
+        });
+    }
+
+    protected void Locate_bt_Click(object sender, EventArgs e)
+    {
+        svr.Execute($"UPDATE assets AssetName={AssetName_lb},ClassCode=(SELECT ClassCode FROM assetclasses WHERE ClassName={AssetClass_lb}),MainValue={PrimValue_lb} ,Location={Location_lb} ,Characteristics={Property_lb} ,Amount={Qty_tb} ,ReservationQty={RsrvQty_tb} ,LendingPolicy={AutoApproveLvl_tb};", (Exception ex) =>
+        {
+            dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
+        });
+    }
 }

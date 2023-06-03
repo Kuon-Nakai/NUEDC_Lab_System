@@ -105,34 +105,44 @@
                                 <div class="column lg-6 tab-12">
                                     元件名称<br />
                                     <br />
+                                      <br />
+                                    
                                     元件类型<br />
                                     <br />
+                                      <br />
+                                      
                                     值<br />
                                     <br />
+                                      
+                                      <br />
                                     位置<br />
                                     <br />
+                                     
+                                      <br />
                                     属性<br />
                                     <br />
+                                     
+                                      <br />
                                     <asp:Panel runat="server" ID="Datasheet_pn0">
                                         参考文档
                                     </asp:Panel>
                                 </div>
                                 <div class="column lg-6 tab-12" style="text-align: right; margin-bottom: 0px">
-                                    <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetName_lb" />
-                                    <br />
-                                    <br />
-                                    <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="AssetClass_lb" />
-                                    <br />
-                                    <br />
-                                    <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="PrimValue_lb" />
-                                    <br />
-                                    <br />
-                                    <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Location_lb" />
-                                    <br />
-                                    <br />
-                                    <asp:Label Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb" />
-                                    <br />
-                                    <br />
+                                    <asp:TextBox Text="Unknown" Font-Bold="true" runat="server" ID="AssetName_lb" />
+                                  
+                                    
+                                    <asp:TextBox Text="Unknown" Font-Bold="true" runat="server" ID="AssetClass_lb" />
+                                  
+                                    
+                                    <asp:TextBox Text="Unknown" Font-Bold="true" runat="server" ID="PrimValue_lb" />
+                                   
+                                    
+                                    <asp:TextBox Text="Unknown" Font-Bold="true" runat="server" ID="Location_lb" />
+                                   
+                                    
+                                    <asp:TextBox Text="Unknown" Font-Bold="true" runat="server" ID="Property_lb" />
+                                    
+                                    
                                     <asp:Panel runat="server" ID="Datasheet_pn1">
                                         <asp:LinkButton Text="添加" ID="AddDoc_bt" runat="server" />
                                     </asp:Panel>
@@ -160,8 +170,8 @@
                             <asp:Panel runat="server" ID="BorrowNotAvailable_pn" Visible="false">
                             </asp:Panel>--%>
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="New_tb" Text="添加记录" />
-                            <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt" Text="更新记录" />
-                            <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Del_tb" Text="删除记录" />
+                            <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt" Text="更新记录" OnClick="Locate_bt_Click" />
+                            <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Del_tb" Text="删除记录" OnClick="Del_tb_Click" />
                         </div>
 
                     </div>
