@@ -367,3 +367,7 @@ FodyWeavers.xsd
 /Practice.aspx
 /Practice.aspx.cs
 /.vscode/CatStatus.bcat
+/html
+/xml
+/Documentation/html
+/Doxygen

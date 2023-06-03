@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,6 +31,15 @@ public class MailSvr
         client.Send(msg);
         return code;
     }
+    /// <summary>
+    /// 向指定邮箱发送邮件
+    /// </summary>
+    /// <param name="target">目标邮箱地址</param>
+    /// <param name="subject">邮件主题</param>
+    /// <param name="body">邮件内容</param>
+    /// <example>
+    ///     <code>SendMail("target@mail.com", "Test mail", "This is a test mail.");</code>
+    /// </example>
     public static void SendMail(string target, string subject, string body) => client.Send(new MailMessage(from: sendAddr, to: new MailAddress(target))
     {
         Subject = subject,
