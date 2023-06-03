@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsManagement.aspx.cs" Inherits="AssetsManagement" Async="true" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsManagement.aspx.cs" Inherits="AssetsManagement" Async="true" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="css/LightboxStyles.scss" />
@@ -67,8 +67,10 @@
                         <div class="column lg-6 tab-12">
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">元器件搜索</h5>
-                                <asp:TextBox runat="server" TextMode="Search" ID="sear_tb" />
-                                <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" OnClick="Search_bt_Click">搜索</asp:LinkButton>
+                                <asp:Panel runat="server" DefaultButton="Search_bt" CssClass="row">
+                                    <asp:TextBox runat="server" TextMode="Search" ID="sear_tb" />
+                                    <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" OnClick="Search_bt_Click">搜索</asp:LinkButton>
+                                </asp:Panel>
                             </div>
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 150px">快捷查询</h5>
@@ -76,7 +78,7 @@
                                 <asp:LinkButton runat="server" CssClass="btn btn--stroke">可续借</asp:LinkButton>
                             </div>
                             <div style="max-width: 100%; overflow-x: scroll">
-                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="25" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging"></asp:GridView>
+                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="25" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging" OnRowCreated="Asset_gv_RowCreated"></asp:GridView>
                             </div>
 
                         </div>

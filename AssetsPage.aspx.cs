@@ -13,7 +13,7 @@ using System.Web.UI.WebControls;
 
 public partial class AssetsPage : System.Web.UI.Page
 {
-    private DynamicControls dc = new DynamicControls();
+    private readonly DynamicControls dc = new DynamicControls();
     MySqlSvr svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
     bool loggedIn = false;
     public string userId;
@@ -75,6 +75,11 @@ public partial class AssetsPage : System.Web.UI.Page
         var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
         var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
 
+        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
+        dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
+        //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
+        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
+
         TotalComp_lb.Text = (await tc)?.ToString();
         TotalEntries_lb.Text = (await te)?.ToString();
         TotalLent_lb.Text = (await tl)?.ToString();
@@ -86,10 +91,6 @@ public partial class AssetsPage : System.Web.UI.Page
         TotalReturned_lb.Text = (string)svr.QuerySingle("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;");
         //TotalQueries_lb.Text = (string) svr.QuerySingle("select ")
 #endif //USE_ASYNC
-        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
-        dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
-        //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
-        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
     }
 
     private void InitiateSearch(string sql)

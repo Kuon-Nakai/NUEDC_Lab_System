@@ -27,6 +27,7 @@ public partial class AssetsManagement : System.Web.UI.Page
 
     protected async void Page_Load(object sender, EventArgs e)
     {
+        
         if (Session["UserPerm"] == null || (int)Session["UserPerm"] > 1)
         {
             dc.CreateAlert("用户权限不足, 拒绝访问", "info", Alerts_pn);
@@ -36,6 +37,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         if (!loggedIn && Session["UserID"] != null)
         {
             loggedIn = true;
+            Login_Jmp_bt.Text = "已登录";
             userId = (string)Session["UserID"];
             //Borrow_tb.OnClientClick = "showBorrowConfirmPopup();";
             //Borrow_tb.Attributes["href"] = "#";
@@ -50,6 +52,11 @@ public partial class AssetsManagement : System.Web.UI.Page
         var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
         var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
 
+        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
+        dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
+        //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
+        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
+
         TotalComp_lb.Text = (await tc)?.ToString();
         TotalEntries_lb.Text = (await te)?.ToString();
         TotalLent_lb.Text = (await tl)?.ToString();
@@ -62,10 +69,6 @@ public partial class AssetsManagement : System.Web.UI.Page
         TotalReturned_lb.Text = (string)svr.QuerySingle("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;");
         //TotalQueries_lb.Text = (string) svr.QuerySingle("select ")
 #endif //USE_ASYNC
-        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
-        dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
-        //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
-        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
     }
 
     private void InitiateSearch(string sql)
