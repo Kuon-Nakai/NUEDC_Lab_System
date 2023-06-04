@@ -33,40 +33,51 @@ public partial class AssetsPage : System.Web.UI.Page
             Borrow_tb.OnClientClick = "showBorrowConfirmPopup();";
             Borrow_tb.Attributes["href"] = "#";
         }
-        if (IsPostBack) { return; }
-        //if (class0.Count == 0)
-        //{
-            svr.QueryReader_Parallel(new MySqlSvr.QueryReaderTask
-            {
-                sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=3;",
-                ReaderDataHandler = (MySqlDataReader rd) =>
-                {
-                    TypeSel0_ddl.Items.Add($"{rd[0]}{rd[1]}");
-                    //class0.Add($"{rd[0]} {rd[1]}");
-                },
-                NoDataHandler = () => TypeSel0_ddl.Visible = false
-            }, new MySqlSvr.QueryReaderTask
-            {
-                sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=6;",
-                ReaderDataHandler = (MySqlDataReader rd) =>
-                {
-                    TypeSel1_ddl.Items.Add($"{((string)rd[0]).Substring(3)}{rd[1]}");
-                    //class1.Add($"{((string)rd[0]).Substring(3)} {rd[1]}");
-                },
-                NoDataHandler = () => TypeSel1_ddl.Visible = false
-            }, new MySqlSvr.QueryReaderTask
-            {
-                sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=9;",
-                ReaderDataHandler = (MySqlDataReader rd) =>
-                {
-                    TypeSel2_ddl.Items.Add($"{((string)rd[0]).Substring(6)}{rd[1]}");
-                    //class2.Add($"{((string)rd[0]).Substring(6)} {rd[1]}");
-                },
-                NoDataHandler = () => TypeSel2_ddl.Visible = false
-            });
-        //}
         
         svr = new MySqlSvr(new MySqlConnection("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234"));
+
+        //------------------------------- POSTBACK HANDLING ABOVE --------------------------------------//
+
+        if (IsPostBack) { return; }
+        TypeSel0_ddl.Items.Add("");
+        TypeSel1_ddl.Items.Add("");
+        TypeSel2_ddl.Items.Add("");
+        // Load data into class filter dropdowns
+        svr.QueryReader_Parallel(new MySqlSvr.QueryReaderTask
+        {
+            sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=3;",
+            ReaderDataHandler = (MySqlDataReader rd) =>
+            {
+                TypeSel0_ddl.Items.Add($"{rd[0]}{rd[1]}");
+                //class0.Add($"{rd[0]} {rd[1]}");
+            },
+            NoDataHandler = () => TypeSel0_ddl.Visible = false
+        }, new MySqlSvr.QueryReaderTask
+        {
+            sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=6;",
+            ReaderDataHandler = (MySqlDataReader rd) =>
+            {
+                TypeSel1_ddl.Items.Add($"{((string)rd[0]).Substring(3)}{rd[1]}");
+                //class1.Add($"{((string)rd[0]).Substring(3)} {rd[1]}");
+            },
+            NoDataHandler = () => TypeSel1_ddl.Visible = false
+        }, new MySqlSvr.QueryReaderTask
+        {
+            sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=9;",
+            ReaderDataHandler = (MySqlDataReader rd) =>
+            {
+                TypeSel2_ddl.Items.Add($"{((string)rd[0]).Substring(6)}{rd[1]}");
+                //class2.Add($"{((string)rd[0]).Substring(6)} {rd[1]}");
+            },
+            NoDataHandler = () => TypeSel2_ddl.Visible = false
+        });
+
+        //TypeSel0_ddl.Text = "分类1";
+        //TypeSel1_ddl.Text = "分类2";
+        TypeSel1_ddl.Enabled = false;
+        //TypeSel2_ddl.Text = "分类3";
+        TypeSel2_ddl.Enabled = false;
+
         //Update system usage public summary
 #if USE_ASYNC
         svr.cn.Open();
@@ -75,7 +86,7 @@ public partial class AssetsPage : System.Web.UI.Page
         var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
         var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
 
-        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
+        InitiateSearch("select * from assets_view2");
         dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
         //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
         LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
@@ -358,7 +369,11 @@ public partial class AssetsPage : System.Web.UI.Page
     protected void Search_bt_Click(object sender, EventArgs e)
     {
         string sear_str = sear_tb.Text;
-        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值, ValueUnit as 单位 from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where AssetCode='{sear_str}' or AssetName like '%{sear_str}%' or MainValue like '%{sear_str}%';");
+        InitiateSearch("select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode where " +
+            $"(AssetCode='{sear_str}' or AssetName like '%{sear_str}%' or MainValue like '%{sear_str}%') and " +
+            $"assets.ClassCode like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}" +
+            $"{TypeSel1_ddl.SelectedValue.Substring(0, Math.Min(TypeSel1_ddl.SelectedValue.Length, 3))}" +
+            $"{TypeSel2_ddl.SelectedValue.Substring(0, Math.Min(TypeSel2_ddl.SelectedValue.Length, 3))}%';");
         LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
     }
 
@@ -442,27 +457,57 @@ public partial class AssetsPage : System.Web.UI.Page
 
     protected void TypeSel0_ddl_SelectedIndexChanged(object sender, EventArgs e)
     {
-        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}%'");
+        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}%'");
         TypeSel1_ddl.Items.Clear();
-        svr.QueryReader($"select ClassCode, ClassName from assetclasses where Length(ClassCode)=6 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}%';", (MySqlDataReader rd) =>
+        TypeSel1_ddl.Items.Add("");
+        if(TypeSel0_ddl.SelectedIndex == 0)
+        {
+            TypeSel1_ddl.Visible = false;
+            TypeSel1_ddl.Enabled = false;
+            TypeSel1_ddl.SelectedIndex = 0;
+            TypeSel2_ddl.Visible = false;
+            TypeSel2_ddl.Enabled = false;
+            TypeSel2_ddl.SelectedIndex = 0;
+            return;
+        }
+        svr.QueryReader($"select ClassCode, ClassName from assetclasses where Length(ClassCode)=6 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}%';", (MySqlDataReader rd) =>
         {
             TypeSel1_ddl.Items.Add(rd.GetString(0).Substring(3) + rd.GetString(1));
             TypeSel1_ddl.Visible = true;
+            TypeSel1_ddl.Enabled = true;
+            TypeSel1_ddl.SelectedIndex = 0;
+            TypeSel2_ddl.Enabled = false;
+            TypeSel2_ddl.SelectedIndex = 0;
         }, () => TypeSel1_ddl.Visible = false);
     }
 
     protected void TypeSel1_ddl_SelectedIndexChanged(object sender, EventArgs e)
     {
-        InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}{TypeSel1_ddl.SelectedValue.Substring(0, 3)}%'");
+        InitiateSearch("select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where " +
+            $"ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}" +
+            $"{TypeSel1_ddl.SelectedValue.Substring(0, Math.Min(TypeSel1_ddl.SelectedValue.Length, 3))}%'");
         TypeSel2_ddl.Items.Clear();
-        svr.QueryReader($"select ClassCode, ClassName from assetclasses where Length(ClassCode)=9 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, 3)}{TypeSel1_ddl.SelectedValue.Substring(0, 3)}%';", (MySqlDataReader rd) =>
+        TypeSel2_ddl.Items.Add("");
+        if(TypeSel1_ddl.SelectedIndex == 0)
+        {
+            TypeSel2_ddl.Visible = false;
+            TypeSel2_ddl.Enabled = false;
+            TypeSel2_ddl.SelectedIndex = 0;
+            return;
+        }
+        svr.QueryReader($"select ClassCode, ClassName from assetclasses where " +
+            $"Length(ClassCode)=9 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}" +
+            $"{TypeSel1_ddl.SelectedValue.Substring(0, Math.Min(TypeSel1_ddl.SelectedValue.Length, 3))}%';", (MySqlDataReader rd) =>
         {
             TypeSel2_ddl.Items.Add(rd.GetString(0).Substring(6) + rd.GetString(1));
             TypeSel2_ddl.Visible = true;
+            TypeSel2_ddl.Enabled = true;
+            TypeSel2_ddl.SelectedIndex = 0;
         }, () => TypeSel2_ddl.Visible = false);
     }
 
-    protected void TypeSel2_ddl_SelectedIndexChanged(object sender, EventArgs e) => InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where ClassCode='{TypeSel2_ddl.SelectedValue.Substring(0, 3)}'");
+    protected void TypeSel2_ddl_SelectedIndexChanged(object sender, EventArgs e) => InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where " +
+        $"ClassCode='{TypeSel2_ddl.SelectedValue.Substring(0, Math.Min(TypeSel2_ddl.SelectedValue.Length, 3))}'");
 
     protected void Borrowed_bt_Click(object sender, EventArgs e)
     {

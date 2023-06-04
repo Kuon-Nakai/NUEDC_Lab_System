@@ -81,9 +81,9 @@
                         <div class="column lg-6 tab-12">
                             <div class="row">
                                 <h5 style="position: relative; top: -39px; width: 60px">分类</h5>
-                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel0_ddl"></asp:DropDownList>
-                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel1_ddl"></asp:DropDownList>
-                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel2_ddl"></asp:DropDownList>
+                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel0_ddl" OnSelectedIndexChanged="TypeSel0_ddl_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel1_ddl" OnSelectedIndexChanged="TypeSel1_ddl_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList runat="server" AutoPostBack="true" CssClass="Ddl" ID="TypeSel2_ddl" OnSelectedIndexChanged="TypeSel2_ddl_SelectedIndexChanged"></asp:DropDownList>
                             </div>
 
                             <h4>元器件信息<br />
