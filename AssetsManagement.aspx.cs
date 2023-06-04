@@ -111,7 +111,7 @@ public partial class AssetsManagement : System.Web.UI.Page
     {
         AssetName_lb.Text = (string)rd[0];
         AssetClass_lb.Text = (string)rd[1];
-        PrimValue_lb.Text = $"{rd[2]} {rd[3]}";
+        PrimValue_lb.Text = (string)rd[2];
         Location_lb.Text = (string)rd[4];
         Property_lb.Text = rd[5].ToString().Length > 0 ? (string)rd[5] : "暂无数据";
 
