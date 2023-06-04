@@ -197,7 +197,14 @@
 		<h2 style="color:white">请确认登录信息和返还日期, 并仔细阅读以下注意事项</h2>
 		<p style="color:white">当前登录: <%=userId %></p>
 		<p style="color:white">归还期限: <%=DateTime.Today.AddMonths(1).ToLongDateString() %></p>
-        <p style="color:white">注意事项</p>
+        <p style="color:white">
+            注意事项: <br />
+            · 除另有声明外, 借出时长默认为: 一个月  请在规定时间内前往实验室归还元件<br />
+            · 时限已到但需要继续使用的, 请在归还期限前联系实验室管理员登记续借<br />
+            · 元件在借出期间损坏或丢失的, 请联系实验室管理员<br />
+            · 电阻、电容等消耗性元件可在线上自助登记归还, 不需要实验室成员登记<br />
+            · 开发板、传感器等较贵重元件需交给实验室成员检查完整性 并由实验室成员登记归还<br />
+        </p>
         <hr />
         <asp:LinkButton Text="我已阅读, 确认借出" runat="server" ID="ConfirmBorrow_bt" CssClass="btn btn--primary btn--large" OnClick="LendReg_bt_Click" />
 	`);

@@ -280,10 +280,15 @@ public partial class AssetsPage : System.Web.UI.Page
             ReturnDeadline_lb.Text = "";
             ReturnCodeSel_ddl.Items.Clear();
             var requirePerm = byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets}").ToString()) == 0;
-            if ((int)Session["UserPerm"] > 2 && requirePerm)
+            if ((int)Session["UserPerm"] > 2)
             {
                 Return_bt.OnClientClick = "showReturnImpossiblePopup();";
                 Return_bt.Attributes["href"] = "#";
+            }
+            if (requirePerm)
+            {
+                BorrowQtySel_tb.Text = "1";
+                BorrowQtySel_tb.Enabled = false;
             }
             svr.QueryReader($"select DateProcessed, TransactionCode, AssetName, FullCode from lending left join assets on assets.AssetCode=lending.AssetCode where ({sql_where_assets}) and MemberCode={Session["UserID"]} and Status='Taken'", (MySqlDataReader rd) =>
             {
@@ -305,11 +310,11 @@ public partial class AssetsPage : System.Web.UI.Page
 
     private void AssignAssetData(MySqlDataReader rd)
     {
-        AssetName_lb.Text = (string)rd[0];
-        AssetClass_lb.Text = (string)rd[1];
-        PrimValue_lb.Text = (string)rd[2];
-        Location_lb.Text = (string)rd[4];
-        Property_lb.Text = rd[5].ToString().Length > 0 ? (string)rd[5] : "暂无数据";
+        AssetName_lb.Text = rd[0].ToString();
+        AssetClass_lb.Text = rd[1].ToString();
+        PrimValue_lb.Text = rd[2].ToString();
+        Location_lb.Text = rd[4].ToString();
+        Property_lb.Text = rd[5].ToString().Length > 0 ? rd[5].ToString() : "暂无数据";
         if ((ulong)rd[7] == 1)
         {
             BorrowQtySel_tb.Enabled = true;
@@ -320,6 +325,8 @@ public partial class AssetsPage : System.Web.UI.Page
             BorrowQtySel_tb.Enabled = false;
             ItemID_tb.Enabled = true;
         }
+
+        
 
         //Legacy code
         //if (((string)rd[6]).Length == 0)
