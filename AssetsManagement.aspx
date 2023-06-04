@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsManagement.aspx.cs" Inherits="AssetsManagement" Async="true" EnableEventValidation="false" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AssetsManagement.aspx.cs" Inherits="AssetsManagement" Async="true" EnableEventValidation="false" MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="css/LightboxStyles.scss" />
@@ -72,13 +72,8 @@
                                     <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="Search_bt" OnClick="Search_bt_Click">搜索</asp:LinkButton>
                                 </asp:Panel>
                             </div>
-                            <div class="row">
-                                <h5 style="position: relative; top: -39px; width: 150px">快捷查询</h5>
-                                <asp:LinkButton runat="server" CssClass="btn btn--stroke" ID="AwaitReturn_bt">待归还</asp:LinkButton>
-                                <asp:LinkButton runat="server" CssClass="btn btn--stroke">可续借</asp:LinkButton>
-                            </div>
                             <div style="max-width: 100%; overflow-x: scroll">
-                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="25" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging" OnRowCreated="Asset_gv_RowCreated"></asp:GridView>
+                                <asp:GridView ID="Asset_gv" runat="server" Width="98%" AllowPaging="True" PageSize="25" HorizontalAlign="Left" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnPageIndexChanging="Asset_gv_PageIndexChanging" OnRowCreated="Asset_gv_RowCreated" OnSelectedIndexChanged="Asset_gv_SelectedIndexChanged"></asp:GridView>
                             </div>
 
                         </div>
@@ -94,12 +89,19 @@
                             <h4>元器件信息<br />
                             </h4>
                             <div style="position: relative; left: 160px; top: -50px">Component Information</div>
-                            <div class="row">
-                                <h5 class="u-fullwidth">元件情况概览</h5>
+                            <div class="row u-add-half-bottom">
+                                <h5 class="u-fullwidth">元件借出情况概览</h5>
                                 <p style="position:relative; text-align:center; margin-top:15px; margin-right:45px">记录搜索</p>
                                 <asp:TextBox runat="server" TextMode="Search" ID="LendSearch_tb" />
                                 <asp:LinkButton runat="server" CssClass="btn btn--primary" ID="LendSearch_bt" OnClick="LendSearch_bt_Click">搜索</asp:LinkButton>
-                                <asp:GridView runat="server" ID="LendState_gv"></asp:GridView>
+                                <div style="max-width:100%; max-height:500px; overflow:scroll">
+                                    <asp:GridView runat="server" ID="LendState_gv" SelectedRowStyle-BackColor="#FFCC99" SelectedRowStyle-BorderColor="#FF9900" SelectedRowStyle-ForeColor="Red" OnRowCreated="LendState_gv_RowCreated" OnSelectedIndexChanged="LendState_gv_SelectedIndexChanged"></asp:GridView>
+                                </div>
+                                <asp:Panel runat="server" CssClass="column" ID="OpBtn_pn">
+                                    <asp:LinkButton Text="确认归还" runat="server" ID="ConfirmReturn_bt" CssClass="btn btn--medium btn--stroke" OnClick="ConfirmReturn_bt_Click" />
+                                    <asp:LinkButton Text="邮件提醒" runat="server" ID="MailNotif_bt" CssClass="btn btn--medium btn--stroke" OnClientClick="showMailConfirmPopup();" />
+                                    <asp:LinkButton Text="标记异常" runat="server" ID="FlagAnomaly_bt" CssClass="btn btn--medium btn--stroke" OnClientClick="showFlagAnomalyPopup();" />
+                                </asp:Panel>
                                 <hr />
                             </div>
                             <div class="row u-add-half-bottom">
@@ -173,9 +175,9 @@
                             </asp:Panel>--%>
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="New_tb" Text="添加记录" />
                             <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Locate_bt" Text="更新记录" OnClick="Locate_bt_Click" />
-                            <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Del_tb" Text="删除记录" OnClick="Del_tb_Click" />
+                            <asp:LinkButton runat="server" CssClass="btn btn--stroke u-fullwidth" ID="Del_tb" Text="删除记录" OnClientClick="showDelConfirmPopup();" />
                         </div>
-
+                        
                     </div>
 
                 </div>
@@ -186,7 +188,7 @@
         </section>
         <!-- end content -->
         <script type="text/javascript">
-            function showBorrowConfirmPopup() {
+            function showCreatePopup() {
 
                 const instance = basicLightbox.create(`
 		<h2 style="color:white">新建元件</h2>
@@ -198,9 +200,74 @@
 
                 //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
                 //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
-                
+
                 instance.show();
 
+            }
+            function showDelConfirmPopup() {
+
+                const instance = basicLightbox.create(`
+		<h2 style="color:white">正在删除一个元件</h2>
+		<p style="color:white">该操作不可撤销, 请确认操作</p>
+        <hr />
+        <asp:LinkButton Text="确认删除" runat="server" ID="ConfirmDel_bt" CssClass="btn btn--primary btn--large" OnClick="ConfirmDel_bt_Click" />
+	`);
+
+                //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
+                //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
+
+                instance.show();
+
+            }
+            function showMailConfirmPopup() {
+
+                const instance = basicLightbox.create(`
+		<h2 style="color:white">准备发送邮件</h2>
+		<p style="color:white">
+            发送: dhu_nuedc_system@163.com <br />
+            目标邮箱: <% =TgtMail %> <br />
+            主题: <%=MailSubject %> <br />
+            内容: <br />
+                <%=MailBody %> <br />
+        </p>
+        <hr />
+        <asp:LinkButton Text="确认删除" runat="server" ID="SendMail_bt" CssClass="btn btn--primary btn--large" OnClick="SendMail_bt_Click" />
+	`);
+
+                //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
+                //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
+
+                instance.show();
+
+            }
+            function showFlagAnomalyPopup() {
+                const instance = basicLightbox.create(`
+		<h2 style="color:white">标记异常</h2>
+		<p style="color:white">将该借出记录标记为异常, 推送给系统管理员进一步操作</p>
+        <div class="column u-fullwidth">
+            <div class="row">
+                <p style="color:white">借出操作代码</p>
+                <asp:TextBox runat="server" ID="Flag_TransactionCode_tb" Enabled="false" Text="Unspecified" />
+            </div>
+            <div class="row">
+                <p style="color:white">借出元件</p>
+                <asp:TextBox runat="server" ID="Flag_AssetName_tb" Enabled="false" Text="Unspecified" />
+                <p style="color:white">借出日期</p>
+                <asp:TextBox runat="server" ID="Flag_LendDate_tb" Enabled="false" Text="Unspecified" />
+            </div>
+            <div class="row u-fullwidth" style="width:1000px">
+                <p style="color:white">情况概述</p>
+                <asp:TextBox runat="server" TextMode="Multiline" ID="Flag_Brief_tb" Enabled="true" Width="800px" />
+            </div>
+        </div>
+        <asp:LinkButton Text="提交" runat="server" ID="FlagSubmit_bt" CssClass="btn btn--primary btn--large" OnClick="FlagSubmit_bt_Click" />
+	`);
+
+                //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
+                //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
+
+                instance.show();
+                
             }
         </script>
     </div>

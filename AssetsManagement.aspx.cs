@@ -13,21 +13,30 @@ using System.Web.UI.WebControls;
 
 public partial class AssetsManagement : System.Web.UI.Page
 {
-    private DynamicControls dc = new DynamicControls();
+    private readonly DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
-    bool loggedIn = false;
-    public string userId;
+    private bool loggedIn = false;
+    private int expiredCnt = 0;
+    private Stack<Task> expireChecks = new Stack<Task>();
 
-    private bool Assert_Perm(byte limit)
-    {
-        if (Session["UserID"] == null) return true;
-        Session["UserPerm"] = svr.QuerySingle($"select PermissionLevel from members where MemberCode={Session["UserID"]};");
-        return (uint)Session["UserPerm"] > limit;
-    }
+    #region Cross boundary fields...
+    public string userId;
+    public Task<object> TgtMail_tk;
+    public string TgtMail;
+    public string MailSubject;
+    public string MailBody;
+    #endregion
 
     protected async void Page_Load(object sender, EventArgs e)
     {
-        
+        Page.MaintainScrollPositionOnPostBack = true;
+
+        #region Disable client only buttons...
+        Del_tb.Attributes["href"] = "#";
+        FlagAnomaly_bt.Attributes["href"] = "#";
+        MailNotif_bt.Attributes["href"] = "#";
+        #endregion
+
         if (Session["UserPerm"] == null || (int)Session["UserPerm"] > 1)
         {
             dc.CreateAlert("用户权限不足, 拒绝访问", "info", Alerts_pn);
@@ -42,8 +51,8 @@ public partial class AssetsManagement : System.Web.UI.Page
             //Borrow_tb.OnClientClick = "showBorrowConfirmPopup();";
             //Borrow_tb.Attributes["href"] = "#";
         }
-        if (IsPostBack) { return; }
         svr = new MySqlSvr(new MySqlConnection("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234"));
+        if (IsPostBack) { return; }
         //Update system usage public summary
 #if USE_ASYNC
         svr.cn.Open();
@@ -55,7 +64,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
         dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
         //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
-        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
+        //LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
 
         TotalComp_lb.Text = (await tc)?.ToString();
         TotalEntries_lb.Text = (await te)?.ToString();
@@ -80,6 +89,35 @@ public partial class AssetsManagement : System.Web.UI.Page
         ViewState["ds"] = svr.QueryDataset(sql);
         Asset_gv.DataSource = ViewState["ds"];
         Asset_gv.DataBind();
+        if(Asset_gv.Rows.Count == 0) dc.CreateAlert("没有符合条件的元件", "info", Alerts_pn);
+        else Asset_gv.SelectRow(0);
+    }
+    private void InitiateLendSearch(string sql)
+    {
+        expiredCnt = 0;
+        expireChecks.Clear();
+        if (svr == null)
+        {
+            svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
+        }
+        ViewState["ds"] = svr.QueryDataset(sql);
+        LendState_gv.DataSource = ViewState["ds"];
+        LendState_gv.DataBind();
+        svr.cn.Close();
+        if (svr == null) svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
+        foreach (GridViewRow row in LendState_gv.Rows)
+        {
+            if(row.RowType == DataControlRowType.DataRow &&
+                row.Cells[3].Text.Equals("Taken") &&
+                DateTime.Now.AddMonths(-1).CompareTo(svr.QuerySingle($"select DateProcessed from lending where TransactionCode='{row.Cells[0].Text}'") as DateTime?) > 0)
+            {
+                ++expiredCnt;
+            }
+        }
+        if (expiredCnt > 0)
+            dc.CreateAlert($"注意: 该元件有{expiredCnt}个借用记录已过期未归还!", "notice", Alerts_pn);
+        else
+            dc.CreateAlert("当前元件未检测到过期记录", "success", Alerts_pn);
     }
 
     public void LoadAssetData(string sql_where_assets)
@@ -105,16 +143,22 @@ public partial class AssetsManagement : System.Web.UI.Page
             {
                 //Datasheet_lk.Text = "暂无文档";
             });
+        //LendState_gv.DataSource = null; 
+        //LendState_gv.DataBind();
+        InitiateLendSearch($"select TransactionCode, MemberCode, {(byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};").ToString()) == 0 ? "FullCode" : "Qty" )}, Status from lending left join assets on assets.AssetCode=lending.AssetCode where " +
+            $"{sql_where_assets};");
+        if(LendState_gv.Rows.Count > 0)
+            LendState_gv.SelectedIndex = 0;
     }
 
     private void AssignAssetData(MySqlDataReader rd)
     {
-        AssetName_lb.Text = (string)rd[0];
-        AssetClass_lb.Text = (string)rd[1];
-        PrimValue_lb.Text = (string)rd[2];
-        Location_lb.Text = (string)rd[4];
-        Property_lb.Text = rd[5].ToString().Length > 0 ? (string)rd[5] : "暂无数据";
-
+        AssetName_lb.Text = rd[0].ToString();
+        AssetClass_lb.Text = rd[1].ToString();
+        PrimValue_lb.Text = rd[2].ToString();
+        Location_lb.Text = rd[4].ToString();
+        Property_lb.Text = rd[5].ToString().Length > 0 ? rd[5].ToString() : "暂无数据";
+        
         #region Legacy code...
         //if (((string)rd[6]).Length == 0)
         //{
@@ -179,14 +223,22 @@ public partial class AssetsManagement : System.Web.UI.Page
 
     protected void LendSearch_bt_Click(object sender, EventArgs e)
     {
-        LendState_gv.DataSource = svr.QueryDataset($"select TransactionCode, MemberCode, {((byte)svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses=ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'") == 0 ? "FullCode" : "Qty" )}, Status from lending where " +
+        InitiateLendSearch($"select TransactionCode, MemberCode, {(byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'").ToString()) == 0 ? "FullCode" : "Qty" )}, Status from lending where " +
             $"AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}' and (" +
-            $"TransactionCode='{LendSearch_bt.Text}' or " +
-            $"MemberCode='{LendSearch_bt.Text}' or " +
-            $"Status like %'{LendSearch_bt.Text}'%;"); // TODOs
+            $"TransactionCode like'%{LendSearch_tb.Text}%' or " +
+            $"MemberCode='{LendSearch_tb.Text}' or " +
+            $"Status like '%{LendSearch_tb.Text}%');"); // TODOs
     }
 
-    protected void Del_tb_Click(object sender, EventArgs e)
+    protected void Locate_bt_Click(object sender, EventArgs e)
+    {
+        svr.Execute($"UPDATE assets set AssetName={AssetName_lb},ClassCode=(SELECT ClassCode FROM assetclasses WHERE ClassName={AssetClass_lb}),MainValue={PrimValue_lb} ,Location={Location_lb} ,Characteristics={Property_lb} ,Amount={Qty_tb} ,ReservationQty={RsrvQty_tb} ,LendingPolicy={AutoApproveLvl_tb};", (Exception ex) =>
+        {
+            dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
+        });
+    }
+
+    protected void ConfirmDel_bt_Click(object sender, EventArgs e)
     {
         svr.Execute($"DELETE FROM assets WHERE AssetCode={Asset_gv.SelectedRow.Cells[0]}", (Exception ex) =>
         {
@@ -194,11 +246,82 @@ public partial class AssetsManagement : System.Web.UI.Page
         });
     }
 
-    protected void Locate_bt_Click(object sender, EventArgs e)
+    protected void ConfirmReturn_bt_Click(object sender, EventArgs e)
     {
-        svr.Execute($"UPDATE assets AssetName={AssetName_lb},ClassCode=(SELECT ClassCode FROM assetclasses WHERE ClassName={AssetClass_lb}),MainValue={PrimValue_lb} ,Location={Location_lb} ,Characteristics={Property_lb} ,Amount={Qty_tb} ,ReservationQty={RsrvQty_tb} ,LendingPolicy={AutoApproveLvl_tb};", (Exception ex) =>
+        svr.cn.Open();
+        using (var transact = svr.cn.BeginTransaction())
         {
-            dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
-        });
+            if (svr.Execute("update lending set Status='已归还', TransactionCycleEnded=1 where TransactionCode=" + LendState_gv.SelectedRow.Cells[0].Text, transact) != 1)
+            {
+                transact.Rollback();
+                dc.CreateAlert("归还操作异常，已回退", "error", Alerts_pn);
+                return;
+            }
+            transact.Commit();
+            dc.CreateAlert("归还成功!", "success", Alerts_pn);
+        }
+    }
+    
+    protected void LendState_gv_RowCreated(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            e.Row.Attributes["onmouseover"] = "this.style.cursor='pointer';this.style.background-color='#ffe5cc';";
+            e.Row.Attributes["onmouseout"] = "this.style.background-color='none';";
+            e.Row.ToolTip = "点击选择";
+            e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(LendState_gv, "Select$" + e.Row.RowIndex);
+        }
+    }
+
+    protected void LendState_gv_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        #region Operation data preload...
+        TgtMail = svr.QuerySingle($"select Email from members where MemberCode='{int.Parse(LendState_gv.SelectedRow.Cells[1].Text):D9}'").ToString();
+        MailSubject = "[NUEDC实验室]元件归还提醒";
+        
+        if(DateTime.Today.AddMonths(-1) > ((DateTime)svr.QuerySingle($"select DateProcessed from lending where TransactionCode='{LendState_gv.SelectedRow.Cells[0].Text}';")))
+        {
+            // Expired!
+            dc.CreateAlert("注意: 检测到该借出已过期", "notice", Alerts_pn);
+            MailBody = $"{svr.QuerySingle($"select MemberName from members where MemberCode={LendState_gv.SelectedRow.Cells[1].Text}")}({LendState_gv.SelectedRow.Cells[1].Text})同学:\n" +
+            $"\t您借用的元件 {svr.QuerySingle($"select AssetName from assets right join lending on lending.AssetCode=assets.AssetCode where lending.TransactionCode='{LendState_gv.SelectedRow.Cells[0].Text}';")} " +
+            $"已在 {((DateTime)svr.QuerySingle($"select DateProcessed from lending where TransactionCode='{LendState_gv.SelectedRow.Cells[0].Text}';")).AddMonths(1)} " +
+            "达到借出时限。根据相关规定, 请尽快前往实验室归还或续借, 感谢理解!\n\n\n" +
+            "该邮件由NUEDC实验室综合服务平台发送\n" +
+            $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}";
+        }
+        else
+        {
+            MailBody = $"{svr.QuerySingle($"select MemberName from members where MemberCode={LendState_gv.SelectedRow.Cells[1].Text}")}({LendState_gv.SelectedRow.Cells[1].Text})同学:\n" +
+                $"\t您借用的元件 {svr.QuerySingle($"select AssetName from assets right join lending on lending.AssetCode=assets.AssetCode where lending.TransactionCode='{LendState_gv.SelectedRow.Cells[0].Text}';")} " +
+                $"将在 {((DateTime)svr.QuerySingle($"select DateProcessed from lending where TransactionCode='{LendState_gv.SelectedRow.Cells[0].Text}';")).AddMonths(1)} " +
+                "达到借出时限。请在时限内前往实验室归还或续借, 感谢理解!\n\n\n" +
+                "该邮件由NUEDC实验室综合服务平台发送\n" +
+                $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}";
+        }
+        OpBtn_pn.DataBind();
+        ViewState["tgtmail"] = TgtMail;
+        ViewState["mailsubject"] = MailSubject;
+        ViewState["mailbody"] = MailBody;
+        #endregion
+    }
+
+    protected void FlagSubmit_bt_Click(object sender, EventArgs e)
+    {
+        // TODO
+    }
+
+    protected void SendMail_bt_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            MailSvr.SendMail(ViewState["tgtmail"].ToString(), ViewState["mailsubject"].ToString(), ViewState["mailbody"].ToString());
+        }
+        catch(Exception ex)
+        {
+            dc.CreateAlert("邮件发送失败:\n" + ex.Message, "error", Alerts_pn);
+            return;
+        }
+        dc.CreateAlert("邮件成功发送!", "success", Alerts_pn);
     }
 }
