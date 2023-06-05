@@ -84,6 +84,7 @@ public partial class AssetsPage : System.Web.UI.Page
         var tc = svr.Cmd("select sum(Amount) from assets group by com;").ExecuteScalarAsync();
         var te = svr.Cmd("select count(AssetCode) from assets group by com;").ExecuteScalarAsync();
         var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
+        var t_r=svr.Cmd("SELECT COUNT(*) FROM lending WHERE TransactionCycleEnded=1;").ExecuteScalarAsync();
         var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
 
         InitiateSearch("select * from assets_view2");
@@ -95,6 +96,7 @@ public partial class AssetsPage : System.Web.UI.Page
         TotalEntries_lb.Text = (await te)?.ToString();
         TotalLent_lb.Text = (await tl)?.ToString();
         TotalReg_lb.Text = (await tr)?.ToString();
+        TotalReturned_lb.Text=(await t_r)?.ToString();
 #else // not USE_ASYNC
         TotalComp_lb.Text = (string)svr.QuerySingle("select sum(Amount) from assets group by com;");
         TotalEntries_lb.Text = (string)svr.QuerySingle("select count(AssetCode) from assets group by com;");
@@ -113,6 +115,10 @@ public partial class AssetsPage : System.Web.UI.Page
         ViewState["ds"] = svr.QueryDataset(sql);
         Asset_gv.DataSource = ViewState["ds"];
         Asset_gv.DataBind();
+        var t_q = (int)Application["TotalQueries"];
+        t_q++;
+        Application["TotalQueries"] = t_q;
+        TotalQueries_lb.Text = Application["TotalQueries"].ToString();
     }
 
     protected bool Assert_Fields()

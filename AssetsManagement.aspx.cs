@@ -97,7 +97,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         var te = svr.Cmd("select count(AssetCode) from assets group by com;").ExecuteScalarAsync();
         var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
         var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
-
+        var t_r = svr.Cmd("SELECT COUNT(*) FROM lending WHERE TransactionCycleEnded=1;").ExecuteScalarAsync();
         InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
         dc.CreateAlert("This is a debug version of the website. Content may change at any time.", "notice", Alerts_pn);
         //DynamicControls.CreateAlert("Info", "info", Alerts_pn);
@@ -107,6 +107,8 @@ public partial class AssetsManagement : System.Web.UI.Page
         TotalEntries_lb.Text = (await te)?.ToString();
         TotalLent_lb.Text = (await tl)?.ToString();
         TotalReg_lb.Text = (await tr)?.ToString();
+        TotalReturned_lb.Text = (await t_r)?.ToString();
+        TotalQueries_lb.Text = Application["TotalQueries"].ToString();
 #else // not USE_ASYNC
         // Legacy code
         TotalComp_lb.Text = (string)svr.QuerySingle("select sum(Amount) from assets group by com;");
@@ -115,7 +117,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         TotalReturned_lb.Text = (string)svr.QuerySingle("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;");
         //TotalQueries_lb.Text = (string) svr.QuerySingle("select ")
 #endif //USE_ASYNC
-       
+
     }
 
     private void InitiateSearch(string sql)
@@ -129,6 +131,9 @@ public partial class AssetsManagement : System.Web.UI.Page
         Asset_gv.DataBind();
         if(Asset_gv.Rows.Count == 0) dc.CreateAlert("没有符合条件的元件", "info", Alerts_pn);
         else Asset_gv.SelectRow(0);
+        var t_q = (int)Application["TotalQueries"];
+        Application["TotalQueries"]= t_q++;
+        TotalQueries_lb.Text = Application["TotalQueries"].ToString();
     }
     private void InitiateLendSearch(string sql)
     {

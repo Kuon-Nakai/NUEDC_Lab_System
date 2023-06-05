@@ -11,7 +11,7 @@ public partial class Events : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
-    protected void Page_Load(object sender, EventArgs e)
+    protected async void Page_Load(object sender, EventArgs e)
     {
         MasterPage.col = .5f;
         if (Session["UserID"] != null)
@@ -19,6 +19,13 @@ public partial class Events : System.Web.UI.Page
             Login_Jmp_bt.Text = "已登录";
         }
         InitiateSearch("select EventCode as 活动代码, EventName as 活动名称, DateStart as 活动时间, DateReg as 报名时间, MaxParticipants as 最大组数 from event");
+        svr.SafeOpen();
+        var t_e = svr.Cmd("SELECT COUNT(*) FROM `event`;").ExecuteScalarAsync();
+        var t_o = svr.Cmd("SELECT COUNT(*) FROM `event` WHERE DateReg<=NOW() AND DateRegEnd>=NOW();").ExecuteScalarAsync();
+        var t_l = svr.Cmd("SELECT COUNT(*) FROM `event` WHERE DateEnd<=NOW();").ExecuteScalarAsync();
+        TotalEntries_lb.Text = (await t_e)?.ToString();
+        TotalEntries_lb.Text = (await t_e)?.ToString();
+        TotalLent_lb.Text = (await t_l)?.ToString();
 
     }
     private void InitiateSearch(string sql)

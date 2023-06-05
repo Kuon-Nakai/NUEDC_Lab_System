@@ -22,6 +22,8 @@ public partial class index : System.Web.UI.Page
     //}
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Application["TotalQueries"] == null)
+            Application["TotalQueries"] = 0;
         MasterPage.col = 0f;
         //Session.Clear(); // for testing
         if (Session["UserID"] != null)
