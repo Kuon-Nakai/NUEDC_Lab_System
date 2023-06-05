@@ -30,6 +30,7 @@ public partial class Events : System.Web.UI.Page
         ViewState["ds"] = svr.QueryDataset(sql);
         Event_gv.DataSource = ViewState["ds"];
         Event_gv.DataBind();
+        Event_gv.SelectRow(0);
     }
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
     {
@@ -96,4 +97,25 @@ public partial class Events : System.Web.UI.Page
         }
     }
     protected void Event_gv_SelectedIndexChanged(object sender, EventArgs e) => LoadAssetData($"assets.AssetCode='{Event_gv.SelectedRow.Cells[0].Text}'");
+
+    protected void Signup_bt_Click(object sender, EventArgs e)
+    {
+        if (Session["UserID"] == null)
+        {
+            dc.CreateAlert("请登录", "notice", Alerts_pn);
+            return;
+        }
+        Session["EventCode"] = Event_gv.SelectedRow.Cells[0].Text;
+        Response.Redirect("EventForm.aspx");
+    }
+
+    protected void EditForm_bt_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void Cancel_bt_Click(object sender, EventArgs e)
+    {
+
+    }
 }
