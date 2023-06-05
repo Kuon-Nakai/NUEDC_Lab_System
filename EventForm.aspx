@@ -29,7 +29,7 @@
                 <div class="row u-add-half-bottom">
                     <div class="column" style="width: 100%">
                         <asp:Panel runat="server" ID="Form_pn" Width="70%" />
-
+                        
                         <hr />
                         <asp:LinkButton Text="提交并确认报名" runat="server" ID="FormSubmit_bt" OnClick="FormSubmit_bt_Click" CssClass="btn btn--primary u-fullwidth" />
                         <asp:LinkButton Text="下载报名表" runat="server" ID="Download_bt" OnClick="Download_bt_Click" CssClass="btn btn--stroke u-fullwidth" Visible="false" />

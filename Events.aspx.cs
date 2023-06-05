@@ -1,7 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -100,22 +102,67 @@ public partial class Events : System.Web.UI.Page
 
     protected void Signup_bt_Click(object sender, EventArgs e)
     {
+        // Assert login state
         if (Session["UserID"] == null)
         {
             dc.CreateAlert("请登录", "notice", Alerts_pn);
             return;
         }
+
+        // Assert form fillout state
+        // FIXME: Potentially a critical issue with sync lock
+        // Either use another method (work queue?) or move all synced code into a single location
+        var EventCode = Event_gv.SelectedRow.Cells[0].Text;
+        lock (this)
+        {
+            var obj = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")));
+            if (obj.ContainsKey(Session["UserID"].ToString()))
+            {
+                dc.CreateAlert("已经填写过报名信息", "notice", Alerts_pn);
+                return;
+            }
+        }
+
         Session["EventCode"] = Event_gv.SelectedRow.Cells[0].Text;
         Response.Redirect("EventForm.aspx");
     }
 
     protected void EditForm_bt_Click(object sender, EventArgs e)
     {
+        // FIXME: Potentially a critical issue with sync lock
+        // Either use another method (work queue?) or move all synced code into a single location
+        var EventCode = Event_gv.SelectedRow.Cells[0].Text;
+        lock (this)
+        {
+            var obj = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")));
+            if (!obj.ContainsKey(Session["UserID"].ToString()))
+            {
+                dc.CreateAlert("没有填写过报名信息", "notice", Alerts_pn);
+                return;
+            }
+        }
 
+        Session["EventCode"] = EventCode;
+        Response.Redirect("EventForm.aspx");
     }
 
     protected void Cancel_bt_Click(object sender, EventArgs e)
     {
+        // FIXME: Potentially a critical issue with sync lock
+        // Either use another method (work queue?) or move all synced code into a single location
+        var EventCode = Event_gv.SelectedRow.Cells[0].Text;
+        lock (this)
+        {
+            var obj = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")));
+            if (!obj.ContainsKey(Session["UserID"].ToString()))
+            {
+                dc.CreateAlert("没有填写过报名信息", "notice", Alerts_pn);
+                return;
+            }
+            // Execute delection & write back
+            obj.Remove(Session["UserID"].ToString());
+            File.WriteAllText(Server.MapPath($"EventForms/{EventCode}_data.json"), JsonConvert.SerializeObject(obj));
+        }
 
     }
 }

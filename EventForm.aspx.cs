@@ -22,10 +22,34 @@ public partial class EventForm : System.Web.UI.Page
         // Build dynamic form
         if (Session["UserID"] == null)
             dc.CreateAlert("报名表需登录填写", "notice");
+        // Fetch & render all fields
+        fields = JsonConvert.DeserializeObject<Dictionary<string, FormFieldConfig>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}.json")));
 
+        // Also check existing records
+        // FIXME: Potentially a critical issue with sync lock
+        // Either use another method (work queue?) or move all synced code into a single location
+        Dictionary<string, string> saved;
+        lock (this)
+        {
+            var obj = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")));
+            saved =  obj[Session["UserID"].ToString()];
+        }
+        foreach (var field in fields.Values)
+            field.Render(Form_pn, (Control ctrl) =>
+            {
+                ctrl.Focus();
+                dc.CreateAlert("该字段为必填字段", "notice");
+            }, int.Parse(Session["UserID"] as string), saved);
+        Session["fields"] = fields;
+
+        if (IsPostBack)
+        {
+            //foreach (var field in fields.Values)
+            //    field.LoadViewState();
+            return;
+        }
         //-------------------- POSTBACK HANDLING ABOVE -----------------------//
 
-        if(IsPostBack) return;
         // Verify if event signup is open
         if (DateTime.Now < (DateTime)svr.QuerySingle($"select DateReg from event where EventCode='{EventCode}'") ||
             DateTime.Now > (DateTime)svr.QuerySingle($"select DateRegEnd from event where EventCode='{EventCode}'"))
@@ -39,16 +63,6 @@ public partial class EventForm : System.Web.UI.Page
         FormSubmit_bt.Enabled = true;
         FormSubmit_bt.CssClass = "btn btn--primary u-fullwidth";
 
-        // Fetch & render all fields
-        fields = JsonConvert.DeserializeObject<Dictionary<string, FormFieldConfig>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}.json")));
-        foreach (var field in fields.Values)
-            field.Render(Form_pn, (Control ctrl) =>
-            {
-                ctrl.Focus();
-                dc.CreateAlert("该字段为必填字段", "notice");
-            }, int.Parse(Session["UserID"] as string));
-        Session["fields"] = fields;
-        
     }
 
     protected void FormSubmit_bt_Click(object sender, EventArgs e)
@@ -70,9 +84,13 @@ public partial class EventForm : System.Web.UI.Page
         // Sync lock to prevent write conflict
         lock(this)
         {
-            File.WriteAllText(Server.MapPath($"EventForms/{EventCode}_data.json"), JsonConvert.SerializeObject(
-                JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")))
-                [Session["UserID"].ToString()] = dataEntry));
+            // Read to dictionary & write back
+            // To be optimized...
+            var obj = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")));
+            if (obj.ContainsKey(Session["UserID"].ToString()))
+                obj.Remove(Session["UserID"].ToString());
+            obj.Add(Session["UserID"].ToString(), dataEntry);
+            File.WriteAllText(Server.MapPath($"EventForms/{EventCode}_data.json"), JsonConvert.SerializeObject(obj));
         }
         dc.CreateAlert("信息已保存", "success");
     }
@@ -98,7 +116,10 @@ public partial class EventForm : System.Web.UI.Page
         [JsonIgnore]
         [NonSerialized]
         public Func<string> GetValue;
-        public Panel Render(Control parent, Action<Control> VerifFailHandler, int mc)
+        //[JsonIgnore]
+        //[NonSerialized]
+        //public Func<string> LoadViewState;
+        public Panel Render(Control parent, Action<Control> VerifFailHandler, int mc, Dictionary<string, string> savedData)
         {
             var panel = new Panel();
             var prompt = new Label()
@@ -107,16 +128,20 @@ public partial class EventForm : System.Web.UI.Page
             };
             panel.Controls.Add(prompt);
             dynamic input;
+
+            // Determine the class of the input
             switch (Input)
             {
                 case "textbox":
                     input = new TextBox()
                     {
-                        Text = (Autofill?.StartsWith("=") ?? false) ? new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234")
+                        Text = savedData == null ? (Autofill?.StartsWith("=") ?? false) ? new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234")
                             .QuerySingle($"select {Autofill.Substring(1)} from members where MemberCode={mc}").ToString()
-                            : (Autofill ?? ""),
+                            : (Autofill ?? "")
+                            : savedData[Prompt],
                         CssClass = "u-fullwidth",
-                        TextMode = (TextBoxMode)Mode
+                        TextMode = (TextBoxMode)Mode,
+                        EnableViewState = true
                     };
                     if (Autofill == "=MemberCode")
                         input.Text = mc.ToString("D9");
@@ -133,10 +158,13 @@ public partial class EventForm : System.Web.UI.Page
                 case "dropdown":
                     input = new DropDownList()
                     {
-                        CssClass = "u-fullwidth"
+                        CssClass = "u-fullwidth", 
+                        EnableViewState= true
                     };
                     foreach(var option in Options)
                         input.Items.Add(option);
+                    if(savedData != null)
+                        input.SelectedValue = savedData[Prompt];
                     GetValue = () =>
                     {
                         if (Required && input.SelectedValue == null)
@@ -150,6 +178,7 @@ public partial class EventForm : System.Web.UI.Page
                 default:
                     throw new ArgumentOutOfRangeException("Input field is invalid.");
             }
+            //LoadViewState = () => input.LoadViewState();
             panel.Controls.Add(input);
             parent.Controls.Add(panel);
             return panel;
