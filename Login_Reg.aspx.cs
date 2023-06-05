@@ -158,11 +158,6 @@ public partial class Login_Reg : System.Web.UI.Page
         return;
     }
 
-    protected void RestorePsw_bt_Click(object sender, EventArgs e)
-    {
-
-    }
-
     protected void ConfirmRst_bt_Click(object sender, EventArgs e)
     {
         // Assert: Verif code is valid

@@ -105,7 +105,7 @@
                     </article>
                     <!-- entry -->
 
-                    <article class="brick entry">
+<%--                    <article class="brick entry">
                         <a href="#modal-04" class="entry__link">
                             <div class="entry__thumb">
                                 <img src="images/folio/lamp@2x.jpg" alt="">
@@ -142,7 +142,7 @@
                             </div>
                         </a>
                     </article>
-                    <!-- entry -->
+                    <!-- entry -->--%>
 
                 </div>
                 <!-- end bricks-wrapper -->

@@ -4,10 +4,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder_TopNavLinks" runat="Server">
     <li class=""><a href="index.aspx">主页</a></li>
-    <li><a href="AssetPage.aspx">元器件</a></li>
+    <li><a href="AssetsPage.aspx">元器件</a></li>
     <li><a href="Events.aspx">活动</a></li>
     <li class=""><a href="#footer" class="smoothscroll">联系我们</a></li>
-    <li><a href="Management.aspx" style="color:white">管理</a></li>
+    <li><a href="#" style="color:white">管理</a></li>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder3" runat="Server">
     <asp:LinkButton Text="Log in" runat="server" CssClass="btn btn--stroke" ForeColor="White" BorderColor="White" ID="Login_Jmp_bt" OnClick="Login_Jmp_bt_Click" />

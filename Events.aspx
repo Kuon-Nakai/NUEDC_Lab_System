@@ -118,4 +118,10 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="ContentPlaceHolder3" runat="Server">
     <asp:Button Text="Log in" runat="server" CssClass="s-header__social-a" ID="Login_Jmp_bt" BackColor="Black" ForeColor="White" OnClick="Login_Jmp_bt_Click" />
 </asp:Content>
-
+<asp:Content ID="Content5" ContentPlaceHolderID="ContentPlaceHolder_TopNavLinks" runat="Server">
+    <li><a href="index.aspx">主页</a></li>
+    <li><a href="AssetsPage.aspx">元器件</a></li>
+    <li><a href="#" style="color:white">活动</a></li>
+    <li class=""><a href="#footer" class="smoothscroll">联系我们</a></li>
+    <li><a href="Management.aspx" style="visibility: hidden">管理</a></li>
+</asp:Content>
