@@ -137,8 +137,8 @@ public partial class AssetsManagement : System.Web.UI.Page
         {
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
-        ViewState["ds"] = svr.QueryDataset(sql);
-        LendState_gv.DataSource = ViewState["ds"];
+        ViewState["dsl"] = svr.QueryDataset(sql);
+        LendState_gv.DataSource = ViewState["dsl"];
         LendState_gv.DataBind();
         svr.cn.Close();
         if (svr == null) svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
