@@ -30,15 +30,19 @@ public class MySqlSvr
         public ReaderDataHandler ReaderDataHandler;
         public Action NoDataHandler;
     }
+
+    public void SafeOpen()
+    {
+        if(cn.State == ConnectionState.Closed)
+            cn.Open();
+    }
+
     /// <summary>
     /// 返回对应sql语句的command对象
     /// </summary>
     /// <param name="sql">SQL语句</param>
     /// <returns></returns>
-    public MySqlCommand Cmd(string sql)
-    {
-        return new MySqlCommand(sql, cn);
-    }
+    public MySqlCommand Cmd(string sql) => new MySqlCommand(sql, cn);
     /// <summary>
     /// 查询单个数据 或多个数据的第一个
     /// </summary>
