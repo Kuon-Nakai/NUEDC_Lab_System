@@ -15,6 +15,7 @@ public class DynamicControls
     private Queue<ControlInfo> Controls;
     private int count = 0;
     private bool RestoreFlag = false;
+    private Control container;
     /// <summary>
     /// 生成提醒信息框
     /// </summary>
@@ -54,6 +55,8 @@ public class DynamicControls
             HorizontalAlign = HorizontalAlign.Center
         };
         panel.Controls.Add(div);
+        if (container != null)
+            container.Controls.Add(panel);
         return panel;
     }
     /// <summary>
@@ -97,7 +100,7 @@ public class DynamicControls
         };
         panel.Controls.Add(div);
         parent.Controls.Add(panel);
-        
+
         return panel;
     }
     public Panel CreateAlert(string message, string alertType, Control parent, Dictionary<string, string> attributes)
@@ -121,7 +124,7 @@ public class DynamicControls
                 ["style"] = "margin-top:10px;"
             }
         };
-        foreach(var k in attributes.Keys)
+        foreach (var k in attributes.Keys)
         {
             div.Attributes.Add(k, attributes[k]);
         }
@@ -140,7 +143,7 @@ public class DynamicControls
         parent.Controls.Add(panel);
         Controls.Enqueue(new ControlInfo
         {
-            
+
         });
         return panel;
     }
@@ -172,6 +175,81 @@ public class DynamicControls
         parent.Controls.Add(r);
         return r;
     }
+    public Panel CreateAlert(string message, string alertType, Dictionary<string, string> attributes)
+    {
+        if (container == null) throw new InvalidOperationException("Default container is not set.");
+        var p = new HtmlGenericControl("p")
+        {
+            InnerText = message
+        };
+        var span = new HtmlGenericControl("span")
+        {
+            Attributes =
+            {
+                ["class"] = "alert-box__close"
+            }
+        };
+        var div = new HtmlGenericControl("div")
+        {
+            Attributes =
+            {
+                ["class"] = $"alert-box alert-box--{alertType} u-fullwidth",
+                ["style"] = "margin-top:10px;"
+            }
+        };
+        foreach (var k in attributes.Keys)
+        {
+            div.Attributes.Add(k, attributes[k]);
+        }
+        div.Controls.Add(p);
+        div.Controls.Add(span);
+        var panel = new Panel()
+        {
+            Attributes =
+            {
+                ["runat"] = "server"
+            },
+            Visible = true,
+            HorizontalAlign = HorizontalAlign.Center
+        };
+        panel.Controls.Add(div);
+        container.Controls.Add(panel);
+        Controls.Enqueue(new ControlInfo
+        {
+
+        });
+        return panel;
+    }
+    /// <summary>
+    /// 动态创建HyperLink对象
+    /// </summary>
+    /// <param name="message">文字</param>
+    /// <param name="parent">提示信息框的父级对象</param>
+    /// <returns>创建的HyperLink对象</returns>
+    public HyperLink CreateHyperLink(string message, string link)
+    {
+        if (container == null) throw new InvalidOperationException("Default container is not set.");
+        var r = new HyperLink()
+        {
+            Text = message,
+            NavigateUrl = link
+        };
+        container.Controls.Add(r);
+        return r;
+    }
+    /// <summary>
+    /// 动态创建任意HTML原生对象
+    /// </summary>
+    /// <param name="tag">对象名称</param>
+    /// <param name="parent">提示信息框的父级对象</param>
+    /// <returns>创建的HyperLink对象</returns>
+    public HtmlGenericControl CreateHTMLElement(string tag)
+    {
+        if (container == null) throw new InvalidOperationException("Default container is not set.");
+        var r = new HtmlGenericControl(tag);
+        container.Controls.Add(r);
+        return r;
+    }
 
     public void Save()
     {
@@ -190,6 +268,11 @@ public class DynamicControls
         //
         // TODO: Add constructor logic here
         //
+    }
+
+    public DynamicControls(Control defPparent)
+    {
+        container = defPparent;
     }
 
     private class ControlInfo
