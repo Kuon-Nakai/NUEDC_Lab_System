@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DocumentFormat.OpenXml.Packaging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,7 @@ public partial class EventForm : System.Web.UI.Page
     private DynamicControls dc;
     private MySqlSvr svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
     private string EventCode;
+    private Dictionary<string, FormFieldConfig> fields;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -38,13 +40,14 @@ public partial class EventForm : System.Web.UI.Page
         FormSubmit_bt.CssClass = "btn btn--primary u-fullwidth";
 
         // Fetch & render all fields
-        var fields = JsonConvert.DeserializeObject<Dictionary<string, FormFieldConfig>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}.json")));
+        fields = JsonConvert.DeserializeObject<Dictionary<string, FormFieldConfig>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}.json")));
         foreach (var field in fields.Values)
             field.Render(Form_pn, (Control ctrl) =>
             {
                 ctrl.Focus();
                 dc.CreateAlert("该字段为必填字段", "notice");
             }, int.Parse(Session["UserID"] as string));
+        Session["fields"] = fields;
         
     }
 
@@ -57,7 +60,21 @@ public partial class EventForm : System.Web.UI.Page
             dc.CreateAlert("活动报名尚未开始", "error");
             return;
         }
-        
+
+        // Save all data into json
+        // Verification is done by the dynamically generated components
+        var storage = new Dictionary<string, Dictionary<string, string>>();
+        var dataEntry = new Dictionary<string, string>();
+        foreach(var field in (Session["fields"] as Dictionary<string, FormFieldConfig>).Values)
+            dataEntry[field.Prompt] = field.GetValue();
+        // Sync lock to prevent write conflict
+        lock(this)
+        {
+            File.WriteAllText(Server.MapPath($"EventForms/{EventCode}_data.json"), JsonConvert.SerializeObject(
+                JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")))
+                [Session["UserID"].ToString()] = dataEntry));
+        }
+        dc.CreateAlert("信息已保存", "success");
     }
 
     protected void Login_Jmp_bt_Click(object sender, EventArgs e)
@@ -66,7 +83,7 @@ public partial class EventForm : System.Web.UI.Page
         ((Stack<string>)Session["jmpStack"]).Push("Events.aspx");
         Response.Redirect("Login_Reg.aspx");
     }
-
+    [Serializable]
     private class FormFieldConfig
     {
         [JsonRequired]
@@ -79,6 +96,7 @@ public partial class EventForm : System.Web.UI.Page
         public List<string> Options;
         public int? Mode;
         [JsonIgnore]
+        [NonSerialized]
         public Func<string> GetValue;
         public Panel Render(Control parent, Action<Control> VerifFailHandler, int mc)
         {
@@ -95,11 +113,13 @@ public partial class EventForm : System.Web.UI.Page
                     input = new TextBox()
                     {
                         Text = (Autofill?.StartsWith("=") ?? false) ? new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234")
-                            .QuerySingle($"select {Autofill.Substring(1)} from members where MemberCode={mc}") as string
+                            .QuerySingle($"select {Autofill.Substring(1)} from members where MemberCode={mc}").ToString()
                             : (Autofill ?? ""),
-                        CssClass = "u-full-width",
+                        CssClass = "u-fullwidth",
                         TextMode = (TextBoxMode)Mode
                     };
+                    if (Autofill == "=MemberCode")
+                        input.Text = mc.ToString("D9");
                     GetValue = () =>
                     {
                         if(Required && input.Text.Trim().Length == 0)
@@ -113,7 +133,7 @@ public partial class EventForm : System.Web.UI.Page
                 case "dropdown":
                     input = new DropDownList()
                     {
-                        CssClass = "u-full-width"
+                        CssClass = "u-fullwidth"
                     };
                     foreach(var option in Options)
                         input.Items.Add(option);
@@ -135,5 +155,10 @@ public partial class EventForm : System.Web.UI.Page
             return panel;
         }
 
+    }
+
+    protected void Download_bt_Click(object sender, EventArgs e)
+    {
+        // TODO
     }
 }

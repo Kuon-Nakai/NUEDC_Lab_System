@@ -1,7 +1,7 @@
 {
   "userid": {
     "Prompt": "账号",
-    "Autofill": "=MemberName",
+    "Autofill": "=MemberCode",
     "Input": "textbox",
     "Mode": 0,
     "Options": [],
@@ -9,7 +9,7 @@
   },
   "username": {
     "Prompt": "姓名",
-    "Autofill": "=MemberCode",
+    "Autofill": "=MemberName",
     "Input": "textbox",
     "Mode": 0,
     "Options": [],
