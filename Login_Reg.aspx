@@ -71,7 +71,36 @@
                         <%--<a class="btn btn--primary u-fullwidth" href="#0" onclick="callSvr('Login_bt_Click', null)">登录</a>--%>
                         <asp:LinkButton ID="Login_bt" runat="server" Text="登录" CssClass="btn btn--primary u-fullwidth" OnClick="Login_bt_Click" />
                         <%--<a class="btn btn--stroke u-fullwidth" href="#0">忘记密码</a>--%>
-                        <asp:LinkButton ID="RestorePsw_bt" runat="server" Text="忘记密码" CssClass="btn btn--stroke u-fullwidth" />
+                        <asp:LinkButton ID="RestorePsw_bt" runat="server" Text="忘记密码" CssClass="btn btn--stroke u-fullwidth" OnClick="RestorePsw_bt_Click1"/>
+                        <asp:Panel runat="server" ID="Restore1_pn" Visible="false" DefaultButton="StartRst_bt">
+                            <hr />
+                            <h4>找回密码</h4>
+                            <p>请输入账号</p>
+                            <asp:TextBox runat="server" ID="Rst_Acc_tb" CssClass="u-fullwidth" />
+                            <asp:LinkButton Text="提交" runat="server" ID="StartRst_bt" CssClass="btn btn--primary u-fullwidth" OnClick="StartRst_bt_Click" />
+                            <hr />
+                        </asp:Panel>
+                        <asp:Panel runat="server" ID="Restore2_pn" Visible="false" DefaultButton="ConfirmRst_bt">
+                            <hr />
+                            <h4>找回密码</h4>
+                            <p>我们已向邮箱 <%=PopupL1 %> 发送了一封验证码邮件, 请凭验证码重置密码</p>
+                            <div class="column">
+                                <div class="row">
+                                    验证码
+                                    <asp:TextBox runat="server" ID="Rst_VerifCode_tb" CssClass="u-fullwidth" />
+                                </div>
+                                <div class="row">
+                                    新密码
+                                    <asp:TextBox runat="server" ID="Rst_NewPsw_tb" CssClass="u-fullwidth" />
+                                </div>
+                                <div class="row">
+                                    重复密码
+                                    <asp:TextBox runat="server" ID="Rst_RepPsw_tb" CssClass="u-fullwidth" />
+                                </div>
+                            </div>
+                            <asp:LinkButton Text="提交" runat="server" ID="ConfirmRst_bt" CssClass="btn btn--primary btn--large u-fullwidth" OnClick="ConfirmRst_bt_Click" />
+                            <hr />
+                        </asp:Panel>
                         <h3>实验室刷卡登录</h3>
                         <asp:LinkButton Text="刷卡登录" runat="server" CssClass="btn btn--primary u-fullwidth" ID="CardLogin" OnClick="CardLogin_Click" OnClientClick="showCardConfirmPopup();" />
                     </div>
@@ -88,7 +117,7 @@
                         <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegPsw1_tb" TextMode="Password" />
                         <h5 class="text-left">邮箱</h5>
                         用于找回密码和发送通知, 非必填, 默认学校分配的教育邮箱
-                                <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegMail_tb" TextMode="Email" />
+                        <asp:TextBox runat="server" CssClass="u-fullwidth" ID="RegMail_tb" TextMode="Email" />
                         <asp:RequiredFieldValidator ID="Reg_Acc_ReqVal" runat="server" ErrorMessage="账号为必填项" ControlToValidate="RegAcc_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
                         <asp:CustomValidator ID="Reg_Acc_YearVal" runat="server" ErrorMessage="入学年份不河里捏..." ControlToValidate="RegAcc_tb" Visible="false" ValidationGroup="Reg" OnServerValidate="Reg_Acc_YearVal_ServerValidate"></asp:CustomValidator>
                         <asp:RequiredFieldValidator ID="Reg_Name_ReqVal" runat="server" ErrorMessage="姓名为必填项" ControlToValidate="RegName_tb" Visible="false" ValidationGroup="Reg"></asp:RequiredFieldValidator>
@@ -107,9 +136,9 @@
 
     </div>
     <script type="text/javascript">
-            function showCardConfirmPopup() {
+        function showCardConfirmPopup() {
 
-                const instance = basicLightbox.create(`
+            const instance = basicLightbox.create(`
 		<h2 style="color:white"><%=PopupL1 %></h2>
 		<p style="color:white">当前登录: <%=PopupL2 %></p>
         <hr />
@@ -118,10 +147,10 @@
 
                 //instance.element().insertAdjacentHTML('afterbegin', '<p>Before placeholder</p>')
                 //instance.element().insertAdjacentHTML('beforeend', '<p>After placeholder</p>')
-                
+
                 instance.show();
 
-            }
+        }
     </script>
 </asp:Content>
 

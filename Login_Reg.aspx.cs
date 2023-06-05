@@ -15,13 +15,22 @@ public partial class Login_Reg : System.Web.UI.Page
 {
     private DynamicControls dc = new DynamicControls();
     MySqlSvr svr;
+
+    #region Cross boundary variables...
     public string Username;
     public string PopupL1 = "请在读卡器刷校园卡...";
     public string PopupL2 = "";
+    #endregion
+
     private string CardCache;
+    private string VerifyCode;
     protected void Page_Load(object sender, EventArgs e)
     {
+        Page.MaintainScrollPositionOnPostBack = true;
+
         CardLogin.Attributes["href"] = "#";
+        //RestorePsw_bt.Attributes["href"] = "#";
+
         MasterPage.col = .5f;
         Validate();
         if (svr == null)
@@ -147,5 +156,89 @@ public partial class Login_Reg : System.Web.UI.Page
             Response.Redirect(((Stack<string>)Session["jmpStack"]).Pop());
         }
         return;
+    }
+
+    protected void RestorePsw_bt_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void ConfirmRst_bt_Click(object sender, EventArgs e)
+    {
+        // Assert: Verif code is valid
+        if (!(ViewState["VerifyCode"] as string).Equals(Rst_VerifCode_tb.Text))
+        {
+            dc.CreateAlert("验证码错误!", "notice", Alerts_pn);
+            return;
+        }
+
+        // Assert: New passwords match
+        if (!Rst_NewPsw_tb.Text.Equals(Rst_RepPsw_tb.Text))
+        {
+            dc.CreateAlert("两次输入的密码不一致!", "notice", Alerts_pn);
+            return;
+        }
+
+        // Operation: Update password
+        svr.SafeOpen();
+        using (var transact = svr.cn.BeginTransaction())
+        {
+            if (svr.Execute($"update members set password='{Rst_NewPsw_tb.Text}' where MemberCode={Rst_Acc_tb.Text};", transact) != 1)
+            {
+                transact.Rollback();
+                dc.CreateAlert("修改密码时数据异常", "error", Alerts_pn);
+                return;
+            }
+            transact.Commit();
+            dc.CreateAlert("密码已更新", "success", Alerts_pn);
+            Restore2_pn.Visible = false;
+            RestorePsw_bt.Visible = true;
+        }
+    }
+
+    protected void StartRst_bt_Click(object sender, EventArgs e)
+    {
+        if (svr.QuerySingle("select MemberCode from members where MemberCode=" + Rst_Acc_tb.Text) == null)
+        {
+            dc.CreateAlert("账号不存在", "notice", Alerts_pn);
+            return;
+        }
+        PopupL1 = svr.QuerySingle($"select Email from members where MemberCode={Rst_Acc_tb.Text}").ToString();
+        DataBind();
+        if(PopupL1.Length == 0)
+        {
+            if(svr.QuerySingle($"select MemberCode from members where MemberCode={Rst_Acc_tb.Text}") == null)
+            {
+                dc.CreateAlert("账号不存在", "notice", Alerts_pn);
+            }
+            else
+            {
+                dc.CreateAlert("该账号未绑定邮箱, 请联系系统管理员协助重置密码", "notice", Alerts_pn);
+            }
+            Rst_NewPsw_tb.Enabled = false;
+            Rst_RepPsw_tb.Enabled = false;
+            Rst_VerifCode_tb.Enabled = false;
+            ConfirmRst_bt.Enabled = false;
+            ConfirmRst_bt.CssClass = "btn btn--large";
+            return;
+        }
+        ConfirmRst_bt.CssClass = "btn btn--primary btn--large";
+        ViewState["VerifyCode"] = MailSvr.SendVerificationMail(PopupL1,
+            "[NUEDC实验室]密码重置验证", 
+            "NUEDC实验室综合服务平台收到了一个密码重置请求, 验证码:\n\n" +
+            "{0}\n\n" +
+            "如非本人操作, 请忽略该邮件。\n" +
+            "本邮件由NUEDC综合服务平台自动发送\n" +
+            $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}");
+        dc.CreateAlert("验证码已发送", "success", Alerts_pn);
+        Restore1_pn.Visible = false;
+        Restore2_pn.Visible = true;
+    }
+
+    protected void RestorePsw_bt_Click1(object sender, EventArgs e)
+    {
+        RestorePsw_bt.Visible = false;
+        Restore1_pn.Visible = true;
+        Restore2_pn.Visible = false;
     }
 }
