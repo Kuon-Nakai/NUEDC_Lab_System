@@ -115,6 +115,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         TotalReturned_lb.Text = (string)svr.QuerySingle("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;");
         //TotalQueries_lb.Text = (string) svr.QuerySingle("select ")
 #endif //USE_ASYNC
+       
     }
 
     private void InitiateSearch(string sql)
@@ -273,17 +274,19 @@ public partial class AssetsManagement : System.Web.UI.Page
 
     protected void Locate_bt_Click(object sender, EventArgs e)
     {
-        svr.Execute($"UPDATE assets set AssetName={AssetName_lb},ClassCode=(SELECT ClassCode FROM assetclasses WHERE ClassName={AssetClass_lb}),MainValue={PrimValue_lb} ,Location={Location_lb} ,Characteristics={Property_lb} ,Amount={Qty_tb} ,ReservationQty={RsrvQty_tb} ,LendingPolicy={AutoApproveLvl_tb};", (Exception ex) =>
+        svr.Execute($"UPDATE assets set AssetName='{AssetName_lb}',ClassCode=(SELECT ClassCode FROM assetclasses WHERE ClassName='{AssetClass_lb}'),MainValue='{PrimValue_lb}' ,Location='{Location_lb}' ,Characteristics='{Property_lb}' ,Amount={Qty_tb} ,ReservationQty={RsrvQty_tb} ,LendingPolicy={AutoApproveLvl_tb};", (Exception ex) =>
         {
-            dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
+            dc.CreateAlert("更新错误，无法删除", "error", Alerts_pn);
+            InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
         });
     }
 
     protected void ConfirmDel_bt_Click(object sender, EventArgs e)
     {
-        svr.Execute($"DELETE FROM assets WHERE AssetCode={Asset_gv.SelectedRow.Cells[0]}", (Exception ex) =>
+        svr.Execute($"DELETE FROM assets WHERE AssetCode='{Asset_gv.SelectedRow.Cells[0]}';", (Exception ex) =>
         {
             dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
+            InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
         });
     }
 
