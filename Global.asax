@@ -14,7 +14,8 @@
         System.Threading.Thread UpdThr = new System.Threading.Thread(() =>
         {
             var svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
-            var cd = 6;
+            var cd = 6; // should be 600
+            // set to 6 just for ease of displaying effects.
             while (true)
             {
                 var stk = new Stack<dynamic>();
@@ -86,7 +87,7 @@
                     var ucd = Application["UserCntData"] as Queue<int>;
                     if (ucd.Count > 128)
                         ucd.Dequeue();
-                    ucd.Enqueue(svr.QuerySingle("select count(MemberCode) from members group by com having com=1;") as int? ?? -1);
+                    ucd.Enqueue(int.Parse(svr.QuerySingle("select count(MemberCode) from members group by com having com=0;").ToString()));
 
                     // Total user count, accumulative over whole lifetime
                     if (Application["DBExecLst"] == null)
@@ -94,7 +95,7 @@
                     var lcd = Application["LendCntData"] as Queue<int>;
                     if (lcd.Count > 128)
                         lcd.Dequeue();
-                    lcd.Enqueue(svr.QuerySingle("select count(TransactionCode) from lending group by com having com=1;") as int? ?? -1);
+                    lcd.Enqueue(int.Parse(svr.QuerySingle("select count(TransactionCode) from lending group by com having com=1;").ToString()));
                 }
                 System.Threading.Thread.Sleep(1000);
             }
