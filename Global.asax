@@ -25,7 +25,7 @@
                 foreach (var s in stk)
                     sessions.Remove(stk.Pop());
 
-                //if(--cd == 0)
+                if (--cd == 0)
                 {
                     cd = 600;
                     // Place data in queue

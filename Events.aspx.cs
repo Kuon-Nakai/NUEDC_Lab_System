@@ -142,7 +142,7 @@ public partial class Events : System.Web.UI.Page
         lock (this)
         {
             var obj = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(Server.MapPath($"EventForms/{EventCode}_data.json")));
-            if (!obj.ContainsKey(Session["UserID"].ToString()))
+            if (!obj.ContainsKey(Session["UserID"]?.ToString()))
             {
                 dc.CreateAlert("没有填写过报名信息", "notice", Alerts_pn);
                 return;

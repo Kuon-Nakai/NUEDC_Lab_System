@@ -64,7 +64,7 @@
                     <ul class="stats-tabs">
                         <li class="stats-tabs-li">
                             <%--<asp:LinkButton Text="0" runat="server" ID="SessionCnt_bt" CssClass="stats-tabs-li-a" OnClientClick="loadChart('ChartArea', '会话数', <%=SessionCnt %>, )" />--%>
-                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '会话数', <%=Newtonsoft.Json.JsonConvert.SerializeObject((Application["SessionData"] as Queue<int>).ToArray().Reverse()) %>,<%=series %> );"><%=(Application["SessionCnt"] as List<HttpSessionState>)?.Count ?? 0 %></a>
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '会话数', <%=SessionResult %>,<%=series %> );"><%=(Application["SessionCnt"] as List<HttpSessionState>)?.Count ?? 0 %></a>
                             <input type="button" name="idk" value="test" onshow="alert('test');" />
                             <em class="stats-tabs-li-a-em">会话数</em></li>
                         <li>
@@ -84,7 +84,7 @@
                             <em class="stats-tabs-li-a-em">登记次数</em></li>
                     </ul>
 
-                    <div class="row u-add-half-bottom" style="max-height: 700px" id="ChartArea"></div>
+                    <div class="row u-add-half-bottom" style="height: 700px; width:100%" id="ChartArea"></div>
 
                     <script src="Scripts/ECharts/echarts-all.js"></script>
                     <script type="text/javascript">
@@ -126,7 +126,7 @@
                                     {
                                         name: title,
                                         type: 'line',
-                                        data: series
+                                        data: x
                                     }
                                 ]
                             }
