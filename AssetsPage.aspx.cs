@@ -48,6 +48,8 @@ public partial class AssetsPage : System.Web.UI.Page
             sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=3;",
             ReaderDataHandler = (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 TypeSel0_ddl.Items.Add($"{rd[0]}{rd[1]}");
                 //class0.Add($"{rd[0]} {rd[1]}");
             },
@@ -57,6 +59,8 @@ public partial class AssetsPage : System.Web.UI.Page
             sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=6;",
             ReaderDataHandler = (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 TypeSel1_ddl.Items.Add($"{((string)rd[0]).Substring(3)}{rd[1]}");
                 //class1.Add($"{((string)rd[0]).Substring(3)} {rd[1]}");
             },
@@ -66,6 +70,8 @@ public partial class AssetsPage : System.Web.UI.Page
             sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=9;",
             ReaderDataHandler = (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 TypeSel2_ddl.Items.Add($"{((string)rd[0]).Substring(6)}{rd[1]}");
                 //class2.Add($"{((string)rd[0]).Substring(6)} {rd[1]}");
             },
@@ -84,7 +90,7 @@ public partial class AssetsPage : System.Web.UI.Page
         var tc = svr.Cmd("select sum(Amount) from assets group by com;").ExecuteScalarAsync();
         var te = svr.Cmd("select count(AssetCode) from assets group by com;").ExecuteScalarAsync();
         var tl = svr.Cmd("select sum(Qty) from lending group by com;").ExecuteScalarAsync();
-        var t_r=svr.Cmd("SELECT COUNT(*) FROM lending WHERE TransactionCycleEnded=1;").ExecuteScalarAsync();
+        var t_r= svr.Cmd("SELECT COUNT(*) FROM lending WHERE TransactionCycleEnded=1;").ExecuteScalarAsync();
         var tr = svr.Cmd("select sum(Qty) from lending group by TransactionCycleEnded having TransactionCycleEnded=1;").ExecuteScalarAsync();
 
         InitiateSearch("select * from assets_view2");
@@ -113,6 +119,8 @@ public partial class AssetsPage : System.Web.UI.Page
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
         ViewState["ds"] = svr.QueryDataset(sql);
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         Asset_gv.DataSource = ViewState["ds"];
         Asset_gv.DataBind();
         var t_q = (int)Application["TotalQueries"];
@@ -161,6 +169,11 @@ public partial class AssetsPage : System.Web.UI.Page
         {
             return false;
         }
+        finally
+        {
+            var cnt = (int)Application["DBQueries"];
+            Application["DBQueries"] = ++cnt;
+        }
     }
 
     private void RequestBorrow()
@@ -174,9 +187,13 @@ public partial class AssetsPage : System.Web.UI.Page
                 if (svr == null) svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
                 if (svr.QuerySingle($"select TransactionCode from lending where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}' and FullCode='{ItemID_tb.Text}' and not TransactionCycleEnded;") != null)
                 {
+                    var cnt1 = (int)Application["DBQueries"];
+                    Application["DBQueries"] = ++cnt1;
                     dc.CreateAlert("数据不一致: 该元件已经处于借出状态", "error", Alerts_pn);
                     return;
                 }
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 // Data consistency check pass
                 if (Application["LastReqDate"] == null || (DateTime)Application["LastReqDate"] != DateTime.Today)
                 {
@@ -190,6 +207,8 @@ public partial class AssetsPage : System.Web.UI.Page
                     // Synchronization lock to prevent multiple requests conflicting
                     lock (this)
                     {
+                        var cnt1 = (int)Application["DBExec"];
+                        Application["DBExec"] = ++cnt1;
                         if (svr.Execute("insert into lending values(" +
                             $"'{DateTime.Today.ToString("yyyy-MM-dd").Replace("-", "") + ((int)Application["TransactionCount"]).ToString("0000")}'," + // TransactionCode
                             $"'{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'," + // AssetCode
@@ -214,6 +233,8 @@ public partial class AssetsPage : System.Web.UI.Page
                         //transact.Commit();
                         if (!Assert_BorrowPerm())
                         {
+                            var cnt2 = (int)Application["DBExec"];
+                            Application["DBExec"] = ++cnt2;
                             // Permission level reached, system will auto approve the request
                             if (svr.Execute("update lending set " +
                                 "DateProcessed=NOW()," +
@@ -235,6 +256,9 @@ public partial class AssetsPage : System.Web.UI.Page
                         //transact.Commit();
                         if ((ulong)svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assetclasses.ClassCode=assets.ClassCode where assets.AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}';") == 1)
                         {
+                            Application["DBQueries"] = ++cnt;
+                            var cnt2 = (int)Application["DBExec"];
+                            Application["DBExec"] = ++cnt2;
                             // Transaction cycle will be marked as complete
                             if (svr.Execute("update lending set " +
                                 "TransactionCycleEnded = 1 " +
@@ -247,6 +271,7 @@ public partial class AssetsPage : System.Web.UI.Page
                                 return;
                             }
                         }
+                        Application["DBQueries"] = ++cnt;
                     }
                     transact.Commit();
                     svr.cn.Close();
@@ -281,6 +306,8 @@ public partial class AssetsPage : System.Web.UI.Page
         svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where ({sql_where_assets})",
             (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 Datasheet_pn1.Controls.Remove(Datasheet_lk);
                 dc.CreateHTMLElement("br", Datasheet_pn0);
                 dc.CreateHTMLElement("div", Datasheet_pn1);
@@ -297,6 +324,8 @@ public partial class AssetsPage : System.Web.UI.Page
             ReturnDeadline_lb.Text = "";
             ReturnCodeSel_ddl.Items.Clear();
             var requirePerm = byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets}").ToString()) == 0;
+            var cnt = (int)Application["DBQueries"];
+            Application["DBQueries"] = ++cnt;
             if ((int)Session["UserPerm"] > 2)
             {
                 Return_bt.OnClientClick = "showReturnImpossiblePopup();";
@@ -309,6 +338,8 @@ public partial class AssetsPage : System.Web.UI.Page
             }
             svr.QueryReader($"select DateProcessed, TransactionCode, AssetName, FullCode from lending left join assets on assets.AssetCode=lending.AssetCode where ({sql_where_assets}) and MemberCode={Session["UserID"]} and Status='Taken'", (MySqlDataReader rd) =>
             {
+                var cnt1 = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt1;
                 Return_pn.Visible = true;
                 ReturnDeadline_lb.Text += $"{rd.GetDateTime(0).Date.AddMonths(1).ToLongDateString()}<br />";
                 //if (requirePerm)
@@ -327,6 +358,8 @@ public partial class AssetsPage : System.Web.UI.Page
 
     private void AssignAssetData(MySqlDataReader rd)
     {
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         AssetName_lb.Text = rd[0].ToString();
         AssetClass_lb.Text = rd[1].ToString();
         PrimValue_lb.Text = rd[2].ToString();
@@ -380,7 +413,7 @@ public partial class AssetsPage : System.Web.UI.Page
             $"assets.ClassCode like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}" +
             $"{TypeSel1_ddl.SelectedValue.Substring(0, Math.Min(TypeSel1_ddl.SelectedValue.Length, 3))}" +
             $"{TypeSel2_ddl.SelectedValue.Substring(0, Math.Min(TypeSel2_ddl.SelectedValue.Length, 3))}%';");
-        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0].Cells[0].Text}'");
+        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0]?.Cells[0]?.Text}'");
     }
 
     protected void AwaitReturn_bt_Click(object sender, EventArgs e)
@@ -442,12 +475,16 @@ public partial class AssetsPage : System.Web.UI.Page
     protected void Return_bt_Click(object sender, EventArgs e)
     {
         var requirePerm = byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where AssetCode='{(Asset_gv.SelectedRow ?? Asset_gv.Rows[0]).Cells[0].Text}'").ToString()) == 0;
-        if(!requirePerm || (int)Session["UserPerm"] < 3)
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
+        if (!requirePerm || (int)Session["UserPerm"] < 3)
         {
             svr.cn.Open();
             // Can return
             using (MySqlTransaction transact = svr.cn.BeginTransaction())
             {
+                var cnt1 = (int)Application["DBExec"];
+                Application["DBExec"] = ++cnt1;
                 if (svr.Execute($"UPDATE lending SET `Status`='Returned',DateReturned=NOW(),TransactionCycleEnded=1 WHERE TransactionCode='{ReturnCodeSel_ddl.SelectedValue.Substring(1, 12)}'", transact) != 1)
                 {
                     dc.CreateAlert("请重试或检查数据", "error", Alerts_pn);
@@ -478,6 +515,8 @@ public partial class AssetsPage : System.Web.UI.Page
         }
         svr.QueryReader($"select ClassCode, ClassName from assetclasses where Length(ClassCode)=6 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}%';", (MySqlDataReader rd) =>
         {
+            var cnt = (int)Application["DBQueries"];
+            Application["DBQueries"] = ++cnt;
             TypeSel1_ddl.Items.Add(rd.GetString(0).Substring(3) + rd.GetString(1));
             TypeSel1_ddl.Visible = true;
             TypeSel1_ddl.Enabled = true;
@@ -504,12 +543,14 @@ public partial class AssetsPage : System.Web.UI.Page
         svr.QueryReader($"select ClassCode, ClassName from assetclasses where " +
             $"Length(ClassCode)=9 and ClassCode Like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}" +
             $"{TypeSel1_ddl.SelectedValue.Substring(0, Math.Min(TypeSel1_ddl.SelectedValue.Length, 3))}%';", (MySqlDataReader rd) =>
-        {
-            TypeSel2_ddl.Items.Add(rd.GetString(0).Substring(6) + rd.GetString(1));
-            TypeSel2_ddl.Visible = true;
-            TypeSel2_ddl.Enabled = true;
-            TypeSel2_ddl.SelectedIndex = 0;
-        }, () => TypeSel2_ddl.Visible = false);
+            {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
+                TypeSel2_ddl.Items.Add(rd.GetString(0).Substring(6) + rd.GetString(1));
+                TypeSel2_ddl.Visible = true;
+                TypeSel2_ddl.Enabled = true;
+                TypeSel2_ddl.SelectedIndex = 0;
+            }, () => TypeSel2_ddl.Visible = false);
     }
 
     protected void TypeSel2_ddl_SelectedIndexChanged(object sender, EventArgs e) => InitiateSearch($"select AssetCode as 元件代码, AssetName as 元件名称, MainValue as 值 from assets where " +

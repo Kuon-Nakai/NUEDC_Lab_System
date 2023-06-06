@@ -37,6 +37,8 @@ public partial class Events : System.Web.UI.Page
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
         ViewState["ds"] = svr.QueryDataset(sql);
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         Event_gv.DataSource = ViewState["ds"];
         Event_gv.DataBind();
         Event_gv.SelectRow(0);
@@ -73,6 +75,8 @@ public partial class Events : System.Web.UI.Page
 
     private void AssignAssetData(MySqlDataReader rd)
     {
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         EventName_lb.Text = (string)rd[1];
         EventTime_lb.Text = $"{(DateTime)rd[6]:yyyy-MM-dd HH:mm} --- {(DateTime)rd[7]:yyyy-MM-dd HH:mm}";
         Location_lb.Text =  rd[10].ToString().Length > 0 ? (string)rd[10] : "暂无数据";
