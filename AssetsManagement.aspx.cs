@@ -324,7 +324,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         svr.cn.Open();
         using (var transact = svr.cn.BeginTransaction())
         {
-            if (svr.Execute("update lending set Status='已归还', TransactionCycleEnded=1 where TransactionCode=" + LendState_gv.SelectedRow.Cells[0].Text, transact) != 1)
+            if (svr.Execute("update lending set Status='Returned', TransactionCycleEnded=1 where TransactionCode=" + LendState_gv.SelectedRow.Cells[0].Text, transact) != 1)
             {
                 var cnt = (int)Application["DBExec"];
                 Application["DBExec"] = ++cnt;
