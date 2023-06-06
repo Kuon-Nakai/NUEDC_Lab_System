@@ -91,11 +91,11 @@
                                 </div>
                                 <div class="row">
                                     新密码
-                                    <asp:TextBox runat="server" ID="Rst_NewPsw_tb" CssClass="u-fullwidth" />
+                                    <asp:TextBox runat="server" ID="Rst_NewPsw_tb" CssClass="u-fullwidth" TextMode="Password" />
                                 </div>
                                 <div class="row">
                                     重复密码
-                                    <asp:TextBox runat="server" ID="Rst_RepPsw_tb" CssClass="u-fullwidth" />
+                                    <asp:TextBox runat="server" ID="Rst_RepPsw_tb" CssClass="u-fullwidth" TextMode="Password" />
                                 </div>
                             </div>
                             <asp:LinkButton Text="提交" runat="server" ID="ConfirmRst_bt" CssClass="btn btn--primary btn--large u-fullwidth" OnClick="ConfirmRst_bt_Click" />
