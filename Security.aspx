@@ -68,19 +68,19 @@
                             <%--<input type="button" name="idk" value="test" onshow="alert('test');" />--%>
                             <em class="stats-tabs-li-a-em">会话数</em></li>
                         <li>
-                            <asp:LinkButton Text="0" runat="server" ID="LinkButton2" CssClass="stats-tabs-li-a" />
-                            <em class="stats-tabs-li-a-em">数据库查询</em></li>
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '数据库查询/行', <%=DBQueriesResult %>,<%=series %> );"><%=(Application["DBQueriesData"] as Queue<int>)?.Last() %></a>
+                            <em class="stats-tabs-li-a-em">数据库查询/行</em></li>
                         <li>
-                            <asp:LinkButton Text="0" runat="server" ID="LinkButton3" CssClass="stats-tabs-li-a" />
-                            <em class="stats-tabs-li-a-em">数据库更新</em></li>
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '数据库操作', <%=DBExecResult %>,<%=series %> );"><%=(Application["DBExecData"] as Queue<int>)?.Last() %></a>
+                            <em class="stats-tabs-li-a-em">数据库操作</em></li>
                         <li>
-                            <asp:LinkButton Text="0" runat="server" ID="LinkButton4" CssClass="stats-tabs-li-a" />
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '总注册用户', <%=UserCntResult %>,<%=series %> );"><%=(Application["UserCntData"] as Queue<int>)?.Last() %></a>
                             <em class="stats-tabs-li-a-em">总注册用户</em></li>
                         <li>
-                            <asp:LinkButton Text="0" runat="server" ID="LinkButton5" CssClass="stats-tabs-li-a" />
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '查询数', <%=TotalQueriesResult %>,<%=series %> );"><%=(Application["TotalQueriesData"] as Queue<int>)?.Last() %></a>
                             <em class="stats-tabs-li-a-em">查询数</em></li>
                         <li>
-                            <asp:LinkButton Text="0" runat="server" ID="LinkButton6" CssClass="stats-tabs-li-a" />
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '登记次数', <%=LendCntResult %>,<%=series %> );"><%=(Application["LendCntData"] as Queue<int>)?.Last() %></a>
                             <em class="stats-tabs-li-a-em">登记次数</em></li>
                     </ul>
 

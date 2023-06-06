@@ -44,6 +44,8 @@ public partial class Login_Reg : System.Web.UI.Page
             Username = svr.QuerySingle($"select MemberName from members where MemberCode='{Session["UserID"]}'") as string ?? "Unavailable";
             DataBind();
             Logout_pn.Visible = true;
+            var cnt = (int)Application["DBQueries"];
+            Application["DBQueries"] = ++cnt;
         }
         //RemoteDelegates.RegisterDelegate("Login_bt_Click", Login_bt_Click);
         //DynamicControls.CreateAlert("请提供登录信息", "error", Alerts_pn);
@@ -54,6 +56,7 @@ public partial class Login_Reg : System.Web.UI.Page
         //Login_Acc_ReqVal.Validate();
         //Login_Psw_ReqVal.Validate();
         Page.Validate("Login");
+        var cnt = (int)Application["DBQueries"];
         if (!Login_Acc_ReqVal.IsValid || !Login_Psw_ReqVal.IsValid || LoginAcc_tb.Text.Trim().Length == 0 || LoginPsw_tb.Text.Trim().Length == 0)
         {
             // Fields invalid
@@ -62,12 +65,14 @@ public partial class Login_Reg : System.Web.UI.Page
         }
         if ((string)svr.QuerySingle($"select password from members where MemberCode={LoginAcc_tb.Text};") == LoginPsw_tb.Text)
         {
+            Application["DBQueries"] = ++cnt;
             // Auth pass
             Session["UserID"] = LoginAcc_tb.Text;
             Session["UserPerm"] = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
             try
             {
                 dc.CreateAlert($"登录成功, 欢迎 {svr.QuerySingle($"select MemberName from members where MemberCode={Session["LoginAcc"]}")}", "success", Alerts_pn);
+                Application["DBQueries"] = ++cnt;
             }
             catch (Exception) { }
             if ((((Stack<string>)Session["jmpStack"])?.Count ?? 0) != 0)
@@ -79,6 +84,7 @@ public partial class Login_Reg : System.Web.UI.Page
         // Auth fail
         if (svr.QuerySingle($"Select * from members where MemberCode={LoginAcc_tb.Text};").GetType().Name == "DBNull")
         {
+            Application["DBQueries"] = ++cnt;
             // Account does not exist
             dc.CreateAlert("账号不存在, 请注册", "notice", Alerts_pn);
             Page.SetFocus(RegAcc_tb);
@@ -94,6 +100,8 @@ public partial class Login_Reg : System.Web.UI.Page
         if (Reg_Acc_ReqVal.IsValid & Reg_Name_ReqVal.IsValid & Reg_Psw_ReqVal.IsValid & Reg_Psw_CompVal.IsValid &
             (RegMail_tb.Text.Length == 0 || Regex.IsMatch(RegMail_tb.Text, "^[a-zA-Z0-9]+@[a-zA-Z0-9.]+(com|cn|co|net)$")))
         {
+            var cnt = (int)Application["DBExec"];
+            Application["DBExec"] = ++cnt;
             if (svr.Execute($"Insert into members values({RegAcc_tb.Text}, '{RegName_tb.Text}', 4, NOW(), NOW(), null, '{RegPsw0_tb.Text}')",
                 (Exception e) =>
                 {
@@ -131,6 +139,8 @@ public partial class Login_Reg : System.Web.UI.Page
         {
             PopupL1 = "请检查登录信息";
             PopupL2 = $"卡号: {data}\n姓名: {svr.QuerySingle($"select MemberName from members where MemberCode={Session["LoginAcc"]}")}";
+            var cnt = (int)Application["DBQueries"];
+            Application["DBQueries"] = ++cnt;
             ViewState["CardCache"] = data;
             DataBind();
             FindControl("ConfirmCard_bt").Visible = true;
@@ -142,7 +152,9 @@ public partial class Login_Reg : System.Web.UI.Page
         FindControl("ConfirmCard_bt").Visible = false;
         Session["UserID"] = ViewState["CardCache"];
         var perm = svr.QuerySingle($"select PermissionLevel from members where MemberCode={LoginAcc_tb.Text};");
-        if( perm == null )
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
+        if ( perm == null )
         {
             Session["UserID"] = null;
             PopupL1 = "错误";
@@ -178,6 +190,8 @@ public partial class Login_Reg : System.Web.UI.Page
         svr.SafeOpen();
         using (var transact = svr.cn.BeginTransaction())
         {
+            var cnt = (int)Application["DBExec"];
+            Application["DBExec"] = ++cnt;
             if (svr.Execute($"update members set password='{Rst_NewPsw_tb.Text}' where MemberCode={Rst_Acc_tb.Text};", transact) != 1)
             {
                 transact.Rollback();
@@ -193,12 +207,15 @@ public partial class Login_Reg : System.Web.UI.Page
 
     protected void StartRst_bt_Click(object sender, EventArgs e)
     {
+        var cnt = (int)Application["DBQueries"];
         if (svr.QuerySingle("select MemberCode from members where MemberCode=" + Rst_Acc_tb.Text) == null)
         {
+            Application["DBQueries"] = ++cnt;
             dc.CreateAlert("账号不存在", "notice", Alerts_pn);
             return;
         }
         PopupL1 = svr.QuerySingle($"select Email from members where MemberCode={Rst_Acc_tb.Text}").ToString();
+        Application["DBQueries"] = ++cnt;
         DataBind();
         if(PopupL1.Length == 0)
         {
@@ -210,6 +227,7 @@ public partial class Login_Reg : System.Web.UI.Page
             {
                 dc.CreateAlert("该账号未绑定邮箱, 请联系系统管理员协助重置密码", "notice", Alerts_pn);
             }
+            Application["DBQueries"] = ++cnt;
             Rst_NewPsw_tb.Enabled = false;
             Rst_RepPsw_tb.Enabled = false;
             Rst_VerifCode_tb.Enabled = false;

@@ -66,6 +66,8 @@ public partial class AssetsManagement : System.Web.UI.Page
             sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=3;",
             ReaderDataHandler = (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 TypeSel0_ddl.Items.Add($"{rd[0]}{rd[1]}");
                 //class0.Add($"{rd[0]} {rd[1]}");
             },
@@ -75,6 +77,8 @@ public partial class AssetsManagement : System.Web.UI.Page
             sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=6;",
             ReaderDataHandler = (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 TypeSel1_ddl.Items.Add($"{((string)rd[0]).Substring(3)}{rd[1]}");
                 //class1.Add($"{((string)rd[0]).Substring(3)} {rd[1]}");
             },
@@ -84,6 +88,8 @@ public partial class AssetsManagement : System.Web.UI.Page
             sql = "select ClassCode, ClassName from assetclasses where Length(ClassCode)=9;",
             ReaderDataHandler = (MySqlDataReader rd) =>
             {
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
                 TypeSel2_ddl.Items.Add($"{((string)rd[0]).Substring(6)}{rd[1]}");
                 //class2.Add($"{((string)rd[0]).Substring(6)} {rd[1]}");
             },
@@ -127,6 +133,8 @@ public partial class AssetsManagement : System.Web.UI.Page
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
         ViewState["ds"] = svr.QueryDataset(sql);
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         Asset_gv.DataSource = ViewState["ds"];
         Asset_gv.DataBind();
         if(Asset_gv.Rows.Count == 0) dc.CreateAlert("没有符合条件的元件", "info", Alerts_pn);
@@ -144,6 +152,8 @@ public partial class AssetsManagement : System.Web.UI.Page
             svr = new MySqlSvr("server=127.0.0.1; database=nuedc; user id=notRoot; password=1234");
         }
         ViewState["dsl"] = svr.QueryDataset(sql);
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         LendState_gv.DataSource = ViewState["dsl"];
         LendState_gv.DataBind();
         svr.cn.Close();
@@ -156,11 +166,15 @@ public partial class AssetsManagement : System.Web.UI.Page
             {
                 ++expiredCnt;
             }
+            var cnt1 = (int)Application["DBQueries"];
+            Application["DBQueries"] = ++cnt1;
         }
         if (expiredCnt > 0)
             dc.CreateAlert($"注意: 该元件有{expiredCnt}个借用记录已过期未归还!", "notice", Alerts_pn);
         else
             dc.CreateAlert("当前元件未检测到过期记录", "success", Alerts_pn);
+        var cntt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cntt;
     }
 
     public void LoadAssetData(string sql_where_assets)
@@ -170,7 +184,11 @@ public partial class AssetsManagement : System.Web.UI.Page
         svr.QueryReader($"select AssetName, ClassName, MainValue, ValueUnit, Location, Characteristics, Amount-ReservationQty-(select count(TransactionCode) from lending right join assets on lending.AssetCode=assets.AssetCode where {sql_where_assets} and Status='Returned'), AutoCplt from assets left join assetclasses on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};",
             AssignAssetData,
             /*() => Alert_DBQueryEmpty_pn.Visible = true*/
-            () => dc.CreateAlert("元件信息查询失败: 返回信息为空", "error", Alerts_pn));
+            () => {
+                dc.CreateAlert("元件信息查询失败: 返回信息为空", "error", Alerts_pn);
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
+            });
         svr.QueryReader($"select URL, Title from datasheets left join assets on datasheets.AssetCode=assets.AssetCode where {sql_where_assets}",
             (MySqlDataReader rd) =>
             {
@@ -178,6 +196,8 @@ public partial class AssetsManagement : System.Web.UI.Page
                 dc.CreateHTMLElement("br", Datasheet_pn0);
                 dc.CreateHTMLElement("div", Datasheet_pn1);
                 dc.CreateHyperLink(rd.GetValue(1).ToString(), rd.GetValue(0).ToString(), Datasheet_pn1);
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
 
                 //Datasheet_pn1.Controls.RemoveAt(Datasheet_pn1.Controls.Count - 1);
                 ++i;
@@ -190,7 +210,7 @@ public partial class AssetsManagement : System.Web.UI.Page
         //LendState_gv.DataBind();
         InitiateLendSearch($"select TransactionCode, MemberCode, {(byte.Parse(svr.QuerySingle($"select AutoCplt from assetclasses right join assets on assets.ClassCode=assetclasses.ClassCode where {sql_where_assets};").ToString()) == 0 ? "FullCode" : "Qty" )}, Status from lending left join assets on assets.AssetCode=lending.AssetCode where " +
             $"{sql_where_assets};");
-        if(LendState_gv.Rows.Count > 0)
+        if (LendState_gv.Rows.Count > 0)
             LendState_gv.SelectedIndex = 0;
     }
 
@@ -282,8 +302,10 @@ public partial class AssetsManagement : System.Web.UI.Page
         svr.Execute($"UPDATE assets set AssetName='{AssetName_lb}',ClassCode=(SELECT ClassCode FROM assetclasses WHERE ClassName='{AssetClass_lb}'),MainValue='{PrimValue_lb}' ,Location='{Location_lb}' ,Characteristics='{Property_lb}' ,Amount={Qty_tb} ,ReservationQty={RsrvQty_tb} ,LendingPolicy={AutoApproveLvl_tb};", (Exception ex) =>
         {
             dc.CreateAlert("更新错误，无法删除", "error", Alerts_pn);
-            InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
         });
+        var cnt = (int)Application["DBExec"];
+        Application["DBExec"] = ++cnt;
+        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
     }
 
     protected void ConfirmDel_bt_Click(object sender, EventArgs e)
@@ -291,8 +313,10 @@ public partial class AssetsManagement : System.Web.UI.Page
         svr.Execute($"DELETE FROM assets WHERE AssetCode='{Asset_gv.SelectedRow.Cells[0]}';", (Exception ex) =>
         {
             dc.CreateAlert("删除错误，无法删除", "error", Alerts_pn);
-            InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
         });
+        var cnt = (int)Application["DBExec"];
+        Application["DBExec"] = ++cnt;
+        InitiateSearch("select AssetCode, AssetName, MainValue, ValueUnit from assets left join assetclasses on assets.ClassCode = assetclasses.ClassCode;");
     }
 
     protected void ConfirmReturn_bt_Click(object sender, EventArgs e)
@@ -302,11 +326,15 @@ public partial class AssetsManagement : System.Web.UI.Page
         {
             if (svr.Execute("update lending set Status='已归还', TransactionCycleEnded=1 where TransactionCode=" + LendState_gv.SelectedRow.Cells[0].Text, transact) != 1)
             {
+                var cnt = (int)Application["DBExec"];
+                Application["DBExec"] = ++cnt;
                 transact.Rollback();
                 dc.CreateAlert("归还操作异常，已回退", "error", Alerts_pn);
                 return;
             }
             transact.Commit();
+            var cnt1 = (int)Application["DBExec"];
+            Application["DBExec"] = ++cnt1;
             dc.CreateAlert("归还成功!", "success", Alerts_pn);
         }
     }
@@ -326,6 +354,8 @@ public partial class AssetsManagement : System.Web.UI.Page
     {
         #region Operation data preload...
         TgtMail = svr.QuerySingle($"select Email from members where MemberCode='{int.Parse(LendState_gv.SelectedRow.Cells[1].Text):D9}'").ToString();
+        var cnt = (int)Application["DBQueries"];
+        Application["DBQueries"] = ++cnt;
         MailSubject = "[NUEDC实验室]元件归还提醒";
         
         if(DateTime.Today.AddMonths(-1) > ((DateTime)svr.QuerySingle($"select DateProcessed from lending where TransactionCode='{LendState_gv.SelectedRow.Cells[0].Text}';")))
@@ -348,6 +378,7 @@ public partial class AssetsManagement : System.Web.UI.Page
                 "该邮件由NUEDC实验室综合服务平台发送\n" +
                 $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}";
         }
+        Application["DBQueries"] = cnt += 4;
         OpBtn_pn.DataBind();
         ViewState["tgtmail"] = TgtMail;
         ViewState["mailsubject"] = MailSubject;
@@ -422,6 +453,8 @@ public partial class AssetsManagement : System.Web.UI.Page
                 TypeSel2_ddl.Visible = true;
                 TypeSel2_ddl.Enabled = true;
                 TypeSel2_ddl.SelectedIndex = 0;
+                var cnt = (int)Application["DBQueries"];
+                Application["DBQueries"] = ++cnt;
             }, () => TypeSel2_ddl.Visible = false);
     }
 
