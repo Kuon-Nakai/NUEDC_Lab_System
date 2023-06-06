@@ -1,0 +1,43 @@
+{
+  "userid": {
+    "Prompt": "账号",
+    "Autofill": "=MemberCode",
+    "Input": "textbox",
+    "Mode": 0,
+    "Options": [],
+    "Required": true
+  },
+  "username": {
+    "Prompt": "姓名",
+    "Autofill": "=MemberName",
+    "Input": "textbox",
+    "Mode": 0,
+    "Options": [],
+    "Required": true
+  },
+  "college": {
+    "Prompt": "所在学院",
+    "Autofill": null,
+    "Input": "dropdown",
+    "Mode": null,
+    "Options": [
+      "信息学院",
+      "理学院",
+      "计算机学院",
+      "材料学院",
+      "纺织学院",
+      "机械学院",
+      "化工学院",
+      "..."
+    ],
+    "Required": true
+  },
+  "note": {
+    "Prompt": "备注",
+    "Autofill": null,
+    "Input": "textbox",
+    "Mode": 1,
+    "Options": [],
+    "Required": false
+  }
+}
