@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.SessionState;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -22,6 +23,18 @@ public partial class index : System.Web.UI.Page
     //}
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Active session counter using LINQ syntax
+        var sessions = Application["SessionCnt"] as List<HttpSessionState>;
+        if ((from s in sessions
+            where s.SessionID == Session.SessionID
+            select new { }).Count() == 0)
+        { 
+            // No existing record of the current session ID
+            sessions.Add(Session);
+            Session["Counted"] = true;
+        }
+
+        // Query counter
         if (Application["TotalQueries"] == null)
             Application["TotalQueries"] = 0;
         MasterPage.col = 0f;

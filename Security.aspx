@@ -63,7 +63,8 @@
 
                     <ul class="stats-tabs">
                         <li class="stats-tabs-li">
-                            <asp:LinkButton Text="0" runat="server" ID="LinkButton1" CssClass="stats-tabs-li-a" OnClick="LinkButton1_Click" />
+                            <%--<asp:LinkButton Text="0" runat="server" ID="SessionCnt_bt" CssClass="stats-tabs-li-a" OnClientClick="loadChart('ChartArea', '会话数', <%=SessionCnt %>, )" />--%>
+                            <a class="stats-tabs-li-a" onclick="loadChart('ChartArea', '会话数', <%=Newtonsoft.Json.JsonConvert.SerializeObject((Application["SessionData"] as Queue<int>).ToArray().Reverse()) %>,<%=series %> );"><%=(Application["SessionCnt"] as List<HttpSessionState>)?.Count ?? 0 %></a>
                             <input type="button" name="idk" value="test" onshow="alert('test');" />
                             <em class="stats-tabs-li-a-em">会话数</em></li>
                         <li>
