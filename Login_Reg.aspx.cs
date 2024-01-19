@@ -102,7 +102,8 @@ public partial class Login_Reg : System.Web.UI.Page
         {
             var cnt = (int)Application["DBExec"];
             Application["DBExec"] = ++cnt;
-            if (svr.Execute($"Insert into members values({RegAcc_tb.Text}, '{RegName_tb.Text}', 4, NOW(), NOW(), null, '{RegPsw0_tb.Text}')",
+            if (svr.Execute($"Insert into members values({RegAcc_tb.Text}, '{RegName_tb.Text}', 4, NOW(), NOW(), null, '{RegPsw0_tb.Text}', " +
+                $"'{(RegMail_tb.Text.Length == 0 ? RegAcc_tb.Text + "@mail.dhu.edu.cn" : RegMail_tb.Text)}', 0)",
                 (Exception e) =>
                 {
                     dc.CreateAlert($"创建数据记录时发生数据库错误:\n{e.Message}", "error", Alerts_pn);

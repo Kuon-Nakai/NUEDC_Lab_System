@@ -142,9 +142,9 @@
                             <p>
                                 上海市松江区
                                 <br>
-                                人民北路2999号 东华大学
+                                人民北路2399号 东华大学
                                 <br>
-                                2号学院楼 2202
+                                2号学院楼 2010
                             </p>
                         </div>
 
@@ -153,6 +153,8 @@
                             <ul class="contact-list">
                                 <li><a href="#0">dhu_nuedc@163.com</a></li>
                                 <li><a href="#0">还有什么联系方式 我也不知道</a></li>
+                                <li><a href="#0">Version v1.0.1 Beta, Oct. 18, 2023</a></li>
+                                <li><a href="#0">网站处于公开测试阶段, 欢迎反馈问题!</a></li>
                             </ul>
                         </div>
 
@@ -199,7 +201,7 @@
                     <div class="column lg-6 tab-12 s-footer__bottom-right">
                         <div class="ss-copyright">
                             <span>NUEDC Innovation Lab @ DHU</span>
-                            <span>Design by: Clive</span>
+                            <span>Design by: Shiki</span>
                         </div>
                     </div>
 

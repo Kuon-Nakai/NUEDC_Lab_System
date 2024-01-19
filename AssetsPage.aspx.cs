@@ -413,7 +413,8 @@ public partial class AssetsPage : System.Web.UI.Page
             $"assets.ClassCode like '{TypeSel0_ddl.SelectedValue.Substring(0, Math.Min(TypeSel0_ddl.SelectedValue.Length, 3))}" +
             $"{TypeSel1_ddl.SelectedValue.Substring(0, Math.Min(TypeSel1_ddl.SelectedValue.Length, 3))}" +
             $"{TypeSel2_ddl.SelectedValue.Substring(0, Math.Min(TypeSel2_ddl.SelectedValue.Length, 3))}%';");
-        LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0]?.Cells[0]?.Text}'");
+        if(Asset_gv.Rows.Count > 0)
+            LoadAssetData($"assets.AssetCode='{Asset_gv.Rows[0]?.Cells[0]?.Text}'");
     }
 
     protected void AwaitReturn_bt_Click(object sender, EventArgs e)
